@@ -66,21 +66,6 @@ namespace SongsServer.Controllers
             }
         }
 
-        //get products by tag
-        // GET: api/<ProductController>/tag
-        [HttpGet("tag/{tag}")]
-        public IActionResult getProductsByTag(String tag)
-        {
-            try
-            {
-                return Ok(Product.getProductsByTag(tag));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
         //update product
         // POST api/<SongsController>
         [HttpPut("updateProduct")]

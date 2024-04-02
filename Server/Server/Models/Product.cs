@@ -12,7 +12,6 @@ namespace Server.Models
         public string description { get; set; }
         public int rate { get; set; }
         public string image { get; set; }
-        public List<string> tags { get; set; }
 
         //CREATE
         //return Product object after added or null if it failed
@@ -35,13 +34,6 @@ namespace Server.Models
         {
             DBservices dbs = new DBservices();
             return dbs.getProductsByCategory(category);
-        }
-
-        //return list of all products that have specific tag
-        public static List<Product> getProductsByTag(string tag)
-        {
-            DBservices dbs = new DBservices();
-            return dbs.getProductsByTag(tag);
         }
 
         //return product details

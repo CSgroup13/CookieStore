@@ -863,7 +863,6 @@ public class DBservices
         paramDic.Add("@description", p.description);
         paramDic.Add("@rate", p.rate);
         paramDic.Add("@image", p.image);
-        paramDic.Add("@tags", p.tags);
 
 
         cmd = CreateCommandWithStoredProcedure("SP_addProduct", con, paramDic);// create the command
@@ -925,7 +924,7 @@ public class DBservices
             while (dataReader.Read())
             {
                 Product p = new Product();
-                p.id = Convert.ToInt32(dataReader["Id"]);
+                p.id = Convert.ToInt32(dataReader["id"]);
                 p.category = dataReader["category"].ToString();
                 p.name = dataReader["name"].ToString();
                 p.price = Convert.ToDouble(dataReader["price"]);
@@ -938,12 +937,6 @@ public class DBservices
                 char[] ingredientDelimiter = { ',' }; // Assuming ingredients are separated by commas
                 string[] ingredientsArray = ingredientsString.Split(ingredientDelimiter, StringSplitOptions.RemoveEmptyEntries);
                 p.ingredients = new List<string>(ingredientsArray);
-
-                // Convert tags to a list of strings
-                string tagsString = dataReader["tags"].ToString();
-                char[] tagDelimiter = { ',' }; // Assuming tags are separated by commas
-                string[] tagsArray = tagsString.Split(tagDelimiter, StringSplitOptions.RemoveEmptyEntries);
-                p.tags = new List<string>(tagsArray);
 
                 products.Add(p);
             }
@@ -1013,86 +1006,6 @@ public class DBservices
                 string[] ingredientsArray = ingredientsString.Split(ingredientDelimiter, StringSplitOptions.RemoveEmptyEntries);
                 p.ingredients = new List<string>(ingredientsArray);
 
-                // Convert tags to a list of strings
-                string tagsString = dataReader["tags"].ToString();
-                char[] tagDelimiter = { ',' }; // Assuming tags are separated by commas
-                string[] tagsArray = tagsString.Split(tagDelimiter, StringSplitOptions.RemoveEmptyEntries);
-                p.tags = new List<string>(tagsArray);
-
-                products.Add(p);
-            }
-            return products;
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // This method Reads all products by specific tag
-    //--------------------------------------------------------------------------------------------------
-    public List<Product> getProductsByTag(string tag)
-    {
-
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-
-        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-        paramDic.Add("@tag", tag);
-        cmd = CreateCommandWithStoredProcedure("SP_getProductsByCategory", con, paramDic);// create the command
-
-
-        List<Product> products = new List<Product>();
-
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-            while (dataReader.Read())
-            {
-                Product p = new Product();
-                p.id = Convert.ToInt32(dataReader["Id"]);
-                p.category = dataReader["category"].ToString();
-                p.name = dataReader["name"].ToString();
-                p.price = Convert.ToDouble(dataReader["price"]);
-                p.description = dataReader["description"].ToString();
-                p.rate = Convert.ToInt32(dataReader["rate"]);
-                p.image = dataReader["image"].ToString();
-
-                // Convert ingredients to a list of strings
-                string ingredientsString = dataReader["ingredients"].ToString();
-                char[] ingredientDelimiter = { ',' }; // Assuming ingredients are separated by commas
-                string[] ingredientsArray = ingredientsString.Split(ingredientDelimiter, StringSplitOptions.RemoveEmptyEntries);
-                p.ingredients = new List<string>(ingredientsArray);
-
-                // Convert tags to a list of strings
-                string tagsString = dataReader["tags"].ToString();
-                char[] tagDelimiter = { ',' }; // Assuming tags are separated by commas
-                string[] tagsArray = tagsString.Split(tagDelimiter, StringSplitOptions.RemoveEmptyEntries);
-                p.tags = new List<string>(tagsArray);
-
                 products.Add(p);
             }
             return products;
@@ -1158,12 +1071,6 @@ public class DBservices
                 string[] ingredientsArray = ingredientsString.Split(ingredientDelimiter, StringSplitOptions.RemoveEmptyEntries);
                 p.ingredients = new List<string>(ingredientsArray);
 
-                // Convert tags to a list of strings
-                string tagsString = dataReader["tags"].ToString();
-                char[] tagDelimiter = { ',' }; // Assuming tags are separated by commas
-                string[] tagsArray = tagsString.Split(tagDelimiter, StringSplitOptions.RemoveEmptyEntries);
-                p.tags = new List<string>(tagsArray);
-
                 return p;
             }
             throw new Exception("could not find Product");
@@ -1214,7 +1121,6 @@ public class DBservices
         paramDic.Add("@description", p.description);
         paramDic.Add("@rate", p.rate);
         paramDic.Add("@image", p.image);
-        paramDic.Add("@tags", p.tags);
 
 
         cmd = CreateCommandWithStoredProcedure("SP_updateProduct", con, paramDic);// create the command
