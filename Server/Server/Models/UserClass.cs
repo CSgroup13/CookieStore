@@ -93,5 +93,11 @@
             DBservices dbs = new DBservices();
             return dbs.getUserDetails(userId);
         }
+
+        public static List<Order> getUserOrders(int userId)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.getUserOrders(userId);
+        }
     }
 }

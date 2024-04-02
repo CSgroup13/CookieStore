@@ -39,6 +39,13 @@ namespace Server.Controllers
             return UserClass.getProductsByUser(userId);
         }
 
+        //get all user orders by user id
+        // GET: api/<UsersController>/
+        [HttpGet("{userId}/orders")]
+        public List<Order> getUserOrders(int userId)
+        {
+            return UserClass.getUserOrders(userId);
+        }
 
 
         //post User object to DB while registration
