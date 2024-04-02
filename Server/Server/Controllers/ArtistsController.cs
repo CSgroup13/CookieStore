@@ -29,7 +29,7 @@ namespace SongsServer.Controllers
         {
             try
             {
-                return (Ok(Artist.getAllArtists()));
+                return (Ok(Order.getAllArtists()));
             }
             catch (Exception ex)
             {
@@ -43,7 +43,7 @@ namespace SongsServer.Controllers
         {
             try
             {
-            return Ok(Artist.getSongsByArtist(artistName));
+            return Ok(Order.getSongsByArtist(artistName));
             }
             catch (Exception ex)
             {
@@ -58,7 +58,7 @@ namespace SongsServer.Controllers
         {
             try
             {
-                return Ok(Artist.getArtistById(id));
+                return Ok(Order.getArtistById(id));
             }
             catch (Exception ex)
             {
@@ -73,7 +73,7 @@ namespace SongsServer.Controllers
         {
             try
             {
-                return Ok(Artist.getArtistByName(artistName));
+                return Ok(Order.getArtistByName(artistName));
             }
             catch (Exception ex)
             {
@@ -88,7 +88,7 @@ namespace SongsServer.Controllers
         {
             try
             {
-                return Ok(Artist.getRandomArtist());
+                return Ok(Order.getRandomArtist());
             }
             catch (Exception ex)
             {
@@ -103,7 +103,7 @@ namespace SongsServer.Controllers
         {
             try
             {
-                return Ok(Artist.getDiffRandomArtists(artistName));
+                return Ok(Order.getDiffRandomArtists(artistName));
             }
             catch (Exception ex)
             {

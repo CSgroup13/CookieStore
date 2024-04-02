@@ -7,7 +7,6 @@
         public string email { get; set; }
         public string password { get; set; }
         public DateTime regDate { get; set; }
-        public int score { get; set; }
 
         //return list of all users
         static public List<UserClass> getAllUsers()
@@ -17,14 +16,14 @@
         }
 
         //return list of all user's favorite songs
-        public static List<Song> getSongsByUser(int userId)
+        public static List<Product> getSongsByUser(int userId)
         {
             DBservices dbs = new DBservices();
             return dbs.getSongsByUser(userId);
         }
 
         //return list of all user's favorite artists
-        public static List<Artist> getArtistsByUser(int userId)
+        public static List<Order> getArtistsByUser(int userId)
         {
             DBservices dbs = new DBservices();
             return dbs.getArtistsByUser(userId);
@@ -80,14 +79,14 @@
         }
 
         //return Artist object that added to user favorite artists or null if it failed
-        public static Artist addArtistToFav(int userId, int artistId)
+        public static Order addArtistToFav(int userId, int artistId)
         {
             DBservices dbs = new DBservices();
             return dbs.addArtistToFav(userId, artistId);
         }
 
         //return Artist object that removed from user favorite artists or null if it failed
-        public static Artist deleteArtistFromFav(int userId, int artistId)
+        public static Order deleteArtistFromFav(int userId, int artistId)
         {
             DBservices dbs = new DBservices();
             return dbs.deleteArtistFromFav(userId, artistId);

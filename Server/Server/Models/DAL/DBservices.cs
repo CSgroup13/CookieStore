@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using System.Data;
-using System.Text;
-using System.Net;
-using System.Diagnostics.Metrics;
-using SongsServer.Models;
-using System.Data.Common;
+using Server.Models;
 using System.Dynamic;
 
 /// <summary>
@@ -195,7 +187,7 @@ public class DBservices
     //--------------------------------------------------------------------------------------------------
     // This method reads all songs of specific user favorite songs
     //--------------------------------------------------------------------------------------------------
-    public List<Song> getSongsByUser(int userId)
+    public List<Product> getSongsByUser(int userId)
     {
 
         SqlConnection con;
@@ -215,7 +207,7 @@ public class DBservices
         paramDic.Add("@userId", userId);
         cmd = CreateCommandWithStoredProcedure("SP_getSongsByUser", con, paramDic);// create the command
 
-        List<Song> songsList = new List<Song>();
+        List<Product> songsList = new List<Product>();
 
         try
         {
@@ -223,7 +215,7 @@ public class DBservices
 
             while (dataReader.Read())
             {
-                Song s = new Song();
+                Product s = new Product();
                 s.id = Convert.ToInt32(dataReader["id"]);
                 s.name = dataReader["name"].ToString();
                 s.artistName = dataReader["artistName"].ToString();
@@ -255,7 +247,7 @@ public class DBservices
     //--------------------------------------------------------------------------------------------------
     // This method reads all artists of specific user favorite artists
     //--------------------------------------------------------------------------------------------------
-    public List<Artist> getArtistsByUser(int userId)
+    public List<Order> getArtistsByUser(int userId)
     {
 
         SqlConnection con;
@@ -275,7 +267,7 @@ public class DBservices
         paramDic.Add("@userId", userId);
         cmd = CreateCommandWithStoredProcedure("SP_getArtistsByUser", con, paramDic);// create the command
 
-        List<Artist> artistsList = new List<Artist>();
+        List<Order> artistsList = new List<Order>();
 
         try
         {
@@ -283,7 +275,7 @@ public class DBservices
 
             while (dataReader.Read())
             {
-                Artist a = new Artist();
+                Order a = new Order();
                 a.id = Convert.ToInt32(dataReader["id"]);
                 a.name = dataReader["name"].ToString();
                 a.rate = Convert.ToInt32(dataReader["rate"]);
@@ -728,7 +720,7 @@ public class DBservices
     //--------------------------------------------------------------------------------------------------
     // This method Insert artist to UserArtists table(favorite artists)
     //--------------------------------------------------------------------------------------------------
-    public Artist addArtistToFav(int userId, int artistId)
+    public Order addArtistToFav(int userId, int artistId)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -756,7 +748,7 @@ public class DBservices
 
             if (dataReader.Read())
             {
-                Artist a = new Artist();
+                Order a = new Order();
                 a.id = Convert.ToInt32(dataReader["id"]);
                 a.name = dataReader["name"].ToString();
                 a.rate = Convert.ToInt32(dataReader["rate"]);
@@ -787,7 +779,7 @@ public class DBservices
     //--------------------------------------------------------------------------------------------------
     // This method Delete artist from UserArtists table
     //--------------------------------------------------------------------------------------------------
-    public Artist deleteArtistFromFav(int userId, int artistId)
+    public Order deleteArtistFromFav(int userId, int artistId)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -815,7 +807,7 @@ public class DBservices
 
             if (dataReader.Read())
             {
-                Artist a = new Artist();
+                Order a = new Order();
                 a.id = Convert.ToInt32(dataReader["id"]);
                 a.name = dataReader["name"].ToString();
                 a.rate = Convert.ToInt32(dataReader["rate"]);
@@ -843,11 +835,11 @@ public class DBservices
     }
 
 
-    //*****************************************************Songs Methods*********************************************************************************
+    //*****************************************************Product Methods*********************************************************************************
     //--------------------------------------------------------------------------------------------------
-    // This method add new song to db
+    // This method add new product to db
     //--------------------------------------------------------------------------------------------------
-    public int InsertSong(Song s)
+    public Product addProduct(Product p)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -864,20 +856,26 @@ public class DBservices
 
         Dictionary<string, object> paramDic = new Dictionary<string, object>();
 
-        paramDic.Add("@name", s.name);
-        paramDic.Add("@artistName", s.artistName);
-        paramDic.Add("@link", s.link);
-        paramDic.Add("@lyrics", s.lyrics);
+        paramDic.Add("@category", p.category);
+        paramDic.Add("@name", p.name);
+        paramDic.Add("@price", p.price);
+        paramDic.Add("@ingredients", p.ingredients);
+        paramDic.Add("@description", p.description);
+        paramDic.Add("@rate", p.rate);
+        paramDic.Add("@image", p.image);
+        paramDic.Add("@tags", p.tags);
 
 
-
-        cmd = CreateCommandWithStoredProcedure("SP_Insert_Song", con, paramDic);// create the command
+        cmd = CreateCommandWithStoredProcedure("SP_addProduct", con, paramDic);// create the command
 
         try
         {
             int numEffected = cmd.ExecuteNonQuery(); // execute the command
-            //int numEffected = Convert.ToInt32(cmd.ExecuteScalar()); // returning the id
-            return numEffected;
+            if (numEffected == 1)
+            {
+                return p;
+            }
+            return null;
         }
         catch (Exception ex)
         {
@@ -895,10 +893,11 @@ public class DBservices
         }
 
     }
+
     //--------------------------------------------------------------------------------------------------
-    // This method Reads all Songs
+    // This method Reads all products
     //--------------------------------------------------------------------------------------------------
-    public List<Song> getAllSongs()
+    public List<Product> getAllProducts()
     {
 
         SqlConnection con;
@@ -915,85 +914,40 @@ public class DBservices
         }
 
 
-        cmd = CreateCommandWithStoredProcedure("SP_getAllSongs", con, null);// create the command
+        cmd = CreateCommandWithStoredProcedure("SP_getAllProducts", con, null);// create the command
 
 
-        List<Song> songList = new List<Song>();
-
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-            while (dataReader.Read())
-            {
-                Song s = new Song();
-                s.id = Convert.ToInt32(dataReader["Id"]);
-                s.name = dataReader["name"].ToString();
-                s.artistName = dataReader["artistName"].ToString();
-                s.link = dataReader["link"].ToString();
-                s.lyrics = dataReader["lyrics"].ToString();
-                s.rate = Convert.ToInt32(dataReader["rate"]);
-                s.image = dataReader["image"].ToString();
-                songList.Add(s);
-            }
-            return songList;
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-
-    }
-    //--------------------------------------------------------------------------------------------------
-    // This method return 3 random songs
-    //--------------------------------------------------------------------------------------------------
-    public List<Song> getRandomSong()
-    {
-
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-
-        cmd = CreateCommandWithStoredProcedure("SP_getRandomSong", con, null);// create the command
-
-
-        List<Song> songList = new List<Song>();
+        List<Product> products = new List<Product>();
 
         try
         {
             SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
             while (dataReader.Read())
             {
-                Song s = new Song();
-                s.id = Convert.ToInt32(dataReader["Id"]);
-                s.name = dataReader["name"].ToString();
-                s.artistName = dataReader["artistName"].ToString();
-                s.link = dataReader["link"].ToString();
-                s.lyrics = dataReader["lyrics"].ToString();
-                s.rate = Convert.ToInt32(dataReader["rate"]);
-                s.image = dataReader["image"].ToString();
-                songList.Add(s);
+                Product p = new Product();
+                p.id = Convert.ToInt32(dataReader["Id"]);
+                p.category = dataReader["category"].ToString();
+                p.name = dataReader["name"].ToString();
+                p.price = Convert.ToDouble(dataReader["price"]);
+                p.description = dataReader["description"].ToString();
+                p.rate = Convert.ToInt32(dataReader["rate"]);
+                p.image = dataReader["image"].ToString();
+
+                // Convert ingredients to a list of strings
+                string ingredientsString = dataReader["ingredients"].ToString();
+                char[] ingredientDelimiter = { ',' }; // Assuming ingredients are separated by commas
+                string[] ingredientsArray = ingredientsString.Split(ingredientDelimiter, StringSplitOptions.RemoveEmptyEntries);
+                p.ingredients = new List<string>(ingredientsArray);
+
+                // Convert tags to a list of strings
+                string tagsString = dataReader["tags"].ToString();
+                char[] tagDelimiter = { ',' }; // Assuming tags are separated by commas
+                string[] tagsArray = tagsString.Split(tagDelimiter, StringSplitOptions.RemoveEmptyEntries);
+                p.tags = new List<string>(tagsArray);
+
+                products.Add(p);
             }
-            return songList;
+            return products;
         }
         catch (Exception ex)
         {
@@ -1013,9 +967,9 @@ public class DBservices
     }
 
     //--------------------------------------------------------------------------------------------------
-    // This method return 3 random songs that are different from input value
+    // This method Reads all products by specific category
     //--------------------------------------------------------------------------------------------------
-    public List<Song> getDiffRandomSongs(String songName)
+    public List<Product> getProductsByCategory(string category)
     {
 
         SqlConnection con;
@@ -1033,28 +987,41 @@ public class DBservices
 
 
         Dictionary<string, object> paramDic = new Dictionary<string, object>();
-        paramDic.Add("@songName", songName);
+        paramDic.Add("@category", category);
+        cmd = CreateCommandWithStoredProcedure("SP_getProductsByCategory", con, paramDic);// create the command
 
-        cmd = CreateCommandWithStoredProcedure("SP_getDiffRandom", con, paramDic);// create the command
 
-        List<Song> songList = new List<Song>();
+        List<Product> products = new List<Product>();
 
         try
         {
             SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
             while (dataReader.Read())
             {
-                Song s = new Song();
-                s.id = Convert.ToInt32(dataReader["Id"]);
-                s.name = dataReader["name"].ToString();
-                s.artistName = dataReader["artistName"].ToString();
-                s.link = dataReader["link"].ToString();
-                s.lyrics = dataReader["lyrics"].ToString();
-                s.rate = Convert.ToInt32(dataReader["rate"]);
-                s.image = dataReader["image"].ToString();
-                songList.Add(s);
+                Product p = new Product();
+                p.id = Convert.ToInt32(dataReader["Id"]);
+                p.category = dataReader["category"].ToString();
+                p.name = dataReader["name"].ToString();
+                p.price = Convert.ToDouble(dataReader["price"]);
+                p.description = dataReader["description"].ToString();
+                p.rate = Convert.ToInt32(dataReader["rate"]);
+                p.image = dataReader["image"].ToString();
+
+                // Convert ingredients to a list of strings
+                string ingredientsString = dataReader["ingredients"].ToString();
+                char[] ingredientDelimiter = { ',' }; // Assuming ingredients are separated by commas
+                string[] ingredientsArray = ingredientsString.Split(ingredientDelimiter, StringSplitOptions.RemoveEmptyEntries);
+                p.ingredients = new List<string>(ingredientsArray);
+
+                // Convert tags to a list of strings
+                string tagsString = dataReader["tags"].ToString();
+                char[] tagDelimiter = { ',' }; // Assuming tags are separated by commas
+                string[] tagsArray = tagsString.Split(tagDelimiter, StringSplitOptions.RemoveEmptyEntries);
+                p.tags = new List<string>(tagsArray);
+
+                products.Add(p);
             }
-            return songList;
+            return products;
         }
         catch (Exception ex)
         {
@@ -1074,9 +1041,83 @@ public class DBservices
     }
 
     //--------------------------------------------------------------------------------------------------
-    // This method return song by name
+    // This method Reads all products by specific tag
     //--------------------------------------------------------------------------------------------------
-    public Song getSongByName(string songName)
+    public List<Product> getProductsByTag(string tag)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+        paramDic.Add("@tag", tag);
+        cmd = CreateCommandWithStoredProcedure("SP_getProductsByCategory", con, paramDic);// create the command
+
+
+        List<Product> products = new List<Product>();
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dataReader.Read())
+            {
+                Product p = new Product();
+                p.id = Convert.ToInt32(dataReader["Id"]);
+                p.category = dataReader["category"].ToString();
+                p.name = dataReader["name"].ToString();
+                p.price = Convert.ToDouble(dataReader["price"]);
+                p.description = dataReader["description"].ToString();
+                p.rate = Convert.ToInt32(dataReader["rate"]);
+                p.image = dataReader["image"].ToString();
+
+                // Convert ingredients to a list of strings
+                string ingredientsString = dataReader["ingredients"].ToString();
+                char[] ingredientDelimiter = { ',' }; // Assuming ingredients are separated by commas
+                string[] ingredientsArray = ingredientsString.Split(ingredientDelimiter, StringSplitOptions.RemoveEmptyEntries);
+                p.ingredients = new List<string>(ingredientsArray);
+
+                // Convert tags to a list of strings
+                string tagsString = dataReader["tags"].ToString();
+                char[] tagDelimiter = { ',' }; // Assuming tags are separated by commas
+                string[] tagsArray = tagsString.Split(tagDelimiter, StringSplitOptions.RemoveEmptyEntries);
+                p.tags = new List<string>(tagsArray);
+
+                products.Add(p);
+            }
+            return products;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    // This method return product by id
+    //--------------------------------------------------------------------------------------------------
+    public Product getProductById(int id)
     {
 
         SqlConnection con;
@@ -1092,11 +1133,9 @@ public class DBservices
             throw (ex);
         }
         Dictionary<string, object> paramDic = new Dictionary<string, object>();
+        paramDic.Add("@id", id);
 
-        paramDic.Add("@name", songName);
-       
-
-        cmd = CreateCommandWithStoredProcedure("SP_getSongByName", con, paramDic);// create the command
+        cmd = CreateCommandWithStoredProcedure("SP_getProductById", con, paramDic);// create the command
 
 
         try
@@ -1104,17 +1143,90 @@ public class DBservices
             SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
             if (dataReader.Read())
             {
-                Song s = new Song();
-                s.id = Convert.ToInt32(dataReader["Id"]);
-                s.name = dataReader["name"].ToString();
-                s.artistName = dataReader["artistName"].ToString();
-                s.link = dataReader["link"].ToString();
-                s.lyrics = dataReader["lyrics"].ToString();
-                s.rate = Convert.ToInt32(dataReader["rate"]);
-                s.image = dataReader["image"].ToString();
-                return s;
+                Product p = new Product();
+                p.id = Convert.ToInt32(dataReader["Id"]);
+                p.category = dataReader["category"].ToString();
+                p.name = dataReader["name"].ToString();
+                p.price = Convert.ToDouble(dataReader["price"]);
+                p.description = dataReader["description"].ToString();
+                p.rate = Convert.ToInt32(dataReader["rate"]);
+                p.image = dataReader["image"].ToString();
+
+                // Convert ingredients to a list of strings
+                string ingredientsString = dataReader["ingredients"].ToString();
+                char[] ingredientDelimiter = { ',' }; // Assuming ingredients are separated by commas
+                string[] ingredientsArray = ingredientsString.Split(ingredientDelimiter, StringSplitOptions.RemoveEmptyEntries);
+                p.ingredients = new List<string>(ingredientsArray);
+
+                // Convert tags to a list of strings
+                string tagsString = dataReader["tags"].ToString();
+                char[] tagDelimiter = { ',' }; // Assuming tags are separated by commas
+                string[] tagsArray = tagsString.Split(tagDelimiter, StringSplitOptions.RemoveEmptyEntries);
+                p.tags = new List<string>(tagsArray);
+
+                return p;
             }
-            throw new Exception("could not find Song");
+            throw new Exception("could not find Product");
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+
+    //--------------------------------------------------------------------------------------------------
+    // This method update product in db
+    //--------------------------------------------------------------------------------------------------
+    public Product updateProduct(Product p)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+
+        paramDic.Add("@id", p.id);
+        paramDic.Add("@category", p.category);
+        paramDic.Add("@name", p.name);
+        paramDic.Add("@price", p.price);
+        paramDic.Add("@ingredients", p.ingredients);
+        paramDic.Add("@description", p.description);
+        paramDic.Add("@rate", p.rate);
+        paramDic.Add("@image", p.image);
+        paramDic.Add("@tags", p.tags);
+
+
+        cmd = CreateCommandWithStoredProcedure("SP_updateProduct", con, paramDic);// create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            if (numEffected == 1)
+            {
+                return p;
+            }
+            return null;
         }
         catch (Exception ex)
         {
@@ -1134,73 +1246,9 @@ public class DBservices
     }
 
     //--------------------------------------------------------------------------------------------------
-    // This method return song by lyrics
+    // This method delete a product from productsTable
     //--------------------------------------------------------------------------------------------------
-    public List<Song> getByLyrics(string lyrics)
-    {
-
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-        paramDic.Add("@lyrics", lyrics);
-
-
-        cmd = CreateCommandWithStoredProcedure("SP_getByLyrics", con, paramDic);// create the command
-
-
-        List<Song> songList = new List<Song>();
-
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-            while (dataReader.Read())
-            {
-                Song s = new Song();
-                s.id = Convert.ToInt32(dataReader["Id"]);
-                s.name = dataReader["name"].ToString();
-                s.artistName = dataReader["artistName"].ToString();
-                s.link = dataReader["link"].ToString();
-                s.lyrics = dataReader["lyrics"].ToString();
-                s.rate = Convert.ToInt32(dataReader["rate"]);
-                s.image = dataReader["image"].ToString();
-                songList.Add(s);
-            }
-            if(songList.Count>0)
-            return songList;
-            throw new Exception("could not find Song");
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // This method Insert a comment to songsComments table
-    //--------------------------------------------------------------------------------------------------
-    public List<ExpandoObject> addCommentToSong(int songId, int userId, string comment)
+    public bool deleteProduct(int id)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -1217,29 +1265,13 @@ public class DBservices
 
         Dictionary<string, object> paramDic = new Dictionary<string, object>();
 
-        paramDic.Add("@songId", songId);
-        paramDic.Add("@userId", userId);
-        paramDic.Add("@comment", comment);
+        paramDic.Add("@id", id);
+        cmd = CreateCommandWithStoredProcedure("SP_deleteProduct", con, paramDic);// create the command
 
-
-        cmd = CreateCommandWithStoredProcedure("SP_addCommentToSong", con, paramDic);// create the command
-
-        List<ExpandoObject> comments = new List<ExpandoObject>();
         try
         {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-            while (dataReader.Read())
-            {
-                dynamic obj = new ExpandoObject();
-                obj.id = Convert.ToInt32(dataReader["id"]);
-                obj.songId = Convert.ToInt32(dataReader["songId"]);
-                obj.userId = Convert.ToInt32(dataReader["userId"]);
-                obj.userName = dataReader["name"].ToString();
-                obj.comment = dataReader["comment"].ToString();
-
-                comments.Add(obj);
-            }
-            return comments;
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected == 1;
         }
         catch (Exception ex)
         {
@@ -1250,121 +1282,6 @@ public class DBservices
         {
             if (con != null)
             {
-                con.Close();
-            }
-        }
-
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // This method Remove a comment from songsComments table
-    //--------------------------------------------------------------------------------------------------
-    public List<ExpandoObject> deleteCommentOfSong(int songId, int commentId)
-    {
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-
-        paramDic.Add("@songId", songId);
-        paramDic.Add("@commentId", commentId);
-
-
-        cmd = CreateCommandWithStoredProcedure("SP_DeleteCommentFromSong", con, paramDic);// create the command
-
-        List<ExpandoObject> comments = new List<ExpandoObject>();
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-            while (dataReader.Read())
-            {
-                dynamic obj = new ExpandoObject();
-                obj.id = Convert.ToInt32(dataReader["id"]);
-                obj.songId = Convert.ToInt32(dataReader["songId"]);
-                obj.userId = Convert.ToInt32(dataReader["userId"]);
-                obj.userName = dataReader["name"].ToString();
-                obj.comment = dataReader["comment"].ToString();
-
-                comments.Add(obj);
-            }
-            return comments;
-        }
-        catch (Exception ex)
-        {
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                con.Close();
-            }
-        }
-
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // This method return all songs comments
-    //--------------------------------------------------------------------------------------------------
-    public List<ExpandoObject> getCommentsOfSong(int songId)
-    {
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-
-        paramDic.Add("@songId", songId);
-
-        cmd = CreateCommandWithStoredProcedure("SP_getSongsComments", con, paramDic);// create the command
-
-        List<ExpandoObject> comments = new List<ExpandoObject>();
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-            while (dataReader.Read())
-            {
-                dynamic obj = new ExpandoObject();
-                obj.id = Convert.ToInt32(dataReader["id"]);
-                obj.songId = Convert.ToInt32(dataReader["songId"]);
-                obj.userId = Convert.ToInt32(dataReader["userId"]);
-                obj.userName = dataReader["name"].ToString();
-                obj.comment = dataReader["comment"].ToString();
-
-                comments.Add(obj);
-            }
-            return comments;
-        }
-        catch (Exception ex)
-        {
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                Console.WriteLine(comments);
                 con.Close();
             }
         }
@@ -1375,7 +1292,7 @@ public class DBservices
     //--------------------------------------------------------------------------------------------------
     // This method return random artist
     //--------------------------------------------------------------------------------------------------
-    public Artist getRandomArtist()
+    public Order getRandomArtist()
     {
 
         SqlConnection con;
@@ -1399,7 +1316,7 @@ public class DBservices
 
             if (dataReader.Read())
             {
-                Artist a = new Artist();
+                Order a = new Order();
                 a.id = Convert.ToInt32(dataReader["id"]);
                 a.name = dataReader["name"].ToString();
                 a.rate = Convert.ToInt32(dataReader["rate"]);
@@ -1429,7 +1346,7 @@ public class DBservices
     //--------------------------------------------------------------------------------------------------
     // This method return 3 random songs that are different from input value
     //--------------------------------------------------------------------------------------------------
-    public List<Artist> getDiffRandomArtists(String artistName)
+    public List<Order> getDiffRandomArtists(String artistName)
     {
 
         SqlConnection con;
@@ -1451,14 +1368,14 @@ public class DBservices
 
         cmd = CreateCommandWithStoredProcedure("SP_getDiffRandomArtists", con, paramDic);// create the command
 
-        List<Artist> artistsList = new List<Artist>();
+        List<Order> artistsList = new List<Order>();
 
         try
         {
             SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
             while (dataReader.Read())
             {
-                Artist a = new Artist();
+                Order a = new Order();
                 a.id = Convert.ToInt32(dataReader["Id"]);
                 a.name = dataReader["name"].ToString();
                 a.rate = Convert.ToInt32(dataReader["rate"]);
@@ -1487,7 +1404,7 @@ public class DBservices
     //--------------------------------------------------------------------------------------------------
     // This method return artist by id
     //--------------------------------------------------------------------------------------------------
-    public Artist getArtistById(int id)
+    public Order getArtistById(int id)
     {
 
         SqlConnection con;
@@ -1515,7 +1432,7 @@ public class DBservices
             SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
             if (dataReader.Read())
             {
-                Artist a = new Artist();
+                Order a = new Order();
                 a.id = Convert.ToInt32(dataReader["id"]);
                 a.name = dataReader["name"].ToString();
                 a.rate = Convert.ToInt32(dataReader["rate"]);
@@ -1545,7 +1462,7 @@ public class DBservices
     //--------------------------------------------------------------------------------------------------
     // This method return artist by Name
     //--------------------------------------------------------------------------------------------------
-    public List<Artist> getArtistByName(string artistName)
+    public List<Order> getArtistByName(string artistName)
     {
 
         SqlConnection con;
@@ -1567,13 +1484,13 @@ public class DBservices
 
         cmd = CreateCommandWithStoredProcedure("SP_getArtistByName", con, paramDic);// create the command
 
-        List<Artist> artistsList=new List<Artist>();
+        List<Order> artistsList=new List<Order>();
         try
         {
             SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
             while (dataReader.Read())
             {
-                Artist a = new Artist();
+                Order a = new Order();
                 a.id = Convert.ToInt32(dataReader["id"]);
                 a.name = dataReader["name"].ToString();
                 a.rate = Convert.ToInt32(dataReader["rate"]);
@@ -1603,7 +1520,7 @@ public class DBservices
     //--------------------------------------------------------------------------------------------------
     // This method Returns all Artists
     //--------------------------------------------------------------------------------------------------
-    public List<Artist> getAllArtists()
+    public List<Order> getAllArtists()
     {
 
         SqlConnection con;
@@ -1623,14 +1540,14 @@ public class DBservices
         cmd = CreateCommandWithStoredProcedure("SP_getAllArtists", con, null);// create the command
 
 
-        List<Artist> artistList = new List<Artist>();
+        List<Order> artistList = new List<Order>();
 
         try
         {
             SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
             while (dataReader.Read())
             {
-                Artist a = new Artist();
+                Order a = new Order();
                 a.id = Convert.ToInt32(dataReader["Id"]);
                 a.name = dataReader["name"].ToString();
                 a.rate = Convert.ToInt32(dataReader["rate"]);
@@ -1659,7 +1576,7 @@ public class DBservices
     //--------------------------------------------------------------------------------------------------
     // This method return songs by artist
     //--------------------------------------------------------------------------------------------------
-    public List<Song> getSongsByArtist(string artistName)
+    public List<Product> getSongsByArtist(string artistName)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -1680,14 +1597,14 @@ public class DBservices
         cmd = CreateCommandWithStoredProcedure("SP_getSongsByArtist", con, paramDic);// create the command
 
 
-        List<Song> songList = new List<Song>();
+        List<Product> songList = new List<Product>();
 
         try
         {
             SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
             while (dataReader.Read())
             {
-                Song s = new Song();
+                Product s = new Product();
                 s.id = Convert.ToInt32(dataReader["id"]);
                 s.name = dataReader["name"].ToString();
                 s.artistName = dataReader["artistName"].ToString();
@@ -1721,7 +1638,7 @@ public class DBservices
     //--------------------------------------------------------------------------------------------------
     // This method return song by different artist
     //--------------------------------------------------------------------------------------------------
-    public Song getSongByDiffArtist(string artistName)
+    public Product getSongByDiffArtist(string artistName)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -1746,7 +1663,7 @@ public class DBservices
             SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
             if (dataReader.Read())
             {
-                Song s = new Song();
+                Product s = new Product();
                 s.id = Convert.ToInt32(dataReader["id"]);
                 s.name = dataReader["name"].ToString();
                 s.artistName = dataReader["artistName"].ToString();

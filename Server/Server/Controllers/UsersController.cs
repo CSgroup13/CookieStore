@@ -22,7 +22,7 @@ namespace SongsServer.Controllers
         //get all favorite songs of user by user id
         // GET: api/<UsersController>/
         [HttpGet("{userId}/songs")]
-        public List<Song> getSongsByUser(int userId)
+        public List<Product> getSongsByUser(int userId)
         {
             return UserClass.getSongsByUser(userId);
         }
@@ -30,7 +30,7 @@ namespace SongsServer.Controllers
         //get all favorite artists of user by user id
         // GET: api/<UsersController>/userId/artists
         [HttpGet("{userId}/artists")]
-        public List<Artist> getArtistsByUser(int userId)
+        public List<Order> getArtistsByUser(int userId)
         {
             return UserClass.getArtistsByUser(userId);
         }
