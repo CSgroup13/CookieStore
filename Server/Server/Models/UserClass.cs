@@ -3,10 +3,14 @@
     public class UserClass
     {
         public int id { get; set; }
-        public string name { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
         public string email { get; set; }
         public string password { get; set; }
+        public string phone { get; set; }
+        public string address { get; set; }
         public DateTime regDate { get; set; }
+
 
         //return list of all users
         static public List<UserClass> getAllUsers()
@@ -15,18 +19,11 @@
             return dbs.getAllUsers();
         }
 
-        //return list of all user's favorite songs
-        public static List<Product> getSongsByUser(int userId)
+        //return list of all user's favorite products
+        public static List<Song> getProductsByUser(int userId)
         {
             DBservices dbs = new DBservices();
             return dbs.getSongsByUser(userId);
-        }
-
-        //return list of all user's favorite artists
-        public static List<Order> getArtistsByUser(int userId)
-        {
-            DBservices dbs = new DBservices();
-            return dbs.getArtistsByUser(userId);
         }
 
         //return User object after registration or null if it failed
@@ -56,40 +53,18 @@
             }
         }
 
-        //return True if score updated and False if no
-        public static UserClass updateUserScore(int id,int score)
-        {
-            DBservices dbs = new DBservices();
-            return dbs.updateUserScore(id, score);
-        }
-
-
-        //return True if song addedd to user favorite songs and False if no
-        public static bool addSongToFav(int userId, int songId)
+        //return True if product added to user favorite products and False if no
+        public static bool addProductToFav(int userId, int songId)
         {
             DBservices dbs = new DBservices();
             return dbs.addSongToFav(userId, songId);
         }
 
-        //return True if song removed from user favorite songs and False if no
-        public static bool deleteSongFromFav(int userId, int songId)
+        //return True if product removed from user favorite products and False if no
+        public static bool deleteProductFromFav(int userId, int prodId)
         {
             DBservices dbs = new DBservices();
-            return dbs.deleteSongFromFav(userId, songId);
-        }
-
-        //return Artist object that added to user favorite artists or null if it failed
-        public static Order addArtistToFav(int userId, int artistId)
-        {
-            DBservices dbs = new DBservices();
-            return dbs.addArtistToFav(userId, artistId);
-        }
-
-        //return Artist object that removed from user favorite artists or null if it failed
-        public static Order deleteArtistFromFav(int userId, int artistId)
-        {
-            DBservices dbs = new DBservices();
-            return dbs.deleteArtistFromFav(userId, artistId);
+            return dbs.deleteSongFromFav(userId, prodId);
         }
 
         //return User object after updated details
@@ -99,7 +74,7 @@
             return dbs.updateUserDetails(this);
         }
 
-        //return list of top 5 users by the total quiz score
+        //return list of top 5 users by the total order price
         public static List<UserClass> getTop5()
         {
             DBservices dbs = new DBservices();
