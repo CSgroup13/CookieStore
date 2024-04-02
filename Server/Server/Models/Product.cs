@@ -1,6 +1,4 @@
-﻿using System.Dynamic;
-
-namespace Server.Models
+﻿namespace Server.Models
 {
     public class Product
     {

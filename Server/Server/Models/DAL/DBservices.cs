@@ -1,7 +1,6 @@
 ﻿using System.Data.SqlClient;
 using System.Data;
 using Server.Models;
-using System.Dynamic;
 
 /// <summary>
 /// DBServices is a class created by me to provides some DataBase Services
@@ -231,12 +230,6 @@ public class DBservices
                 char[] ingredientDelimiter = { ',' }; // Assuming ingredients are separated by commas
                 string[] ingredientsArray = ingredientsString.Split(ingredientDelimiter, StringSplitOptions.RemoveEmptyEntries);
                 p.ingredients = new List<string>(ingredientsArray);
-
-                // Convert tags to a list of strings
-                string tagsString = dataReader["tags"].ToString();
-                char[] tagDelimiter = { ',' }; // Assuming tags are separated by commas
-                string[] tagsArray = tagsString.Split(tagDelimiter, StringSplitOptions.RemoveEmptyEntries);
-                p.tags = new List<string>(tagsArray);
 
                 productsList.Add(p);
             }
@@ -636,7 +629,6 @@ public class DBservices
     }
 
 
-
     //*****************************************************Product Methods*********************************************************************************
     //--------------------------------------------------------------------------------------------------
     // This method add new product to db
@@ -995,408 +987,409 @@ public class DBservices
         }
 
     }
-
-    //*****************************************************Artists Methods*********************************************************************************
-    //--------------------------------------------------------------------------------------------------
-    // This method return random artist
-    //--------------------------------------------------------------------------------------------------
-    public Order getRandomArtist()
-    {
-
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-            throw (ex);
-        }
-
-
-        cmd = CreateCommandWithStoredProcedure("SP_getRandomArtist", con, null);// create the command
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-            if (dataReader.Read())
-            {
-                Order a = new Order();
-                a.id = Convert.ToInt32(dataReader["id"]);
-                a.name = dataReader["name"].ToString();
-                a.rate = Convert.ToInt32(dataReader["rate"]);
-                a.image = dataReader["image"].ToString();
-
-                return a;
-            }
-            throw new Exception("couldn't get Random artist");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // This method return 3 random songs that are different from input value
-    //--------------------------------------------------------------------------------------------------
-    public List<Order> getDiffRandomArtists(String artistName)
-    {
-
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-
-        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-        paramDic.Add("@artistName", artistName);
-
-        cmd = CreateCommandWithStoredProcedure("SP_getDiffRandomArtists", con, paramDic);// create the command
-
-        List<Order> artistsList = new List<Order>();
-
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-            while (dataReader.Read())
-            {
-                Order a = new Order();
-                a.id = Convert.ToInt32(dataReader["Id"]);
-                a.name = dataReader["name"].ToString();
-                a.rate = Convert.ToInt32(dataReader["rate"]);
-                a.image = dataReader["image"].ToString();
-                artistsList.Add(a);
-            }
-            return artistsList;
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // This method return artist by id
-    //--------------------------------------------------------------------------------------------------
-    public Order getArtistById(int id)
-    {
-
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-
-        paramDic.Add("@id", id);
-
-
-        cmd = CreateCommandWithStoredProcedure("SP_getArtistById", con, paramDic);// create the command
-
-
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-            if (dataReader.Read())
-            {
-                Order a = new Order();
-                a.id = Convert.ToInt32(dataReader["id"]);
-                a.name = dataReader["name"].ToString();
-                a.rate = Convert.ToInt32(dataReader["rate"]);
-                a.image = dataReader["image"].ToString();
-
-                return a;
-            }
-            throw new Exception("could not find Artist");
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // This method return artist by Name
-    //--------------------------------------------------------------------------------------------------
-    public List<Order> getArtistByName(string artistName)
-    {
-
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-
-        paramDic.Add("@name", artistName);
-
-
-        cmd = CreateCommandWithStoredProcedure("SP_getArtistByName", con, paramDic);// create the command
-
-        List<Order> artistsList = new List<Order>();
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-            while (dataReader.Read())
-            {
-                Order a = new Order();
-                a.id = Convert.ToInt32(dataReader["id"]);
-                a.name = dataReader["name"].ToString();
-                a.rate = Convert.ToInt32(dataReader["rate"]);
-                a.image = dataReader["image"].ToString();
-                artistsList.Add(a);
-            }
-            return artistsList;
-            throw new Exception("could not find Artist");
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // This method Returns all Artists
-    //--------------------------------------------------------------------------------------------------
-    public List<Order> getAllArtists()
-    {
-
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-
-        cmd = CreateCommandWithStoredProcedure("SP_getAllArtists", con, null);// create the command
-
-
-        List<Order> artistList = new List<Order>();
-
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-            while (dataReader.Read())
-            {
-                Order a = new Order();
-                a.id = Convert.ToInt32(dataReader["Id"]);
-                a.name = dataReader["name"].ToString();
-                a.rate = Convert.ToInt32(dataReader["rate"]);
-                a.image = dataReader["image"].ToString();
-                artistList.Add(a);
-            }
-            return artistList;
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // This method return songs by artist
-    //--------------------------------------------------------------------------------------------------
-    public List<Product> getSongsByArtist(string artistName)
-    {
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-        paramDic.Add("@artistName", artistName);
-
-        cmd = CreateCommandWithStoredProcedure("SP_getSongsByArtist", con, paramDic);// create the command
-
-
-        List<Product> songList = new List<Product>();
-
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-            while (dataReader.Read())
-            {
-                Product s = new Product();
-                s.id = Convert.ToInt32(dataReader["id"]);
-                s.name = dataReader["name"].ToString();
-                s.artistName = dataReader["artistName"].ToString();
-                s.link = dataReader["link"].ToString();
-                s.lyrics = dataReader["lyrics"].ToString();
-                s.rate = Convert.ToInt32(dataReader["rate"]);
-                s.image = dataReader["image"].ToString();
-                songList.Add(s);
-            }
-            if (songList.Count > 0)
-            {
-                return songList;
-            }
-            throw new Exception("No Songs from this Artist");
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-    }
-    //--------------------------------------------------------------------------------------------------
-    // This method return song by different artist
-    //--------------------------------------------------------------------------------------------------
-    public Product getSongByDiffArtist(string artistName)
-    {
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-        paramDic.Add("@artistName", artistName);
-
-        cmd = CreateCommandWithStoredProcedure("SP_getDiffArtistSong", con, paramDic);// create the command
-
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-            if (dataReader.Read())
-            {
-                Product s = new Product();
-                s.id = Convert.ToInt32(dataReader["id"]);
-                s.name = dataReader["name"].ToString();
-                s.artistName = dataReader["artistName"].ToString();
-                s.link = dataReader["link"].ToString();
-                s.lyrics = dataReader["lyrics"].ToString();
-                s.rate = Convert.ToInt32(dataReader["rate"]);
-                s.image = dataReader["image"].ToString();
-                return s;
-            }
-
-            throw new Exception("No Song from this Different Artist");
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-    }
 }
+
+//    //*****************************************************Artists Methods*********************************************************************************
+//    //--------------------------------------------------------------------------------------------------
+//    // This method return random artist
+//    //--------------------------------------------------------------------------------------------------
+//    public Order getRandomArtist()
+//    {
+
+//        SqlConnection con;
+//        SqlCommand cmd;
+
+//        try
+//        {
+//            con = connect("myProjDB"); // create the connection
+//        }
+//        catch (Exception ex)
+//        {
+//            Console.WriteLine(ex.Message);
+//            throw (ex);
+//        }
+
+
+//        cmd = CreateCommandWithStoredProcedure("SP_getRandomArtist", con, null);// create the command
+//        try
+//        {
+//            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+//            if (dataReader.Read())
+//            {
+//                Order a = new Order();
+//                a.id = Convert.ToInt32(dataReader["id"]);
+//                a.name = dataReader["name"].ToString();
+//                a.rate = Convert.ToInt32(dataReader["rate"]);
+//                a.image = dataReader["image"].ToString();
+
+//                return a;
+//            }
+//            throw new Exception("couldn't get Random artist");
+//        }
+//        catch (Exception ex)
+//        {
+//            Console.WriteLine(ex.Message);
+//            throw (ex);
+//        }
+
+//        finally
+//        {
+//            if (con != null)
+//            {
+//                // close the db connection
+//                con.Close();
+//            }
+//        }
+
+//    }
+
+//    //--------------------------------------------------------------------------------------------------
+//    // This method return 3 random songs that are different from input value
+//    //--------------------------------------------------------------------------------------------------
+//    public List<Order> getDiffRandomArtists(String artistName)
+//    {
+
+//        SqlConnection con;
+//        SqlCommand cmd;
+
+//        try
+//        {
+//            con = connect("myProjDB"); // create the connection
+//        }
+//        catch (Exception ex)
+//        {
+//            // write to log
+//            throw (ex);
+//        }
+
+
+//        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+//        paramDic.Add("@artistName", artistName);
+
+//        cmd = CreateCommandWithStoredProcedure("SP_getDiffRandomArtists", con, paramDic);// create the command
+
+//        List<Order> artistsList = new List<Order>();
+
+//        try
+//        {
+//            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+//            while (dataReader.Read())
+//            {
+//                Order a = new Order();
+//                a.id = Convert.ToInt32(dataReader["Id"]);
+//                a.name = dataReader["name"].ToString();
+//                a.rate = Convert.ToInt32(dataReader["rate"]);
+//                a.image = dataReader["image"].ToString();
+//                artistsList.Add(a);
+//            }
+//            return artistsList;
+//        }
+//        catch (Exception ex)
+//        {
+//            // write to log
+//            throw (ex);
+//        }
+
+//        finally
+//        {
+//            if (con != null)
+//            {
+//                // close the db connection
+//                con.Close();
+//            }
+//        }
+
+//    }
+
+//    //--------------------------------------------------------------------------------------------------
+//    // This method return artist by id
+//    //--------------------------------------------------------------------------------------------------
+//    public Order getArtistById(int id)
+//    {
+
+//        SqlConnection con;
+//        SqlCommand cmd;
+
+//        try
+//        {
+//            con = connect("myProjDB"); // create the connection
+//        }
+//        catch (Exception ex)
+//        {
+//            // write to log
+//            throw (ex);
+//        }
+//        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+
+//        paramDic.Add("@id", id);
+
+
+//        cmd = CreateCommandWithStoredProcedure("SP_getArtistById", con, paramDic);// create the command
+
+
+//        try
+//        {
+//            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+//            if (dataReader.Read())
+//            {
+//                Order a = new Order();
+//                a.id = Convert.ToInt32(dataReader["id"]);
+//                a.name = dataReader["name"].ToString();
+//                a.rate = Convert.ToInt32(dataReader["rate"]);
+//                a.image = dataReader["image"].ToString();
+
+//                return a;
+//            }
+//            throw new Exception("could not find Artist");
+//        }
+//        catch (Exception ex)
+//        {
+//            // write to log
+//            throw (ex);
+//        }
+
+//        finally
+//        {
+//            if (con != null)
+//            {
+//                // close the db connection
+//                con.Close();
+//            }
+//        }
+
+//    }
+
+//    //--------------------------------------------------------------------------------------------------
+//    // This method return artist by Name
+//    //--------------------------------------------------------------------------------------------------
+//    public List<Order> getArtistByName(string artistName)
+//    {
+
+//        SqlConnection con;
+//        SqlCommand cmd;
+
+//        try
+//        {
+//            con = connect("myProjDB"); // create the connection
+//        }
+//        catch (Exception ex)
+//        {
+//            // write to log
+//            throw (ex);
+//        }
+//        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+
+//        paramDic.Add("@name", artistName);
+
+
+//        cmd = CreateCommandWithStoredProcedure("SP_getArtistByName", con, paramDic);// create the command
+
+//        List<Order> artistsList = new List<Order>();
+//        try
+//        {
+//            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+//            while (dataReader.Read())
+//            {
+//                Order a = new Order();
+//                a.id = Convert.ToInt32(dataReader["id"]);
+//                a.name = dataReader["name"].ToString();
+//                a.rate = Convert.ToInt32(dataReader["rate"]);
+//                a.image = dataReader["image"].ToString();
+//                artistsList.Add(a);
+//            }
+//            return artistsList;
+//            throw new Exception("could not find Artist");
+//        }
+//        catch (Exception ex)
+//        {
+//            // write to log
+//            throw (ex);
+//        }
+
+//        finally
+//        {
+//            if (con != null)
+//            {
+//                // close the db connection
+//                con.Close();
+//            }
+//        }
+
+//    }
+
+//    //--------------------------------------------------------------------------------------------------
+//    // This method Returns all Artists
+//    //--------------------------------------------------------------------------------------------------
+//    public List<Order> getAllArtists()
+//    {
+
+//        SqlConnection con;
+//        SqlCommand cmd;
+
+//        try
+//        {
+//            con = connect("myProjDB"); // create the connection
+//        }
+//        catch (Exception ex)
+//        {
+//            // write to log
+//            throw (ex);
+//        }
+
+
+//        cmd = CreateCommandWithStoredProcedure("SP_getAllArtists", con, null);// create the command
+
+
+//        List<Order> artistList = new List<Order>();
+
+//        try
+//        {
+//            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+//            while (dataReader.Read())
+//            {
+//                Order a = new Order();
+//                a.id = Convert.ToInt32(dataReader["Id"]);
+//                a.name = dataReader["name"].ToString();
+//                a.rate = Convert.ToInt32(dataReader["rate"]);
+//                a.image = dataReader["image"].ToString();
+//                artistList.Add(a);
+//            }
+//            return artistList;
+//        }
+//        catch (Exception ex)
+//        {
+//            // write to log
+//            throw (ex);
+//        }
+
+//        finally
+//        {
+//            if (con != null)
+//            {
+//                // close the db connection
+//                con.Close();
+//            }
+//        }
+
+//    }
+
+//    //--------------------------------------------------------------------------------------------------
+//    // This method return songs by artist
+//    //--------------------------------------------------------------------------------------------------
+//    public List<Product> getSongsByArtist(string artistName)
+//    {
+//        SqlConnection con;
+//        SqlCommand cmd;
+
+//        try
+//        {
+//            con = connect("myProjDB"); // create the connection
+//        }
+//        catch (Exception ex)
+//        {
+//            // write to log
+//            throw (ex);
+//        }
+
+//        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+//        paramDic.Add("@artistName", artistName);
+
+//        cmd = CreateCommandWithStoredProcedure("SP_getSongsByArtist", con, paramDic);// create the command
+
+
+//        List<Product> songList = new List<Product>();
+
+//        try
+//        {
+//            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+//            while (dataReader.Read())
+//            {
+//                Product s = new Product();
+//                s.id = Convert.ToInt32(dataReader["id"]);
+//                s.name = dataReader["name"].ToString();
+//                s.artistName = dataReader["artistName"].ToString();
+//                s.link = dataReader["link"].ToString();
+//                s.lyrics = dataReader["lyrics"].ToString();
+//                s.rate = Convert.ToInt32(dataReader["rate"]);
+//                s.image = dataReader["image"].ToString();
+//                songList.Add(s);
+//            }
+//            if (songList.Count > 0)
+//            {
+//                return songList;
+//            }
+//            throw new Exception("No Songs from this Artist");
+//        }
+//        catch (Exception ex)
+//        {
+//            // write to log
+//            throw (ex);
+//        }
+
+//        finally
+//        {
+//            if (con != null)
+//            {
+//                // close the db connection
+//                con.Close();
+//            }
+//        }
+//    }
+//    //--------------------------------------------------------------------------------------------------
+//    // This method return song by different artist
+//    //--------------------------------------------------------------------------------------------------
+//    public Product getSongByDiffArtist(string artistName)
+//    {
+//        SqlConnection con;
+//        SqlCommand cmd;
+
+//        try
+//        {
+//            con = connect("myProjDB"); // create the connection
+//        }
+//        catch (Exception ex)
+//        {
+//            // write to log
+//            throw (ex);
+//        }
+
+//        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+//        paramDic.Add("@artistName", artistName);
+
+//        cmd = CreateCommandWithStoredProcedure("SP_getDiffArtistSong", con, paramDic);// create the command
+
+//        try
+//        {
+//            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+//            if (dataReader.Read())
+//            {
+//                Product s = new Product();
+//                s.id = Convert.ToInt32(dataReader["id"]);
+//                s.name = dataReader["name"].ToString();
+//                s.artistName = dataReader["artistName"].ToString();
+//                s.link = dataReader["link"].ToString();
+//                s.lyrics = dataReader["lyrics"].ToString();
+//                s.rate = Convert.ToInt32(dataReader["rate"]);
+//                s.image = dataReader["image"].ToString();
+//                return s;
+//            }
+
+//            throw new Exception("No Song from this Different Artist");
+//        }
+//        catch (Exception ex)
+//        {
+//            // write to log
+//            throw (ex);
+//        }
+
+//        finally
+//        {
+//            if (con != null)
+//            {
+//                // close the db connection
+//                con.Close();
+//            }
+//        }
+//    }
+//}
