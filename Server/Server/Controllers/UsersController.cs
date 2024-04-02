@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SongsServer.Models;
+using Server.Models;
 using System.Diagnostics.Eventing.Reader;
 
 
@@ -22,7 +22,7 @@ namespace SongsServer.Controllers
         //get all favorite products of user by user id
         // GET: api/<UsersController>/
         [HttpGet("{userId}/products")]
-        public List<Song> getProductsByUser(int userId)
+        public List<Product> getProductsByUser(int userId)
         {
             return UserClass.getProductsByUser(userId);
         }
