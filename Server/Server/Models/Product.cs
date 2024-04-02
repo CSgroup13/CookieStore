@@ -26,6 +26,13 @@
             return dbs.getAllProducts();
         }
 
+        //return list of 8 best sellers products
+        public static List<Product> getBestSellers()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.getBestSellers();
+        }
+
         //return list of products by category in DB
         public static List<Product> getProductsByCategory(int categoryId)
         {

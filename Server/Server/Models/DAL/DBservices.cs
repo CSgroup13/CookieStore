@@ -746,6 +746,71 @@ public class DBservices
     }
 
     //--------------------------------------------------------------------------------------------------
+    // This method Reads 8 best sellers products
+    //--------------------------------------------------------------------------------------------------
+    public List<Product> getBestSellers()
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+
+        cmd = CreateCommandWithStoredProcedure("SP_getBestSellers", con, null);// create the command
+
+
+        List<Product> products = new List<Product>();
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dataReader.Read())
+            {
+                Product p = new Product();
+                p.id = Convert.ToInt32(dataReader["id"]);
+                p.name = dataReader["name"].ToString();
+                p.price = Convert.ToDouble(dataReader["price"]);
+                p.description = dataReader["description"].ToString();
+                p.rate = Convert.ToInt32(dataReader["rate"]);
+                p.image = dataReader["image"].ToString();
+
+                // Convert ingredients to a list of strings
+                string ingredientsString = dataReader["ingredients"].ToString();
+                char[] ingredientDelimiter = { ',' }; // Assuming ingredients are separated by commas
+                string[] ingredientsArray = ingredientsString.Split(ingredientDelimiter, StringSplitOptions.RemoveEmptyEntries);
+                p.ingredients = new List<string>(ingredientsArray);
+
+                products.Add(p);
+            }
+            return products;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    //--------------------------------------------------------------------------------------------------
     // This method Reads all products
     //--------------------------------------------------------------------------------------------------
     public List<Product> getAllProducts()
@@ -1123,7 +1188,7 @@ public class DBservices
         {
             int numEffected = cmd.ExecuteNonQuery(); // execute the command
             return numEffected > 0;
-          }
+        }
         catch (Exception ex)
         {
             // write to log
@@ -1348,409 +1413,287 @@ public class DBservices
 
     }
 
+    //*****************************************************Order Methods*********************************************************************************
+    //--------------------------------------------------------------------------------------------------
+    // This method add new order to db
+    //--------------------------------------------------------------------------------------------------
+    public Order addOrder(Order o)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+
+        // Add parameters for the stored procedure if needed
+        paramDic.Add("@userId", o.userId);
+        paramDic.Add("@totalPrice", o.totalPrice);
+        paramDic.Add("@date", o.date);
+        paramDic.Add("@shippingAddress", o.shippingAddress);
+        paramDic.Add("@notes", o.notes);
+        paramDic.Add("@status", (int)o.status);
+        paramDic.Add("@shippingMethod", (int)o.shippingMethod);
+        paramDic.Add("@paymentMethod", (int)o.paymentMethod);
+
+        cmd = CreateCommandWithStoredProcedure("SP_addOrder", con, paramDic);// create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            if (numEffected == 1)
+            {
+                return o;
+            }
+            return null;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    // This method Reads all orders
+    //--------------------------------------------------------------------------------------------------
+    public List<Order> getAllOrders()
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+
+        cmd = CreateCommandWithStoredProcedure("SP_getAllOrders", con, null);// create the command
+
+
+        List<Order> orders = new List<Order>();
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dataReader.Read())
+            {
+                Order o = new Order();
+                o.id = Convert.ToInt32(dataReader["id"]);
+                o.userId = Convert.ToInt32(dataReader["userId"]);
+                o.totalPrice = Convert.ToDouble(dataReader["totalPrice"]);
+                o.date = Convert.ToDateTime(dataReader["date"]);
+                o.shippingAddress = dataReader["shippingAddress"].ToString();
+                o.notes = dataReader["notes"].ToString();
+                o.status = (Order.Status)dataReader["status"];
+                o.shippingMethod = (Order.ShippingMethod)dataReader["shippingMethod"];
+                o.paymentMethod = (Order.PaymentMethod)dataReader["paymentMethod"];
+
+                orders.Add(o);
+            }
+            return orders;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+
+    //--------------------------------------------------------------------------------------------------
+    // This method return order by id
+    //--------------------------------------------------------------------------------------------------
+    public Order getOrderById(int id)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+        paramDic.Add("@id", id);
+
+        cmd = CreateCommandWithStoredProcedure("SP_getOrderById", con, paramDic);// create the command
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            if (dataReader.Read())
+            {
+                Order o = new Order();
+                o.id = Convert.ToInt32(dataReader["id"]);
+                o.userId = Convert.ToInt32(dataReader["userId"]);
+                o.totalPrice = Convert.ToDouble(dataReader["totalPrice"]);
+                o.date = Convert.ToDateTime(dataReader["date"]);
+                o.shippingAddress = dataReader["shippingAddress"].ToString();
+                o.notes = dataReader["notes"].ToString();
+                o.status = (Order.Status)dataReader["status"];
+                o.shippingMethod = (Order.ShippingMethod)dataReader["shippingMethod"];
+                o.paymentMethod = (Order.PaymentMethod)dataReader["paymentMethod"];
+
+                return o;
+            }
+            throw new Exception("could not find Order");
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+
+    //--------------------------------------------------------------------------------------------------
+    // This method update order in db
+    //--------------------------------------------------------------------------------------------------
+    public Order updateOrder(Order o)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+
+        paramDic.Add("@userId", o.userId);
+        paramDic.Add("@totalPrice", o.totalPrice);
+        paramDic.Add("@date", o.date);
+        paramDic.Add("@shippingAddress", o.shippingAddress);
+        paramDic.Add("@notes", o.notes);
+        paramDic.Add("@status", (int)o.status);
+        paramDic.Add("@shippingMethod", (int)o.shippingMethod);
+        paramDic.Add("@paymentMethod", (int)o.paymentMethod);
+
+
+        cmd = CreateCommandWithStoredProcedure("SP_updateOrder", con, paramDic);// create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            if (numEffected == 1)
+            {
+                return o;
+            }
+            return null;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    // This method delete order from orders table
+    //--------------------------------------------------------------------------------------------------
+    public bool deleteOrder(int id)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+
+        paramDic.Add("@id", id);
+        cmd = CreateCommandWithStoredProcedure("SP_deleteOrder", con, paramDic);// create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected == 1;
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+
+    }
 }
-
-//    //*****************************************************Artists Methods*********************************************************************************
-//    //--------------------------------------------------------------------------------------------------
-//    // This method return random artist
-//    //--------------------------------------------------------------------------------------------------
-//    public Order getRandomArtist()
-//    {
-
-//        SqlConnection con;
-//        SqlCommand cmd;
-
-//        try
-//        {
-//            con = connect("myProjDB"); // create the connection
-//        }
-//        catch (Exception ex)
-//        {
-//            Console.WriteLine(ex.Message);
-//            throw (ex);
-//        }
-
-
-//        cmd = CreateCommandWithStoredProcedure("SP_getRandomArtist", con, null);// create the command
-//        try
-//        {
-//            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-//            if (dataReader.Read())
-//            {
-//                Order a = new Order();
-//                a.id = Convert.ToInt32(dataReader["id"]);
-//                a.name = dataReader["name"].ToString();
-//                a.rate = Convert.ToInt32(dataReader["rate"]);
-//                a.image = dataReader["image"].ToString();
-
-//                return a;
-//            }
-//            throw new Exception("couldn't get Random artist");
-//        }
-//        catch (Exception ex)
-//        {
-//            Console.WriteLine(ex.Message);
-//            throw (ex);
-//        }
-
-//        finally
-//        {
-//            if (con != null)
-//            {
-//                // close the db connection
-//                con.Close();
-//            }
-//        }
-
-//    }
-
-//    //--------------------------------------------------------------------------------------------------
-//    // This method return 3 random songs that are different from input value
-//    //--------------------------------------------------------------------------------------------------
-//    public List<Order> getDiffRandomArtists(String artistName)
-//    {
-
-//        SqlConnection con;
-//        SqlCommand cmd;
-
-//        try
-//        {
-//            con = connect("myProjDB"); // create the connection
-//        }
-//        catch (Exception ex)
-//        {
-//            // write to log
-//            throw (ex);
-//        }
-
-
-//        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-//        paramDic.Add("@artistName", artistName);
-
-//        cmd = CreateCommandWithStoredProcedure("SP_getDiffRandomArtists", con, paramDic);// create the command
-
-//        List<Order> artistsList = new List<Order>();
-
-//        try
-//        {
-//            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-//            while (dataReader.Read())
-//            {
-//                Order a = new Order();
-//                a.id = Convert.ToInt32(dataReader["Id"]);
-//                a.name = dataReader["name"].ToString();
-//                a.rate = Convert.ToInt32(dataReader["rate"]);
-//                a.image = dataReader["image"].ToString();
-//                artistsList.Add(a);
-//            }
-//            return artistsList;
-//        }
-//        catch (Exception ex)
-//        {
-//            // write to log
-//            throw (ex);
-//        }
-
-//        finally
-//        {
-//            if (con != null)
-//            {
-//                // close the db connection
-//                con.Close();
-//            }
-//        }
-
-//    }
-
-//    //--------------------------------------------------------------------------------------------------
-//    // This method return artist by id
-//    //--------------------------------------------------------------------------------------------------
-//    public Order getArtistById(int id)
-//    {
-
-//        SqlConnection con;
-//        SqlCommand cmd;
-
-//        try
-//        {
-//            con = connect("myProjDB"); // create the connection
-//        }
-//        catch (Exception ex)
-//        {
-//            // write to log
-//            throw (ex);
-//        }
-//        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-
-//        paramDic.Add("@id", id);
-
-
-//        cmd = CreateCommandWithStoredProcedure("SP_getArtistById", con, paramDic);// create the command
-
-
-//        try
-//        {
-//            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-//            if (dataReader.Read())
-//            {
-//                Order a = new Order();
-//                a.id = Convert.ToInt32(dataReader["id"]);
-//                a.name = dataReader["name"].ToString();
-//                a.rate = Convert.ToInt32(dataReader["rate"]);
-//                a.image = dataReader["image"].ToString();
-
-//                return a;
-//            }
-//            throw new Exception("could not find Artist");
-//        }
-//        catch (Exception ex)
-//        {
-//            // write to log
-//            throw (ex);
-//        }
-
-//        finally
-//        {
-//            if (con != null)
-//            {
-//                // close the db connection
-//                con.Close();
-//            }
-//        }
-
-//    }
-
-//    //--------------------------------------------------------------------------------------------------
-//    // This method return artist by Name
-//    //--------------------------------------------------------------------------------------------------
-//    public List<Order> getArtistByName(string artistName)
-//    {
-
-//        SqlConnection con;
-//        SqlCommand cmd;
-
-//        try
-//        {
-//            con = connect("myProjDB"); // create the connection
-//        }
-//        catch (Exception ex)
-//        {
-//            // write to log
-//            throw (ex);
-//        }
-//        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-
-//        paramDic.Add("@name", artistName);
-
-
-//        cmd = CreateCommandWithStoredProcedure("SP_getArtistByName", con, paramDic);// create the command
-
-//        List<Order> artistsList = new List<Order>();
-//        try
-//        {
-//            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-//            while (dataReader.Read())
-//            {
-//                Order a = new Order();
-//                a.id = Convert.ToInt32(dataReader["id"]);
-//                a.name = dataReader["name"].ToString();
-//                a.rate = Convert.ToInt32(dataReader["rate"]);
-//                a.image = dataReader["image"].ToString();
-//                artistsList.Add(a);
-//            }
-//            return artistsList;
-//            throw new Exception("could not find Artist");
-//        }
-//        catch (Exception ex)
-//        {
-//            // write to log
-//            throw (ex);
-//        }
-
-//        finally
-//        {
-//            if (con != null)
-//            {
-//                // close the db connection
-//                con.Close();
-//            }
-//        }
-
-//    }
-
-//    //--------------------------------------------------------------------------------------------------
-//    // This method Returns all Artists
-//    //--------------------------------------------------------------------------------------------------
-//    public List<Order> getAllArtists()
-//    {
-
-//        SqlConnection con;
-//        SqlCommand cmd;
-
-//        try
-//        {
-//            con = connect("myProjDB"); // create the connection
-//        }
-//        catch (Exception ex)
-//        {
-//            // write to log
-//            throw (ex);
-//        }
-
-
-//        cmd = CreateCommandWithStoredProcedure("SP_getAllArtists", con, null);// create the command
-
-
-//        List<Order> artistList = new List<Order>();
-
-//        try
-//        {
-//            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-//            while (dataReader.Read())
-//            {
-//                Order a = new Order();
-//                a.id = Convert.ToInt32(dataReader["Id"]);
-//                a.name = dataReader["name"].ToString();
-//                a.rate = Convert.ToInt32(dataReader["rate"]);
-//                a.image = dataReader["image"].ToString();
-//                artistList.Add(a);
-//            }
-//            return artistList;
-//        }
-//        catch (Exception ex)
-//        {
-//            // write to log
-//            throw (ex);
-//        }
-
-//        finally
-//        {
-//            if (con != null)
-//            {
-//                // close the db connection
-//                con.Close();
-//            }
-//        }
-
-//    }
-
-//    //--------------------------------------------------------------------------------------------------
-//    // This method return songs by artist
-//    //--------------------------------------------------------------------------------------------------
-//    public List<Product> getSongsByArtist(string artistName)
-//    {
-//        SqlConnection con;
-//        SqlCommand cmd;
-
-//        try
-//        {
-//            con = connect("myProjDB"); // create the connection
-//        }
-//        catch (Exception ex)
-//        {
-//            // write to log
-//            throw (ex);
-//        }
-
-//        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-//        paramDic.Add("@artistName", artistName);
-
-//        cmd = CreateCommandWithStoredProcedure("SP_getSongsByArtist", con, paramDic);// create the command
-
-
-//        List<Product> songList = new List<Product>();
-
-//        try
-//        {
-//            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-//            while (dataReader.Read())
-//            {
-//                Product s = new Product();
-//                s.id = Convert.ToInt32(dataReader["id"]);
-//                s.name = dataReader["name"].ToString();
-//                s.artistName = dataReader["artistName"].ToString();
-//                s.link = dataReader["link"].ToString();
-//                s.lyrics = dataReader["lyrics"].ToString();
-//                s.rate = Convert.ToInt32(dataReader["rate"]);
-//                s.image = dataReader["image"].ToString();
-//                songList.Add(s);
-//            }
-//            if (songList.Count > 0)
-//            {
-//                return songList;
-//            }
-//            throw new Exception("No Songs from this Artist");
-//        }
-//        catch (Exception ex)
-//        {
-//            // write to log
-//            throw (ex);
-//        }
-
-//        finally
-//        {
-//            if (con != null)
-//            {
-//                // close the db connection
-//                con.Close();
-//            }
-//        }
-//    }
-//    //--------------------------------------------------------------------------------------------------
-//    // This method return song by different artist
-//    //--------------------------------------------------------------------------------------------------
-//    public Product getSongByDiffArtist(string artistName)
-//    {
-//        SqlConnection con;
-//        SqlCommand cmd;
-
-//        try
-//        {
-//            con = connect("myProjDB"); // create the connection
-//        }
-//        catch (Exception ex)
-//        {
-//            // write to log
-//            throw (ex);
-//        }
-
-//        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-//        paramDic.Add("@artistName", artistName);
-
-//        cmd = CreateCommandWithStoredProcedure("SP_getDiffArtistSong", con, paramDic);// create the command
-
-//        try
-//        {
-//            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-//            if (dataReader.Read())
-//            {
-//                Product s = new Product();
-//                s.id = Convert.ToInt32(dataReader["id"]);
-//                s.name = dataReader["name"].ToString();
-//                s.artistName = dataReader["artistName"].ToString();
-//                s.link = dataReader["link"].ToString();
-//                s.lyrics = dataReader["lyrics"].ToString();
-//                s.rate = Convert.ToInt32(dataReader["rate"]);
-//                s.image = dataReader["image"].ToString();
-//                return s;
-//            }
-
-//            throw new Exception("No Song from this Different Artist");
-//        }
-//        catch (Exception ex)
-//        {
-//            // write to log
-//            throw (ex);
-//        }
-
-//        finally
-//        {
-//            if (con != null)
-//            {
-//                // close the db connection
-//                con.Close();
-//            }
-//        }
-//    }
-//}

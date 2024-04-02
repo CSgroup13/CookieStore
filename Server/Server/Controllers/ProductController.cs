@@ -36,6 +36,18 @@ namespace SongsServer.Controllers
             catch (Exception ex) { return BadRequest(ex.Message); }
         }
 
+        //get 8 best sellers products
+        // GET: api/<ProductController>
+        [HttpGet]
+        public IActionResult getBestSellers()
+        {
+            try
+            {
+                return Ok(Product.getBestSellers());
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
+        }
+
         //get products by category
         // GET: api/<ProductController>/category
         [HttpGet("category/{category}")]
