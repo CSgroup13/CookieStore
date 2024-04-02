@@ -193,9 +193,9 @@ public class DBservices
 
     }
     //--------------------------------------------------------------------------------------------------
-    // This method reads all songs of specific user favorite songs
+    // This method reads all products of specific user favorite products
     //--------------------------------------------------------------------------------------------------
-    public List<Song> getSongsByUser(int userId)
+    public List<Product> getProductsByUser(int userId)
     {
 
         SqlConnection con;

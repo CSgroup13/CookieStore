@@ -19,29 +19,15 @@ namespace SongsServer.Controllers
             return UserClass.getAllUsers();
         }
 
-        //get all favorite songs of user by user id
+        //get all favorite products of user by user id
         // GET: api/<UsersController>/
-        [HttpGet("{userId}/songs")]
-        public List<Song> getSongsByUser(int userId)
+        [HttpGet("{userId}/products")]
+        public List<Song> getProductsByUser(int userId)
         {
-            return UserClass.getSongsByUser(userId);
+            return UserClass.getProductsByUser(userId);
         }
 
-        //get all favorite artists of user by user id
-        // GET: api/<UsersController>/userId/artists
-        [HttpGet("{userId}/artists")]
-        public List<Artist> getArtistsByUser(int userId)
-        {
-            return UserClass.getArtistsByUser(userId);
-        }
 
-        //get top 5 of users by users total score in the quiz
-        // GET: api/<UsersController>/leaders
-        [HttpGet("leaders")]
-        public List<UserClass> getTop5()
-        {
-            return UserClass.getTop5();
-        }
 
         //post User object to DB while registration
         // POST api/<UsersController>/register
@@ -73,43 +59,24 @@ namespace SongsServer.Controllers
             }
         }
 
-        //update user score in DB
-        [HttpPost("{userId}/Score/{userScore}")]
-        public IActionResult updateUserScore(int userId, int userScore)
-        {
-            try
-            {
-                return Ok(UserClass.updateUserScore(userId, userScore));
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        //post for adding song to favorites of user
+        //post for adding product to favorites of user
         // POST api/<UsersController>
-        [HttpPost("{userId}/{songId}")]
-        public IActionResult addSongToFav(int userId, int songId)
+        [HttpPost("{userId}/{prodId}")]
+        public IActionResult addProductToFav(int userId, int prodId)
         {
-            if (UserClass.addSongToFav(userId, songId))
+            if (UserClass.addProductToFav(userId, prodId))
                 return Ok(true);
-            return BadRequest("Song is already in favorites");
+            return BadRequest("Product is already in favorites");
         }
 
-        //post for adding artist to favorites of user
-        // POST api/<UsersController>
-        [HttpPost("{userId}/addArtistToFav/{artistId}")]
-        public IActionResult addArtistToFav(int userId, int artistId)
+        //delete product from user's favorite products
+        // DELETE api/<UsersController>/5
+        [HttpDelete("{userId}/{prodId}")]
+        public IActionResult deleteProductFromFav(int userId, int prodId)
         {
-            try
-            {
-                return Ok(UserClass.addArtistToFav(userId, artistId));
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+            if (UserClass.deleteProductFromFav(userId, prodId))
+                return Ok(true);
+            return BadRequest("Product is not in favorites");
         }
 
         //update user details (by admin)
@@ -127,29 +94,12 @@ namespace SongsServer.Controllers
             }
         }
 
-        //delete song from user's favorite songs
-        // DELETE api/<UsersController>/5
-        [HttpDelete("{userId}/{songId}")]
-        public IActionResult deleteSongFromFav(int userId, int songId)
+        //get top 5 of users by users total order price
+        // GET: api/<UsersController>/leaders
+        [HttpGet("leaders")]
+        public List<UserClass> getTop5()
         {
-            if (UserClass.deleteSongFromFav(userId, songId))
-                return Ok(true);
-            return BadRequest("Song is not in favorites");
-        }
-
-        //delete artist from user's favorite artists
-        // DELETE api/<UsersController>
-        [HttpDelete("{userId}/removeArtistFromFav/{artistId}")]
-        public IActionResult deleteArtistFromFav(int userId, int artistId)
-        {
-            try
-            {
-                return Ok(UserClass.deleteArtistFromFav(userId, artistId));
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+            return UserClass.getTop5();
         }
 
         //delete user(by admin)
