@@ -87,5 +87,11 @@
             DBservices dbs = new DBservices();
             return dbs.deleteUser(userId);
         }
+
+        public static UserClass getUserDetails(int userId)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.getUserDetails(userId);
+        }
     }
 }

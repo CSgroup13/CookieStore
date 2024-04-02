@@ -17,6 +17,20 @@ namespace Server.Controllers
             return UserClass.getAllUsers();
         }
 
+        //get user details
+        // GET: api/<UsersController>/
+        [HttpGet("{userId}/userDetails")]
+        public IActionResult getUserDetails (int userId)
+        {
+            try
+            {
+                return Ok(UserClass.getUserDetails(userId));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         //get all favorite products of user by user id
         // GET: api/<UsersController>/
         [HttpGet("{userId}/products")]

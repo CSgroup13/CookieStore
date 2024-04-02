@@ -131,6 +131,65 @@ public class DBservices
         }
 
     }
+
+    //--------------------------------------------------------------------------------------------------
+    // This method returns user details by his userId
+    //--------------------------------------------------------------------------------------------------
+    public UserClass getUserDetails(int userId)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            throw (ex);
+        }
+
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+        paramDic.Add("@userId", userId);
+
+        cmd = CreateCommandWithStoredProcedure("SP_getUserDetails", con, paramDic);
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            if (dataReader.Read())
+            {
+                UserClass u = new UserClass();
+                u.id = Convert.ToInt32(dataReader["id"]);
+                u.firstName = dataReader["firstName"].ToString();
+                u.lastName = dataReader["lastName"].ToString();
+                u.email = dataReader["email"].ToString();
+                u.password = dataReader["password"].ToString();
+                u.phone = dataReader["phone"].ToString();
+                u.address = dataReader["address"].ToString();
+                u.regDate = Convert.ToDateTime(dataReader["regDate"]);
+                return u;
+            }
+            throw new Exception("User with this id does not exist");
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
     //--------------------------------------------------------------------------------------------------
     // This method return top 5 users by total order price
     //--------------------------------------------------------------------------------------------------
