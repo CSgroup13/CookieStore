@@ -39,11 +39,11 @@ namespace SongsServer.Controllers
         //get products by category
         // GET: api/<ProductController>/category
         [HttpGet("category/{category}")]
-        public IActionResult getProductsByCategory(String category)
+        public IActionResult getProductsByCategory(int categoryId)
         {
             try
             {
-                return Ok(Product.getProductsByCategory(category));
+                return Ok(Product.getProductsByCategory(categoryId));
             }
             catch (Exception ex)
             {
@@ -81,7 +81,7 @@ namespace SongsServer.Controllers
             }
         }
 
-        //delete comment of song by songId and commentId
+        //delete product
         // DELETE api/<SongsController>
         [HttpDelete("deleteProduct/{id}")]
         public IActionResult deleteProduct(int id)

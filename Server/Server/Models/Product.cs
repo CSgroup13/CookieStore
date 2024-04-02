@@ -3,7 +3,6 @@
     public class Product
     {
         public int id { get; set; }
-        public string category { get; set; }
         public string name { get; set; }
         public double price { get; set; }
         public List<string> ingredients { get; set; }
@@ -28,10 +27,10 @@
         }
 
         //return list of products by category in DB
-        public static List<Product> getProductsByCategory(string category)
+        public static List<Product> getProductsByCategory(int categoryId)
         {
             DBservices dbs = new DBservices();
-            return dbs.getProductsByCategory(category);
+            return dbs.getProductsByCategory(categoryId);
         }
 
         //return product details

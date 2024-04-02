@@ -277,7 +277,6 @@ public class DBservices
             {
                 Product p = new Product();
                 p.id = Convert.ToInt32(dataReader["Id"]);
-                p.category = dataReader["category"].ToString();
                 p.name = dataReader["name"].ToString();
                 p.price = Convert.ToDouble(dataReader["price"]);
                 p.description = dataReader["description"].ToString();
@@ -709,14 +708,14 @@ public class DBservices
 
         Dictionary<string, object> paramDic = new Dictionary<string, object>();
 
-        paramDic.Add("@category", p.category);
         paramDic.Add("@name", p.name);
         paramDic.Add("@price", p.price);
-        paramDic.Add("@ingredients", p.ingredients);
         paramDic.Add("@description", p.description);
         paramDic.Add("@rate", p.rate);
         paramDic.Add("@image", p.image);
 
+        string ingredientsString = string.Join(",", p.ingredients); // Converts List to a comma-separated string
+        paramDic.Add("@ingredients", ingredientsString);
 
         cmd = CreateCommandWithStoredProcedure("SP_addProduct", con, paramDic);// create the command
 
@@ -778,7 +777,6 @@ public class DBservices
             {
                 Product p = new Product();
                 p.id = Convert.ToInt32(dataReader["id"]);
-                p.category = dataReader["category"].ToString();
                 p.name = dataReader["name"].ToString();
                 p.price = Convert.ToDouble(dataReader["price"]);
                 p.description = dataReader["description"].ToString();
@@ -815,7 +813,7 @@ public class DBservices
     //--------------------------------------------------------------------------------------------------
     // This method Reads all products by specific category
     //--------------------------------------------------------------------------------------------------
-    public List<Product> getProductsByCategory(string category)
+    public List<Product> getProductsByCategory(int categoryId)
     {
 
         SqlConnection con;
@@ -833,7 +831,7 @@ public class DBservices
 
 
         Dictionary<string, object> paramDic = new Dictionary<string, object>();
-        paramDic.Add("@category", category);
+        paramDic.Add("@categoryId", categoryId);
         cmd = CreateCommandWithStoredProcedure("SP_getProductsByCategory", con, paramDic);// create the command
 
 
@@ -846,7 +844,6 @@ public class DBservices
             {
                 Product p = new Product();
                 p.id = Convert.ToInt32(dataReader["Id"]);
-                p.category = dataReader["category"].ToString();
                 p.name = dataReader["name"].ToString();
                 p.price = Convert.ToDouble(dataReader["price"]);
                 p.description = dataReader["description"].ToString();
@@ -911,7 +908,6 @@ public class DBservices
             {
                 Product p = new Product();
                 p.id = Convert.ToInt32(dataReader["Id"]);
-                p.category = dataReader["category"].ToString();
                 p.name = dataReader["name"].ToString();
                 p.price = Convert.ToDouble(dataReader["price"]);
                 p.description = dataReader["description"].ToString();
@@ -967,7 +963,6 @@ public class DBservices
         Dictionary<string, object> paramDic = new Dictionary<string, object>();
 
         paramDic.Add("@id", p.id);
-        paramDic.Add("@category", p.category);
         paramDic.Add("@name", p.name);
         paramDic.Add("@price", p.price);
         paramDic.Add("@ingredients", p.ingredients);
@@ -1046,6 +1041,313 @@ public class DBservices
         }
 
     }
+
+    //*****************************************************Category Methods*********************************************************************************
+    //--------------------------------------------------------------------------------------------------
+    // This method add new category to db
+    //--------------------------------------------------------------------------------------------------
+    public Category addCategory(Category c)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+
+        paramDic.Add("@name", c.name);
+        paramDic.Add("@description", c.description);
+
+        cmd = CreateCommandWithStoredProcedure("SP_addCategory", con, paramDic);// create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            if (numEffected == 1)
+            {
+                return c;
+            }
+            return null;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    // This method connect add category and product to productCategories table
+    //--------------------------------------------------------------------------------------------------
+    public bool addProductToCategory(int categoryId, int productId)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+
+        paramDic.Add("@categoryId", categoryId);
+        paramDic.Add("@productId", productId);
+
+        cmd = CreateCommandWithStoredProcedure("SP_addProductToCategory", con, paramDic);// create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected > 0;
+          }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    // This method Reads all categories
+    //--------------------------------------------------------------------------------------------------
+    public List<Category> getAllCategories()
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+
+        cmd = CreateCommandWithStoredProcedure("SP_getAllCategories", con, null);// create the command
+
+
+        List<Category> categories = new List<Category>();
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dataReader.Read())
+            {
+                Category c = new Category();
+                c.id = Convert.ToInt32(dataReader["id"]);
+                c.name = dataReader["name"].ToString();
+                c.description = dataReader["description"].ToString();
+
+                categories.Add(c);
+            }
+            return categories;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    // This method return category by id
+    //--------------------------------------------------------------------------------------------------
+    public Category getCategoryById(int id)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+        paramDic.Add("@id", id);
+
+        cmd = CreateCommandWithStoredProcedure("SP_getCategoryById", con, paramDic);// create the command
+
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            if (dataReader.Read())
+            {
+                Category c = new Category();
+                c.id = Convert.ToInt32(dataReader["Id"]);
+                c.name = dataReader["name"].ToString();
+                c.description = dataReader["description"].ToString();
+
+                return c;
+            }
+            throw new Exception("could not find Product");
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+
+    //--------------------------------------------------------------------------------------------------
+    // This method update category in db
+    //--------------------------------------------------------------------------------------------------
+    public Category updateCategory(Category c)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+
+        paramDic.Add("@id", c.id);
+        paramDic.Add("@name", c.name);
+        paramDic.Add("@description", c.description);
+
+        cmd = CreateCommandWithStoredProcedure("SP_updateCategory", con, paramDic);// create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            if (numEffected == 1)
+            {
+                return c;
+            }
+            return null;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    // This method delete a category from categoriesTable
+    //--------------------------------------------------------------------------------------------------
+    public bool deleteCategory(int id)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+
+        paramDic.Add("@id", id);
+        cmd = CreateCommandWithStoredProcedure("SP_deleteCategory", con, paramDic);// create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected == 1;
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+
+    }
+
 }
 
 //    //*****************************************************Artists Methods*********************************************************************************
