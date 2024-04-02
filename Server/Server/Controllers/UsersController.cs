@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SongsServer.Models;
+using Server.Models;
 using System.Diagnostics.Eventing.Reader;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace SongsServer.Controllers
+namespace Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -22,7 +22,7 @@ namespace SongsServer.Controllers
         //get all favorite products of user by user id
         // GET: api/<UsersController>/
         [HttpGet("{userId}/products")]
-        public List<Song> getProductsByUser(int userId)
+        public List<Product> getProductsByUser(int userId)
         {
             return UserClass.getProductsByUser(userId);
         }

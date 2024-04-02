@@ -31,7 +31,7 @@ public class DBservices
             con.Open();
             return con;
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             throw new Exception("Error in DB");
         }
@@ -105,11 +105,13 @@ public class DBservices
             {
                 UserClass u = new UserClass();
                 u.id = Convert.ToInt32(dataReader["id"]);
-                u.name = dataReader["name"].ToString();
+                u.firstName = dataReader["firstName"].ToString();
+                u.lastName = dataReader["lastName"].ToString();
                 u.email = dataReader["email"].ToString();
                 u.password = dataReader["password"].ToString();
+                u.phone = dataReader["phone"].ToString();
+                u.address = dataReader["address"].ToString();
                 u.regDate = Convert.ToDateTime(dataReader["regDate"]);
-                u.score = Convert.ToInt32(dataReader["score"]);
                 usersList.Add(u);
             }
             return usersList;
@@ -131,7 +133,7 @@ public class DBservices
 
     }
     //--------------------------------------------------------------------------------------------------
-    // This method return top 5 leaders by score in quiz
+    // This method return top 5 users by total order price
     //--------------------------------------------------------------------------------------------------
     public List<UserClass> getTop5()
     {
@@ -162,8 +164,8 @@ public class DBservices
             while (dataReader.Read())
             {
                 UserClass u = new UserClass();
-                u.name = dataReader["name"].ToString();
-                u.score = Convert.ToInt32(dataReader["score"]);
+                u.firstName = dataReader["name"].ToString();
+                u.lastName = dataReader["lastName"].ToString();
                 usersList.Add(u);
             }
             return usersList;
@@ -185,9 +187,9 @@ public class DBservices
 
     }
     //--------------------------------------------------------------------------------------------------
-    // This method reads all songs of specific user favorite songs
+    // This method reads all products of specific user favorite products
     //--------------------------------------------------------------------------------------------------
-    public List<Product> getSongsByUser(int userId)
+    public List<Product> getProductsByUser(int userId)
     {
 
         SqlConnection con;
@@ -205,9 +207,9 @@ public class DBservices
 
         Dictionary<string, object> paramDic = new Dictionary<string, object>();
         paramDic.Add("@userId", userId);
-        cmd = CreateCommandWithStoredProcedure("SP_getSongsByUser", con, paramDic);// create the command
+        cmd = CreateCommandWithStoredProcedure("SP_getProductsByUser", con, paramDic);// create the command
 
-        List<Product> songsList = new List<Product>();
+        List<Product> productsList = new List<Product>();
 
         try
         {
@@ -215,17 +217,30 @@ public class DBservices
 
             while (dataReader.Read())
             {
-                Product s = new Product();
-                s.id = Convert.ToInt32(dataReader["id"]);
-                s.name = dataReader["name"].ToString();
-                s.artistName = dataReader["artistName"].ToString();
-                s.link = dataReader["link"].ToString();
-                s.lyrics = dataReader["lyrics"].ToString();
-                s.rate = Convert.ToInt32(dataReader["rate"]);
-                s.image=dataReader["image"].ToString();
-                songsList.Add(s);
+                Product p = new Product();
+                p.id = Convert.ToInt32(dataReader["Id"]);
+                p.category = dataReader["category"].ToString();
+                p.name = dataReader["name"].ToString();
+                p.price = Convert.ToDouble(dataReader["price"]);
+                p.description = dataReader["description"].ToString();
+                p.rate = Convert.ToInt32(dataReader["rate"]);
+                p.image = dataReader["image"].ToString();
+
+                // Convert ingredients to a list of strings
+                string ingredientsString = dataReader["ingredients"].ToString();
+                char[] ingredientDelimiter = { ',' }; // Assuming ingredients are separated by commas
+                string[] ingredientsArray = ingredientsString.Split(ingredientDelimiter, StringSplitOptions.RemoveEmptyEntries);
+                p.ingredients = new List<string>(ingredientsArray);
+
+                // Convert tags to a list of strings
+                string tagsString = dataReader["tags"].ToString();
+                char[] tagDelimiter = { ',' }; // Assuming tags are separated by commas
+                string[] tagsArray = tagsString.Split(tagDelimiter, StringSplitOptions.RemoveEmptyEntries);
+                p.tags = new List<string>(tagsArray);
+
+                productsList.Add(p);
             }
-            return songsList;
+            return productsList;
         }
         catch (Exception ex)
         {
@@ -244,63 +259,6 @@ public class DBservices
 
     }
 
-    //--------------------------------------------------------------------------------------------------
-    // This method reads all artists of specific user favorite artists
-    //--------------------------------------------------------------------------------------------------
-    public List<Order> getArtistsByUser(int userId)
-    {
-
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-            throw (ex);
-        }
-
-        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-        paramDic.Add("@userId", userId);
-        cmd = CreateCommandWithStoredProcedure("SP_getArtistsByUser", con, paramDic);// create the command
-
-        List<Order> artistsList = new List<Order>();
-
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-            while (dataReader.Read())
-            {
-                Order a = new Order();
-                a.id = Convert.ToInt32(dataReader["id"]);
-                a.name = dataReader["name"].ToString();
-                a.rate = Convert.ToInt32(dataReader["rate"]);
-                a.image = dataReader["image"].ToString();
-
-                artistsList.Add(a);
-            }
-            return artistsList;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-
-    }
 
     //--------------------------------------------------------------------------------------------------
     // This method Inserts a new User to the Users table 
@@ -322,9 +280,12 @@ public class DBservices
         }
 
         Dictionary<string, object> paramDic = new Dictionary<string, object>();
-        paramDic.Add("@name", user.name);
+        paramDic.Add("@firstName", user.firstName);
+        paramDic.Add("@lastName", user.lastName);
         paramDic.Add("@email", user.email);
         paramDic.Add("@password", user.password);
+        paramDic.Add("@phone", user.phone);
+        paramDic.Add("@address", user.address);
         paramDic.Add("@regDate", user.regDate);
 
 
@@ -338,10 +299,13 @@ public class DBservices
             {
                 UserClass u = new UserClass();
                 u.id = Convert.ToInt32(dataReader["id"]);
-                u.name = dataReader["name"].ToString();
+                u.firstName = dataReader["firstName"].ToString();
+                u.lastName = dataReader["lastName"].ToString();
                 u.email = dataReader["email"].ToString();
+                u.password = dataReader["password"].ToString();
+                u.phone = dataReader["phone"].ToString();
+                u.address = dataReader["address"].ToString();
                 u.regDate = Convert.ToDateTime(dataReader["regDate"]);
-                u.score= Convert.ToInt32(dataReader["score"]);
                 return u;
             }
             throw new Exception("User with this email is already exits.");
@@ -362,7 +326,7 @@ public class DBservices
         }
     }
 
-   //--------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------
     // This method updates User details
     //--------------------------------------------------------------------------------------------------
     public UserClass updateUserDetails(UserClass user)
@@ -384,12 +348,13 @@ public class DBservices
         Dictionary<string, object> paramDic = new Dictionary<string, object>();
 
         paramDic.Add("@id", user.id);
-        paramDic.Add("@name", user.name);
+        paramDic.Add("@firstName", user.firstName);
+        paramDic.Add("@lastName", user.lastName);
         paramDic.Add("@email", user.email);
         paramDic.Add("@password", user.password);
+        paramDic.Add("@phone", user.phone);
+        paramDic.Add("@address", user.address);
         paramDic.Add("@regDate", user.regDate);
-        paramDic.Add("@score", user.score);
-
 
 
         cmd = CreateCommandWithStoredProcedure("SP_UpdateUserDetails", con, paramDic);             // create the command
@@ -402,11 +367,13 @@ public class DBservices
             {
                 UserClass u = new UserClass();
                 u.id = Convert.ToInt32(dataReader["id"]);
-                u.name = dataReader["name"].ToString();
+                u.firstName = dataReader["firstName"].ToString();
+                u.lastName = dataReader["lastName"].ToString();
                 u.email = dataReader["email"].ToString();
                 u.password = dataReader["password"].ToString();
+                u.phone = dataReader["phone"].ToString();
+                u.address = dataReader["address"].ToString();
                 u.regDate = Convert.ToDateTime(dataReader["regDate"]);
-                u.score = Convert.ToInt32(dataReader["score"]);
                 return u;
             }
             throw new Exception("User with this email is already exits.");
@@ -447,7 +414,7 @@ public class DBservices
         Dictionary<string, object> paramDic = new Dictionary<string, object>();
 
         paramDic.Add("@id", userId);
-      
+
 
         cmd = CreateCommandWithStoredProcedure("SP_DeleteUser", con, paramDic);// create the command
 
@@ -550,7 +517,8 @@ public class DBservices
             if (dataReader.Read())
             {
                 u.id = Convert.ToInt32(dataReader["id"]);
-                u.name = dataReader["name"].ToString();
+                u.firstName = dataReader["firstName"].ToString();
+                u.lastName = dataReader["lastName"].ToString();
                 u.email = dataReader["email"].ToString();
                 return u;
             }
@@ -572,61 +540,11 @@ public class DBservices
         }
 
     }
+
     //--------------------------------------------------------------------------------------------------
-    // This method updates User Score
+    // This method Insert a product to userProducts table(favorite products)
     //--------------------------------------------------------------------------------------------------
-    public UserClass updateUserScore(int id,int score)
-    {
-
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-            throw (ex);
-        }
-
-        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-        paramDic.Add("@id", id);
-        paramDic.Add("@score", score);
-
-        cmd = CreateCommandWithStoredProcedure("SP_updateScore", con, paramDic);
-        UserClass u = new UserClass();
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-            if (dataReader.Read())
-            {
-                u.score = Convert.ToInt32(dataReader["score"]);
-                return u;
-            }
-            throw new Exception("couldn't update score");
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-
-    }
-    //--------------------------------------------------------------------------------------------------
-    // This method Insert a song to userSongs table(favorite songs)
-    //--------------------------------------------------------------------------------------------------
-    public bool addSongToFav(int userId, int songId)
+    public bool addProductToFav(int userId, int productId)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -644,14 +562,14 @@ public class DBservices
         Dictionary<string, object> paramDic = new Dictionary<string, object>();
 
         paramDic.Add("@userId", userId);
-        paramDic.Add("@songId", songId);
+        paramDic.Add("@productId", productId);
 
-        cmd = CreateCommandWithStoredProcedure("SP_addSongToFav", con, paramDic);// create the command
+        cmd = CreateCommandWithStoredProcedure("SP_addProdToFav", con, paramDic);// create the command
 
         try
         {
             int numEffected = cmd.ExecuteNonQuery(); // execute the command
-            return numEffected>0;
+            return numEffected > 0;
         }
         catch (Exception ex)
         {
@@ -671,9 +589,9 @@ public class DBservices
     }
 
     //--------------------------------------------------------------------------------------------------
-    // This method Delete a song from userSongs table
+    // This method Delete a product from userProducts table
     //--------------------------------------------------------------------------------------------------
-    public bool deleteSongFromFav(int userId, int songId)
+    public bool deleteProductFromFav(int userId, int productId)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -691,14 +609,14 @@ public class DBservices
         Dictionary<string, object> paramDic = new Dictionary<string, object>();
 
         paramDic.Add("@userId", userId);
-        paramDic.Add("@songId", songId);
+        paramDic.Add("@productId", productId);
 
-        cmd = CreateCommandWithStoredProcedure("SP_deleteSongFromFav", con, paramDic);// create the command
+        cmd = CreateCommandWithStoredProcedure("SP_deleteProdFromFav", con, paramDic);// create the command
 
         try
         {
             int numEffected = cmd.ExecuteNonQuery(); // execute the command
-            return numEffected>0;
+            return numEffected > 0;
         }
         catch (Exception ex)
         {
@@ -717,122 +635,6 @@ public class DBservices
 
     }
 
-    //--------------------------------------------------------------------------------------------------
-    // This method Insert artist to UserArtists table(favorite artists)
-    //--------------------------------------------------------------------------------------------------
-    public Order addArtistToFav(int userId, int artistId)
-    {
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-
-        paramDic.Add("@userId", userId);
-        paramDic.Add("@artistId", artistId);
-
-        cmd = CreateCommandWithStoredProcedure("SP_addArtistToFav", con, paramDic);// create the command
-
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-            if (dataReader.Read())
-            {
-                Order a = new Order();
-                a.id = Convert.ToInt32(dataReader["id"]);
-                a.name = dataReader["name"].ToString();
-                a.rate = Convert.ToInt32(dataReader["rate"]);
-                a.image = dataReader["image"].ToString();
-
-                return a;
-            }
-            throw new Exception("Artist already in your favorite");
-        
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // This method Delete artist from UserArtists table
-    //--------------------------------------------------------------------------------------------------
-    public Order deleteArtistFromFav(int userId, int artistId)
-    {
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        Dictionary<string, object> paramDic = new Dictionary<string, object>();
-
-        paramDic.Add("@userId", userId);
-        paramDic.Add("@artistId", artistId);
-
-        cmd = CreateCommandWithStoredProcedure("SP_deleteArtistFromFav", con, paramDic);// create the command
-
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-            if (dataReader.Read())
-            {
-                Order a = new Order();
-                a.id = Convert.ToInt32(dataReader["id"]);
-                a.name = dataReader["name"].ToString();
-                a.rate = Convert.ToInt32(dataReader["rate"]);
-                a.image = dataReader["image"].ToString();
-
-                return a;
-            }
-            throw new Exception("Artist is not in your favorite");
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-
-    }
 
 
     //*****************************************************Product Methods*********************************************************************************
@@ -1390,7 +1192,7 @@ public class DBservices
 
         cmd = CreateCommandWithStoredProcedure("SP_getArtistByName", con, paramDic);// create the command
 
-        List<Order> artistsList=new List<Order>();
+        List<Order> artistsList = new List<Order>();
         try
         {
             SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
@@ -1517,12 +1319,12 @@ public class DBservices
                 s.link = dataReader["link"].ToString();
                 s.lyrics = dataReader["lyrics"].ToString();
                 s.rate = Convert.ToInt32(dataReader["rate"]);
-                s.image= dataReader["image"].ToString();
+                s.image = dataReader["image"].ToString();
                 songList.Add(s);
             }
-            if(songList.Count > 0)
+            if (songList.Count > 0)
             {
-            return songList;
+                return songList;
             }
             throw new Exception("No Songs from this Artist");
         }
@@ -1579,7 +1381,7 @@ public class DBservices
                 s.image = dataReader["image"].ToString();
                 return s;
             }
-           
+
             throw new Exception("No Song from this Different Artist");
         }
         catch (Exception ex)

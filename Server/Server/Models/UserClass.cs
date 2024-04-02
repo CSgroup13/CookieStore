@@ -1,4 +1,4 @@
-﻿namespace SongsServer.Models
+﻿namespace Server.Models
 {
     public class UserClass
     {
@@ -20,10 +20,10 @@
         }
 
         //return list of all user's favorite products
-        public static List<Song> getProductsByUser(int userId)
+        public static List<Product> getProductsByUser(int userId)
         {
             DBservices dbs = new DBservices();
-            return dbs.getSongsByUser(userId);
+            return dbs.getProductsByUser(userId);
         }
 
         //return User object after registration or null if it failed
@@ -57,14 +57,14 @@
         public static bool addProductToFav(int userId, int songId)
         {
             DBservices dbs = new DBservices();
-            return dbs.addSongToFav(userId, songId);
+            return dbs.addProductToFav(userId, songId);
         }
 
         //return True if product removed from user favorite products and False if no
         public static bool deleteProductFromFav(int userId, int prodId)
         {
             DBservices dbs = new DBservices();
-            return dbs.deleteSongFromFav(userId, prodId);
+            return dbs.deleteProductFromFav(userId, prodId);
         }
 
         //return User object after updated details
