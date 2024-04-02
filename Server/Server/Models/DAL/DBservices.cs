@@ -1655,7 +1655,7 @@ public class DBservices
     }
 
     //--------------------------------------------------------------------------------------------------
-    // This method delete order from orders table
+    // This method delete order from ordersTable
     //--------------------------------------------------------------------------------------------------
     public bool deleteOrder(int id)
     {
