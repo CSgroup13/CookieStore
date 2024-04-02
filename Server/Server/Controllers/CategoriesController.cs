@@ -82,7 +82,7 @@ namespace Server.Controllers
 
         //add category to DB
         // POST api/<CategoryController>
-        [HttpPost]
+        [HttpPost("addProductToCategory")]
         public IActionResult addProductToCategory(int categoryId, int productId)
         {
             try

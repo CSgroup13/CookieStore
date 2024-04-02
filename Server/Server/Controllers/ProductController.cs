@@ -37,7 +37,7 @@ namespace Server.Controllers
 
         //get 8 best sellers products
         // GET: api/<ProductController>
-        [HttpGet]
+        [HttpGet("bestSellers")]
         public IActionResult getBestSellers()
         {
             try
