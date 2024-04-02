@@ -132,6 +132,120 @@ public class DBservices
 
     }
 
+    public List<Order> getUserOrders(int userId)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            throw (ex);
+        }
+
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+        paramDic.Add("@userId", userId);
+        cmd = CreateCommandWithStoredProcedure("SP_getUserOrders", con, paramDic);// create the command
+
+        List<Order> OrdersList = new List<Order>();
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dataReader.Read())
+            {
+                Order o = new Order();
+                o.id = Convert.ToInt32(dataReader["id"]);
+                o.userId = Convert.ToInt32(dataReader["userId"]);
+                o.totalPrice = Convert.ToDouble(dataReader["totalPrice"]);
+                o.date = Convert.ToDateTime(dataReader["date"]);
+                o.shippingAddress = dataReader["shippingAddress"].ToString();
+                o.notes = dataReader["notes"].ToString();
+                o.status = (Order.Status)dataReader["status"];
+                o.shippingMethod = (Order.ShippingMethod)dataReader["shippingMethod"];
+                o.paymentMethod = (Order.PaymentMethod)dataReader["paymentMethod"];
+
+                //// Fetch order items for the current order
+                //List<OrderItem> orderItems = getOrderItemsByOrderId(o.id);
+                //o.Items = orderItems;
+
+                OrdersList.Add(o);
+            }
+            return OrdersList;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+    }
+
+    //// Create a method to fetch order items by order ID
+    //public List<OrderItem> getOrderItemsByOrderId(int orderId)
+    //{
+    //    SqlConnection con;
+    //    SqlCommand cmd;
+
+    //    try
+    //    {
+    //        con = connect("myProjDB"); // create the connection
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Console.WriteLine(ex.Message);
+    //        throw (ex);
+    //    }
+
+    //    Dictionary<string, object> paramDic = new Dictionary<string, object>();
+    //    paramDic.Add("@orderId", orderId);
+    //    cmd = CreateCommandWithStoredProcedure("SP_getOrderItemsByOrderId", con, paramDic);// create the command
+
+    //    List<OrderItem> orderItems = new List<OrderItem>();
+
+    //    try
+    //    {
+    //        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+    //        while (dataReader.Read())
+    //        {
+    //            OrderItem item = new OrderItem();
+    //            item.id = Convert.ToInt32(dataReader["id"]);
+    //            item.productId = Convert.ToInt32(dataReader["productId"]);
+    //            item.quantity = Convert.ToInt32(dataReader["quantity"]);
+
+    //            orderItems.Add(item);
+    //        }
+    //        return orderItems;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Console.WriteLine(ex.Message);
+    //        throw (ex);
+    //    }
+    //    finally
+    //    {
+    //        if (con != null)
+    //        {
+    //            // close the db connection
+    //            con.Close();
+    //        }
+    //    }
+    //}
+
+
     //--------------------------------------------------------------------------------------------------
     // This method returns user details by his userId
     //--------------------------------------------------------------------------------------------------
