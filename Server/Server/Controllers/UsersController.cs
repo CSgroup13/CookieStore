@@ -20,7 +20,7 @@ namespace Server.Controllers
         //get user details
         // GET: api/<UsersController>/
         [HttpGet("{userId}/userDetails")]
-        public IActionResult getUserDetails (int userId)
+        public IActionResult getUserDetails(int userId)
         {
             try
             {
