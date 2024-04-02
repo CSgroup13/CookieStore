@@ -3,7 +3,7 @@ using Server.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace SongsServer.Controllers
+namespace Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -79,7 +79,7 @@ namespace SongsServer.Controllers
         }
 
         //update product
-        // POST api/<SongsController>
+        // POST api/<ProductController>
         [HttpPut("updateProduct")]
         public IActionResult updateProduct([FromBody] Product updatedProduct)
         {
@@ -94,7 +94,7 @@ namespace SongsServer.Controllers
         }
 
         //delete product
-        // DELETE api/<SongsController>
+        // DELETE api/<ProductController>
         [HttpDelete("deleteProduct/{id}")]
         public IActionResult deleteProduct(int id)
         {

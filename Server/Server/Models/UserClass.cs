@@ -54,10 +54,10 @@
         }
 
         //return True if product added to user favorite products and False if no
-        public static bool addProductToFav(int userId, int songId)
+        public static bool addProductToFav(int userId, int prodId)
         {
             DBservices dbs = new DBservices();
-            return dbs.addProductToFav(userId, songId);
+            return dbs.addProductToFav(userId, prodId);
         }
 
         //return True if product removed from user favorite products and False if no
