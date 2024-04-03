@@ -1562,7 +1562,7 @@ public class DBservices
                 Dictionary<string, object> paramDic = new Dictionary<string, object>();
                 paramDic.Add("@orderId", o.id);
                 paramDic.Add("@productId", orderItem.productId);
-                paramDic.Add("@quantity", orderItem.productId);
+                paramDic.Add("@quantity", orderItem.quantity);
                 cmd = CreateCommandWithStoredProcedure("SP_addOrderItem", con, paramDic);// create the command
 
                 int numEffected = cmd.ExecuteNonQuery(); // execute the command
@@ -1693,7 +1693,8 @@ public class DBservices
                 o.status = (Order.Status)dataReader["status"];
                 o.shippingMethod = (Order.ShippingMethod)dataReader["shippingMethod"];
                 o.paymentMethod = (Order.PaymentMethod)dataReader["paymentMethod"];
-
+                o.orderItems = getOrderItems(o.id);
+                
                 orders.Add(o);
             }
             return orders;
@@ -1754,10 +1755,68 @@ public class DBservices
                 o.status = (Order.Status)dataReader["status"];
                 o.shippingMethod = (Order.ShippingMethod)dataReader["shippingMethod"];
                 o.paymentMethod = (Order.PaymentMethod)dataReader["paymentMethod"];
+                o.orderItems = getOrderItems(o.id);
 
                 return o;
             }
             throw new Exception("could not find Order");
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    // This method Reads all order items
+    //--------------------------------------------------------------------------------------------------
+    public List<OrderItem> getOrderItems(int orderId)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+        paramDic.Add("@orderId", orderId);
+        cmd = CreateCommandWithStoredProcedure("SP_getOrderItems", con, paramDic);// create the command
+
+
+        List<OrderItem> orderItems = new List<OrderItem>();
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dataReader.Read())
+            {
+                OrderItem oi = new OrderItem();
+                oi.id = Convert.ToInt32(dataReader["id"]);
+                oi.orderId = Convert.ToInt32(dataReader["orderId"]);
+                oi.productId = Convert.ToInt32(dataReader["productId"]);
+                oi.quantity = Convert.ToInt32(dataReader["quantity"]);
+                orderItems.Add(oi);
+            }
+            return orderItems;
         }
         catch (Exception ex)
         {
