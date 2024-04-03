@@ -42,7 +42,7 @@ const App = () => {
             <Routes>
               
               <Route
-                path={process.env.PUBLIC_URL + "/home-organic-food"}
+                path={process.env.PUBLIC_URL + "/"}
                 element={<HomeOrganicFood/>}
               />
               
