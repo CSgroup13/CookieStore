@@ -20,12 +20,14 @@ const ProductGridSingleTwo = ({
   titlePriceClass
 }) => {
   const [modalShow, setModalShow] = useState(false);
+
   const discountedPrice = getDiscountPrice(product.price, product.discount);
   const finalProductPrice = +(product.price * currency.currencyRate).toFixed(2);
   const finalDiscountedPrice = +(
     discountedPrice * currency.currencyRate
   ).toFixed(2);
   const dispatch = useDispatch();
+  product.imagePath=`/assets/img/cookies_images/${product.name}.jpg`;
 
   return (
     <Fragment>
@@ -34,76 +36,29 @@ const ProductGridSingleTwo = ({
           <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
             <img
               className="default-img"
-              src={process.env.PUBLIC_URL + product.image[0]}
+              src={product.imagePath}
               alt=""
             />
-            {product.image.length > 1 ? (
-              <img
-                className="hover-img"
-                src={process.env.PUBLIC_URL + product.image[1]}
-                alt=""
-              />
-            ) : (
-              ""
-            )}
           </Link>
-          {product.discount || product.new ? (
-            <div className="product-img-badges">
-              {product.discount ? (
-                <span className="pink">-{product.discount}%</span>
-              ) : (
-                ""
-              )}
-              {product.new ? <span className="purple">New</span> : ""}
-            </div>
-          ) : (
-            ""
-          )}
-
           <div className="product-action-2">
-            {product.affiliateLink ? (
-              <a
-                href={product.affiliateLink}
-                rel="noopener noreferrer"
-                target="_blank"
-                title="Buy now"
-              >
-                {" "}
-                <i className="fa fa-shopping-cart"></i>{" "}
-              </a>
-            ) : product.variation && product.variation.length >= 1 ? (
-              <Link
-                to={`${process.env.PUBLIC_URL}/product/${product.id}`}
-                title="Select options"
-              >
-                <i className="fa fa-cog"></i>
-              </Link>
-            ) : product.stock && product.stock > 0 ? (
-              <button
-                onClick={() => dispatch(addToCart(product))}
-                className={
-                  cartItem !== undefined && cartItem.quantity > 0
-                    ? "active"
-                    : ""
-                }
-                disabled={cartItem !== undefined && cartItem.quantity > 0}
-                title={
-                  cartItem !== undefined ? "Added to cart" : "Add to cart"
-                }
-              >
-                {" "}
-                <i className="fa fa-shopping-cart"></i>{" "}
-              </button>
-            ) : (
-              <button disabled className="active" title="Out of stock">
-                <i className="fa fa-shopping-cart"></i>
-              </button>
-            )}
-
+            <button
+              onClick={() => dispatch(addToCart(product))}
+              className={
+                cartItem !== undefined && cartItem.quantity > 0
+                  ? "active"
+                  : ""
+              }
+              disabled={cartItem !== undefined && cartItem.quantity > 0}
+              title={
+                cartItem !== undefined ? "Added to cart" : "Add to cart"
+              }
+            >
+              {" "}
+              <i className="fa fa-shopping-cart"></i>{" "}
+            </button>
             <button onClick={() => setModalShow(true)} title="Quick View">
               <i className="fa fa-eye"></i>
             </button>
-
             <button
               className={compareItem !== undefined ? "active" : ""}
               disabled={compareItem !== undefined}
@@ -120,9 +75,8 @@ const ProductGridSingleTwo = ({
         </div>
         <div className="product-content-2">
           <div
-            className={`title-price-wrap-2 ${
-              titlePriceClass ? titlePriceClass : ""
-            }`}
+            className={`title-price-wrap-2 ${titlePriceClass ? titlePriceClass : ""
+              }`}
           >
             <h3>
               <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
