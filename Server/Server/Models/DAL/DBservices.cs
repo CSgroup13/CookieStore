@@ -336,7 +336,8 @@ public class DBservices
             while (dataReader.Read())
             {
                 UserClass u = new UserClass();
-                u.firstName = dataReader["name"].ToString();
+                u.id = Convert.ToInt32(dataReader["id"].ToString());
+                u.firstName = dataReader["firstName"].ToString();
                 u.lastName = dataReader["lastName"].ToString();
                 usersList.Add(u);
             }
