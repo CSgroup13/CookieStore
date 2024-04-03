@@ -30,7 +30,7 @@ namespace Server.Controllers
         {
             try
             {
-                return Ok(Product.getAllProducts());
+                return Ok(Order.getAllOrders());
             }
             catch (Exception ex) { return BadRequest(ex.Message); }
         }

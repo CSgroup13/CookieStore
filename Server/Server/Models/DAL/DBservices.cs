@@ -1,6 +1,7 @@
 ﻿using System.Data.SqlClient;
 using System.Data;
 using Server.Models;
+using System.Collections.Generic;
 
 /// <summary>
 /// DBServices is a class created by me to provides some DataBase Services
@@ -1044,7 +1045,7 @@ public class DBservices
 
                 products.Add(p);
             }
-            if(products.Count()>0)
+            if (products.Count() > 0)
                 return products;
             throw new Exception("could not find Category.");
         }
@@ -1538,8 +1539,59 @@ public class DBservices
 
     //*****************************************************Order Methods*********************************************************************************
     //--------------------------------------------------------------------------------------------------
-    // This method add new order to db
+    // This method add new orderItem to db
     //--------------------------------------------------------------------------------------------------
+    public bool addOrderItem(Order o)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        try
+        {
+            foreach (var orderItem in o.orderItems)
+            {
+                Dictionary<string, object> paramDic = new Dictionary<string, object>();
+                paramDic.Add("@orderId", o.id);
+                paramDic.Add("@productId", orderItem.productId);
+                paramDic.Add("@quantity", orderItem.productId);
+                cmd = CreateCommandWithStoredProcedure("SP_addOrderItem", con, paramDic);// create the command
+
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                if (numEffected != 1)
+                {
+                    throw new Exception($"{orderItem.productId} does not exist");
+                }
+            }
+            return true;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+    }
+
+
+
+
     public Order addOrder(Order o)
     {
         SqlConnection con;
@@ -1579,6 +1631,7 @@ public class DBservices
             {
                 // Set the ID of the product object
                 o.id = Convert.ToInt32(cmd.Parameters["@OrderId"].Value);
+                addOrderItem(o);
                 return o;
             }
             return null;
