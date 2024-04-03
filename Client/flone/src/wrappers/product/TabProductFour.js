@@ -17,21 +17,14 @@ const TabProductFour = ({ spaceBottomClass, category, productTabClass }) => {
         <Tab.Container defaultActiveKey="bestSeller">
           <Nav
             variant="pills"
-            className={clsx("product-tab-list pt-35 pb-60 text-center", productTabClass)}
+            className={clsx(
+              "product-tab-list pt-35 pb-60 text-center",
+              productTabClass
+            )}
           >
-            <Nav.Item>
-              <Nav.Link eventKey="newArrival">
-                <h4>New Arrivals</h4>
-              </Nav.Link>
-            </Nav.Item>
             <Nav.Item>
               <Nav.Link eventKey="bestSeller">
                 <h4>Best Sellers</h4>
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="saleItems">
-                <h4>Sale Items</h4>
               </Nav.Link>
             </Nav.Item>
           </Nav>
@@ -83,7 +76,7 @@ const TabProductFour = ({ spaceBottomClass, category, productTabClass }) => {
 
 TabProductFour.propTypes = {
   category: PropTypes.string,
-  spaceBottomClass: PropTypes.string
+  spaceBottomClass: PropTypes.string,
 };
 
 export default TabProductFour;

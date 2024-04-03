@@ -1,9 +1,9 @@
 import { Fragment, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import { getProducts, getBestSellers } from "../../helpers/product";
+import { getBestSellers } from "../../helpers/product";
 import ProductGridSingleTwo from "../../components/product/ProductGridSingleTwo";
-import api from "../../utils/api";
+
 
 const ProductGridTwo = ({
   spaceBottomClass,
@@ -13,12 +13,10 @@ const ProductGridTwo = ({
   type,
   limit,
 }) => {
-  const { products } = useSelector((state) => state.product);
   const currency = useSelector((state) => state.currency);
   const { cartItems } = useSelector((state) => state.cart);
   const { wishlistItems } = useSelector((state) => state.wishlist);
   const { compareItems } = useSelector((state) => state.compare);
-  const prods = getProducts(products, category, type, limit);
 
   const [bestSellersProducts, setBestSellersProducts] = useState([]);
 
