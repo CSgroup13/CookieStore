@@ -835,20 +835,20 @@ public class DBservices
         cmd = CreateCommandWithStoredProcedure("SP_addProduct", con, paramDic);// create the command
 
         try
-    {
-        SqlParameter outputIdParam = new SqlParameter("@ProductId", SqlDbType.Int);
-        outputIdParam.Direction = ParameterDirection.Output;
-        cmd.Parameters.Add(outputIdParam);
-
-        int numEffected = cmd.ExecuteNonQuery(); // execute the command
-        if (numEffected == 1)
         {
-            // Set the ID of the product object
-            p.id = Convert.ToInt32(cmd.Parameters["@ProductId"].Value);
-            return p;
+            SqlParameter outputIdParam = new SqlParameter("@ProductId", SqlDbType.Int);
+            outputIdParam.Direction = ParameterDirection.Output;
+            cmd.Parameters.Add(outputIdParam);
+
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            if (numEffected == 1)
+            {
+                // Set the ID of the product object
+                p.id = Convert.ToInt32(cmd.Parameters["@ProductId"].Value);
+                return p;
+            }
+            return null;
         }
-        return null;
-    }
         catch (Exception ex)
         {
             // write to log
@@ -1568,12 +1568,17 @@ public class DBservices
         paramDic.Add("@paymentMethod", (int)o.paymentMethod);
 
         cmd = CreateCommandWithStoredProcedure("SP_addOrder", con, paramDic);// create the command
-
         try
         {
+            SqlParameter outputIdParam = new SqlParameter("@OrderId", SqlDbType.Int);
+            outputIdParam.Direction = ParameterDirection.Output;
+            cmd.Parameters.Add(outputIdParam);
+
             int numEffected = cmd.ExecuteNonQuery(); // execute the command
             if (numEffected == 1)
             {
+                // Set the ID of the product object
+                o.id = Convert.ToInt32(cmd.Parameters["@OrderId"].Value);
                 return o;
             }
             return null;
