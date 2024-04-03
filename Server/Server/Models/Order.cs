@@ -10,7 +10,7 @@ namespace Server.Models
         public DateTime date { get; set; }
         public string shippingAddress { get; set; }
         public string notes { get; set; }
-
+        public List<OrderItem> orderItems { get; set; }
         public enum Status
         {
             Pending=1,
