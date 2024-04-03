@@ -7,7 +7,6 @@ import TabProductFour from "../../wrappers/product/TabProductFour";
 import BannerFive from "../../wrappers/banner/BannerFive";
 import CountDownTwo from "../../wrappers/countdown/CountDownTwo";
 import TestimonialOne from "../../wrappers/testimonial/TestimonialOne";
-import NewsletterTwo from "../../wrappers/newsletter/NewsletterTwo";
 
 const HomeOrganicFood = () => {
   return (
@@ -52,12 +51,6 @@ const HomeOrganicFood = () => {
           spaceLeftClass="ml-70"
           spaceRightClass="mr-70"
           bgColorClass="bg-gray-3"
-        />
-        {/* newsletter */}
-        <NewsletterTwo
-          spaceTopClass="pt-100"
-          spaceBottomClass="pb-100"
-          subscribeBtnClass="green-subscribe"
         />
       </LayoutThree>
     </Fragment>
