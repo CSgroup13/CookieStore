@@ -835,14 +835,20 @@ public class DBservices
         cmd = CreateCommandWithStoredProcedure("SP_addProduct", con, paramDic);// create the command
 
         try
+    {
+        SqlParameter outputIdParam = new SqlParameter("@ProductId", SqlDbType.Int);
+        outputIdParam.Direction = ParameterDirection.Output;
+        cmd.Parameters.Add(outputIdParam);
+
+        int numEffected = cmd.ExecuteNonQuery(); // execute the command
+        if (numEffected == 1)
         {
-            int numEffected = cmd.ExecuteNonQuery(); // execute the command
-            if (numEffected == 1)
-            {
-                return p;
-            }
-            return null;
+            // Set the ID of the product object
+            p.id = Convert.ToInt32(cmd.Parameters["@ProductId"].Value);
+            return p;
         }
+        return null;
+    }
         catch (Exception ex)
         {
             // write to log
@@ -1038,7 +1044,9 @@ public class DBservices
 
                 products.Add(p);
             }
-            return products;
+            if(products.Count()>0)
+                return products;
+            throw new Exception("could not find Category.");
         }
         catch (Exception ex)
         {
@@ -1413,7 +1421,7 @@ public class DBservices
 
                 return c;
             }
-            throw new Exception("could not find Product");
+            throw new Exception("could not find Category");
         }
         catch (Exception ex)
         {

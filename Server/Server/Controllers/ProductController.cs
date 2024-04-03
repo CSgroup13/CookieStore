@@ -49,7 +49,7 @@ namespace Server.Controllers
 
         //get products by category
         // GET: api/<ProductController>/category
-        [HttpGet("category/{category}")]
+        [HttpGet("category/{categoryId}")]
         public IActionResult getProductsByCategory(int categoryId)
         {
             try
