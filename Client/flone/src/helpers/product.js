@@ -1,9 +1,29 @@
 // get products
+import api from "../utils/api.js";
+
+export const getBestSellers = () => {
+  const endpoint = api.products + "bestSellers";
+  fetch(endpoint)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      return data;
+    })
+    .catch(error => {
+      // Handle errors here
+      console.error('There was a problem with your fetch operation:', error);
+    });
+};
+
 export const getProducts = (products, category, type, limit) => {
   const finalProducts = category
     ? products.filter(
-        product => product.category.filter(single => single === category)[0]
-      )
+      product => product.category.filter(single => single === category)[0]
+    )
     : products;
 
   if (type && type === "new") {
@@ -118,7 +138,7 @@ export const getSortedProducts = (products, sortType, sortValue) => {
 
 // get individual element
 const getIndividualItemArray = array => {
-  let individualItemArray = array.filter(function(v, i, self) {
+  let individualItemArray = array.filter(function (v, i, self) {
     return i === self.indexOf(v);
   });
   return individualItemArray;
