@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 import FooterCopyright from "../../components/footer/FooterCopyright";
-import FooterNewsletter from "../../components/footer/FooterNewsletter";
 
 
 const FooterOne = ({
@@ -160,12 +159,6 @@ const FooterOne = ({
               sideMenu ? "col-xl-3 col-sm-8" : "col-lg-4 col-sm-6"
             }`}
           >
-            {/* footer newsletter */}
-            <FooterNewsletter
-              spaceBottomClass="mb-30"
-              spaceLeftClass="ml-70"
-              sideMenu={sideMenu}
-            />
           </div>
         </div>
       </div>

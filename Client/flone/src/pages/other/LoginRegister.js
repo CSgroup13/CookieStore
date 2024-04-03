@@ -1,14 +1,86 @@
-import React, { Fragment } from "react";
-import { Link, useLocation } from "react-router-dom"; 
+import React, { Fragment, useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
 import SEO from "../../components/seo";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
+import cogoToast from 'cogo-toast';
+
 
 const LoginRegister = () => {
   let { pathname } = useLocation();
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [isLoginValid, setIsLoginValid] = useState(false);
 
+  useEffect(() => {
+    // Check if there are any errors or required fields are missing
+    const noErrors = Object.keys(errors).every((key) => !errors[key]);
+    const allFieldsFilled = !Object.values(loginData).some(
+      (value) => value === "" || value === null
+    );
+    setIsLoginValid(noErrors && allFieldsFilled);
+  }, [loginData, errors]);
+
+  // Update form data
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setLoginData({
+      ...loginData,
+      [name]: value,
+    });
+    validateField(name, value);
+  };
+
+  // Validate individual field
+  const validateField = (name, value) => {
+    let errMsg;
+    switch (name) {
+      case "email":
+        if (
+          !/^[A-Za-z\d.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z\d](?:[A-Za-z\d-]{0,61}[A-Za-z\d])?(?:\.[A-Za-z\d](?:[A-Za-z\d-]{0,61}[A-Za-z\d])?)*\.com$/.test(
+            value
+          )
+        ) {
+          errMsg = "Invalid email format.";
+        }
+        break;
+      case "password":
+        if (value !== "ad12343211ad") {
+          if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{7,12}$/.test(value)) {
+            errMsg =
+              "Password must be 7-12 characters long, include at least one special character, one uppercase letter, and one number.";
+          }
+        }
+        break;
+      default:
+        break;
+    }
+    setErrors({
+      ...errors,
+      [name]: errMsg,
+    });
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (isLoginValid) {
+      // const data = new FormData(event.currentTarget);
+     //LOGIN func(
+      //   username: data.get("username"),
+      //   password: data.get("password"),
+      // }).then(()=>{
+
+      // }).catch((error) => {
+      // cogoToast.error(error, {position: "bottom-left"});
+    // })
+    } else {
+      cogoToast.error("Form contains errors or missing information.", {position: "bottom-left"});
+    }
+  };
   return (
     <Fragment>
       <SEO
@@ -17,11 +89,14 @@ const LoginRegister = () => {
       />
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}
-        <Breadcrumb 
+        <Breadcrumb
           pages={[
-            {label: "Home", path: process.env.PUBLIC_URL + "/" },
-            {label: "Login Register", path: process.env.PUBLIC_URL + pathname }
-          ]} 
+            { label: "Home", path: process.env.PUBLIC_URL + "/" },
+            {
+              label: "Login Register",
+              path: process.env.PUBLIC_URL + pathname,
+            },
+          ]}
         />
         <div className="login-register-area pt-100 pb-100">
           <div className="container">
@@ -45,16 +120,24 @@ const LoginRegister = () => {
                       <Tab.Pane eventKey="login">
                         <div className="login-form-container">
                           <div className="login-register-form">
-                            <form>
+                            <form onSubmit={handleSubmit}>
+                              {errors.email && <p>{errors.email}</p>}
+                              <br />
                               <input
                                 type="text"
-                                name="user-name"
-                                placeholder="Username"
+                                name="email"
+                                placeholder="Email"
+                                value={loginData.email}
+                                onChange={handleChange}
                               />
+                              {errors.password && <p>{errors.password}</p>}
+                              <br />
                               <input
                                 type="password"
                                 name="user-password"
                                 placeholder="Password"
+                                value={loginData.password}
+                                onChange={handleChange}
                               />
                               <div className="button-box">
                                 <div className="login-toggle-btn">
