@@ -5,7 +5,6 @@ import Logo from "../../components/header/Logo";
 import NavMenu from "../../components/header/NavMenu";
 import IconGroup from "../../components/header/IconGroup";
 import MobileMenu from "../../components/header/MobileMenu";
-import HeaderTop from "../../components/header/HeaderTop";
 
 const HeaderOne = ({
   layout,
@@ -13,7 +12,7 @@ const HeaderOne = ({
   borderStyle,
   headerPaddingClass,
   headerPositionClass,
-  headerBgClass
+  headerBgClass,
 }) => {
   const [scroll, setScroll] = useState(0);
   const [headerTop, setHeaderTop] = useState(0);
@@ -32,24 +31,26 @@ const HeaderOne = ({
   };
 
   return (
-    <header className={clsx("header-area clearfix", headerBgClass, headerPositionClass)}>
+    <header
+      className={clsx(
+        "header-area clearfix",
+        headerBgClass,
+        headerPositionClass
+      )}
+    >
       <div
         className={clsx(
-          "header-top-area", 
-          headerPaddingClass, top === "visible" ? "d-none d-lg-block" : "d-none", 
-          borderStyle === "fluid-border" && "border-none" 
+          "header-top-area",
+          headerPaddingClass,
+          top === "visible" ? "d-none d-lg-block" : "d-none",
+          borderStyle === "fluid-border" && "border-none"
         )}
-      >
-        <div className={layout === "container-fluid" ? layout : "container"}>
-          {/* header top */}
-          <HeaderTop borderStyle={borderStyle} />
-        </div>
-      </div>
+      ></div>
 
       <div
         className={clsx(
-          headerPaddingClass, 
-          "sticky-bar header-res-padding clearfix", 
+          headerPaddingClass,
+          "sticky-bar header-res-padding clearfix",
           scroll > headerTop && "stick"
         )}
       >
@@ -81,7 +82,7 @@ HeaderOne.propTypes = {
   headerPaddingClass: PropTypes.string,
   headerPositionClass: PropTypes.string,
   layout: PropTypes.string,
-  top: PropTypes.string
+  top: PropTypes.string,
 };
 
 export default HeaderOne;
