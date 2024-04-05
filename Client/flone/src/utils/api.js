@@ -26,6 +26,7 @@ export const getData = (endpoint) => {
       throw new Error(error.message || "Network error");
     });
 };
+
 export const postData = (endpoint, payload) => {
   const requestOptions = {
     method: "POST",

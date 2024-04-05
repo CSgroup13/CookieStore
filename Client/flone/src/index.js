@@ -1,4 +1,4 @@
-import React from "react";
+import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import App from "./App";
@@ -15,16 +15,22 @@ import api, { getData } from "./utils/api";
 
 getData(api.products)
   .then((products) => {
-    store.dispatch(setProducts(products));
+    const productsWithImages = products.map((product) => ({
+      ...product,
+      image: `/assets/img/cookies_images/${product.name}.jpg`,
+    }));
+    store.dispatch(setProducts(productsWithImages));
   })
-  .catch();
+  .catch((error) => {
+    console.error(error);
+  });
 
 const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(
   <Provider store={store}>
     <PersistProvider>
-      <App />
+        <App />
     </PersistProvider>
   </Provider>
 );

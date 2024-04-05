@@ -32,7 +32,7 @@ const MenuCart = () => {
                 : (cartTotalPrice += finalProductPrice * item.quantity);
 
               return (
-                <li className="single-shopping-cart" key={item.cartItemId}>
+                <li key={item.id} className="single-shopping-cart" key={item.cartItemId}>
                   <div className="shopping-cart-img">
                     <Link to={process.env.PUBLIC_URL + "/product/" + item.id}>
                       <img

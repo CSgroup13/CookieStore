@@ -9,30 +9,27 @@ const ProductGridTwo = ({
   spaceBottomClass,
   colorClass,
   titlePriceClass,
-  category,
-  type,
-  limit,
 }) => {
-  const currency = useSelector((state) => state.currency);
   const { cartItems } = useSelector((state) => state.cart);
   const { wishlistItems } = useSelector((state) => state.wishlist);
   const { compareItems } = useSelector((state) => state.compare);
+  const { products } = useSelector((state) => state.product);
 
   const [bestSellersProducts, setBestSellersProducts] = useState([]);
 
   useEffect(() => {
     getBestSellers()
       .then((data) => {
-        const productsWithImages = data.map((product) => ({
-          ...product,
-          image: `/assets/img/cookies_images/${product.name}.jpg`,
-        }));
-        setBestSellersProducts(productsWithImages);
+        const bestSellersFromStore = products.filter((product) =>
+          data.some((bestSeller) => bestSeller.id === product.id)
+        );
+        setBestSellersProducts(bestSellersFromStore);
       })
       .catch((error) => {
         console.error("Error fetching best sellers:", error);
       });
   }, []);
+
   return (
     <Fragment>
       {bestSellersProducts?.map((product) => {

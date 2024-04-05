@@ -94,24 +94,6 @@ const Wishlist = () => {
                                 </td>
 
                                 <td className="product-wishlist-cart">
-                                  {wishlistItem.affiliateLink ? (
-                                    <a
-                                      href={wishlistItem.affiliateLink}
-                                      rel="noopener noreferrer"
-                                      target="_blank"
-                                    >
-                                      {" "}
-                                      Buy now{" "}
-                                    </a>
-                                  ) : wishlistItem.variation &&
-                                    wishlistItem.variation.length >= 1 ? (
-                                    <Link
-                                      to={`${process.env.PUBLIC_URL}/product/${wishlistItem.id}`}
-                                    >
-                                      Select option
-                                    </Link>
-                                  ) : wishlistItem.stock &&
-                                    wishlistItem.stock > 0 ? (
                                     <button
                                       onClick={() =>
                                         dispatch(addToCart(wishlistItem))
@@ -137,11 +119,6 @@ const Wishlist = () => {
                                         ? "Added"
                                         : "Add to cart"}
                                     </button>
-                                  ) : (
-                                    <button disabled className="active">
-                                      Out of stock
-                                    </button>
-                                  )}
                                 </td>
 
                                 <td className="product-remove">

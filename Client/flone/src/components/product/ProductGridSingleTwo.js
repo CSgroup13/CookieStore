@@ -112,7 +112,7 @@ const ProductGridSingleTwo = ({
         wishlistItem={wishlistItem}
         compareItem={compareItem}
       />
-    </Fragment>
+    </Fragment >
   );
 };
 
