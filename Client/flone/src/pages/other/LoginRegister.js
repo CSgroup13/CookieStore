@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Tab from "react-bootstrap/Tab";
 import emailjs from "emailjs-com";
 import Nav from "react-bootstrap/Nav";
@@ -162,7 +162,6 @@ const LoginRegister = () => {
             position: "top-right",
           });
           dispatch(loginUser(user));
-          console.log(user);
           navigate("/");
         })
         .catch((error) => {
@@ -232,20 +231,23 @@ const LoginRegister = () => {
             },
             "Ov1O19nU4lvvYar64"
           )
-          .then((response) => {
-            console.log("Email sent:", response);
+          .then(() => {
             cogoToast.success("Password email sent. Please check your email.");
-            // Reset form fields after successful email send
             setEmail("");
           })
           .catch((error) => {
             console.error("Error sending email:", error);
+          })
+          .finally(() => {
+            setIsLoading(false);
           });
       })
       .catch((err) => {
         cogoToast.error(err.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
-    setIsLoading(false);
   };
 
   return (

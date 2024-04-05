@@ -1,5 +1,5 @@
 const localApi = "https://localhost:44365/api/";
-const ruppinApi = "";
+// const ruppinApi = "";
 
 const currentApi = localApi;
 
@@ -10,7 +10,6 @@ const api = {
   users: currentApi + "Users/",
 };
 export const getData = (endpoint) => {
-  // const endpoint = api.products;
   return fetch(endpoint)
     .then(async (response) => {
       if (!response.ok) {
