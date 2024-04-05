@@ -2,14 +2,17 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
+import { useDispatch } from "react-redux";
 import SEO from "../../components/seo";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
-import cogoToast from 'cogo-toast';
-
+import cogoToast from "cogo-toast";
+import { loginUser } from "../../store/slices/user-slice";
+import api, { postData } from "../../utils/api";
 
 const LoginRegister = () => {
   let { pathname } = useLocation();
+  const dispatch = useDispatch();
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -68,17 +71,28 @@ const LoginRegister = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (isLoginValid) {
-      // const data = new FormData(event.currentTarget);
-     //LOGIN func(
-      //   username: data.get("username"),
-      //   password: data.get("password"),
-      // }).then(()=>{
-
-      // }).catch((error) => {
-      // cogoToast.error(error, {position: "bottom-left"});
-    // })
+      const data = new FormData(event.currentTarget);
+      postData(`${api.users}login`, {
+        email: data.get("email"),
+        password: data.get("password"),
+        phone: "",
+        address: "",
+        lastName: "",
+        firstName: "",
+      })
+        .then((user) => {
+          cogoToast.success(`Hello ${user.firstName} ${user.lastName}`, {
+            position: "bottom-left",
+          });
+          dispatch(loginUser(user));
+        })
+        .catch((error) => {
+          cogoToast.error(error.message, { position: "bottom-left" });
+        });
     } else {
-      cogoToast.error("Form contains errors or missing information.", {position: "bottom-left"});
+      cogoToast.error("Form contains errors or missing information.", {
+        position: "bottom-left",
+      });
     }
   };
   return (
@@ -134,7 +148,7 @@ const LoginRegister = () => {
                               <br />
                               <input
                                 type="password"
-                                name="user-password"
+                                name="password"
                                 placeholder="Password"
                                 value={loginData.password}
                                 onChange={handleChange}
