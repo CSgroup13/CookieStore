@@ -22,20 +22,19 @@ const ShopGridStandard = () => {
     const [currentData, setCurrentData] = useState([]);
     const [sortedProducts, setSortedProducts] = useState([]);
     const { products } = useSelector((state) => state.product);
-
     const pageLimit = 15;
     let { pathname } = useLocation();
 
     const onSearch = (searchTerm) => {
-        if(searchTerm!==""){
+        if (searchTerm !== "") {
             // Filter products based on the search term
-            const filteredProducts = currentData.filter((product) =>
+            const filteredProducts = sortedProducts.filter((product) =>
                 product.name.toLowerCase().includes(searchTerm.toLowerCase())
             );
             // Update the current data state with the filtered products
             setCurrentData(filteredProducts);
         }
-        else{
+        else {
             setCurrentData(sortedProducts)
         }
     };
@@ -64,9 +63,14 @@ const ShopGridStandard = () => {
         }
         else {
             getData(api.products + `category/${sortValue}`)
-                .then((products) => {
-                    setSortedProducts(products); // Set sorted products to the fetched products
-                    setCurrentData(products.slice(offset, offset + pageLimit)); // Update current data
+                .then((productsFromApi) => {
+                    let matchingProducts = products.filter((storeProduct) =>
+                        productsFromApi.some((apiProduct) => apiProduct.id === storeProduct.id)
+                    );
+                    const filterSortedProducts = getSortedProducts(matchingProducts, filterSortType, filterSortValue);
+                    matchingProducts = filterSortedProducts;
+                    setSortedProducts(matchingProducts); // Set sorted products to the fetched products
+                    setCurrentData(matchingProducts.slice(offset, offset + pageLimit)); // Update current data
                 })
                 .catch((error) => {
                     console.error(error);

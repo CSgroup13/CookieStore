@@ -5,17 +5,17 @@ const HeroSliderFiveSingle = ({ data }) => {
   return (
     <div
       className="single-slider-2 slider-height-1 slider-height-res15 d-flex align-items-center slider-height-res bg-img"
-      style={{ backgroundImage: `url(${process.env.PUBLIC_URL + data.image})` }}
+      style={{ backgroundImage: `linear-gradient(rgba(255, 255, 255, 0), rgba(220, 180, 200, 255)), url(/assets/img/cookies_images/main_image.jpg)`, }}
     >
       <div className="container">
         <div className="row">
           <div className="col-xl-6 col-lg-6 col-md-7 ms-auto">
             <div className="slider-content-2 slider-content-fruits slider-animated-1">
-              <h3 className="animated">{data.title}</h3>
-              <h1 className="animated">{data.subtitle}</h1>
+              {/* <h3 className="animated">{data.title}</h3> */}
+              {/* <h1 className="animated">{data.subtitle}</h1> */}
               <div className="slider-btn btn-hover">
                 <Link
-                  className="animated"
+                  className="animated" style={{backgroundColor:"white", color:"pink",borderColor:"white", borderRadius:"15px"}}
                   to={process.env.PUBLIC_URL + data.url}
                 >
                   SHOP NOW
