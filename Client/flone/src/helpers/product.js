@@ -22,8 +22,8 @@ export const getBestSellers = () => {
 export const getProducts = (products, category, type, limit) => {
   const finalProducts = category
     ? products.filter(
-        (product) => product.category.filter((single) => single === category)[0]
-      )
+      (product) => product.category.filter((single) => single === category)[0]
+    )
     : products;
 
   if (type && type === "new") {
@@ -89,33 +89,13 @@ export const cartItemStock = (item, color, size) => {
 
 //get products based on category
 export const getSortedProducts = (products, sortType, sortValue) => {
+  console.log("type",sortType)
+  console.log("value",sortValue)
   if (products && sortType && sortValue) {
     if (sortType === "category") {
       return products.filter(
         (product) =>
           product.category.filter((single) => single === sortValue)[0]
-      );
-    }
-    if (sortType === "tag") {
-      return products.filter(
-        (product) => product.tag.filter((single) => single === sortValue)[0]
-      );
-    }
-    if (sortType === "color") {
-      return products.filter(
-        (product) =>
-          product.variation &&
-          product.variation.filter((single) => single.color === sortValue)[0]
-      );
-    }
-    if (sortType === "size") {
-      return products.filter(
-        (product) =>
-          product.variation &&
-          product.variation.filter(
-            (single) =>
-              single.size.filter((single) => single.name === sortValue)[0]
-          )[0]
       );
     }
     if (sortType === "filterSort") {
@@ -144,22 +124,6 @@ const getIndividualItemArray = (array) => {
     return i === self.indexOf(v);
   });
   return individualItemArray;
-};
-
-// get individual categories
-export const getIndividualCategories = (products) => {
-  let productCategories = [];
-  products &&
-    products.map((product) => {
-      return (
-        product.category &&
-        product.category.map((single) => {
-          return productCategories.push(single);
-        })
-      );
-    });
-  const individualProductCategories = getIndividualItemArray(productCategories);
-  return individualProductCategories;
 };
 
 // get individual tags

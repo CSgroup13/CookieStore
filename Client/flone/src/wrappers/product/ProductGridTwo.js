@@ -33,6 +33,7 @@ const ProductGridTwo = ({
         console.error("Error fetching best sellers:", error);
       });
   }, []);
+  
   return (
     <Fragment>
       {bestSellersProducts?.map((product) => {

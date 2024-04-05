@@ -1,16 +1,22 @@
+import React, { useState } from 'react';
 
+const ShopSearch = ({ onSearch }) => {
 
-const ShopSearch = () => {
+  const handleChange = (event) => {
+    const value = event.target.value;
+    onSearch(value);
+  };
+
   return (
     <div className="sidebar-widget">
-      <h4 className="pro-sidebar-title">Search </h4>
       <div className="pro-sidebar-search mb-50 mt-25">
-        <form className="pro-sidebar-search-form" action="#">
-          <input type="text" placeholder="Search here..." />
-          <button>
-            <i className="pe-7s-search" />
-          </button>
-        </form>
+        <div className="pro-sidebar-search-form">
+          <input
+            type="text"
+            placeholder="Search here..."
+            onChange={handleChange}
+          />
+        </div>
       </div>
     </div>
   );

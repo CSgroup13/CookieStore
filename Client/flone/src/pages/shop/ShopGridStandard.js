@@ -9,6 +9,7 @@ import Breadcrumb from '../../wrappers/breadcrumb/Breadcrumb';
 import ShopSidebar from '../../wrappers/product/ShopSidebar';
 import ShopTopbar from '../../wrappers/product/ShopTopbar';
 import ShopProducts from '../../wrappers/product/ShopProducts';
+import api, { getData } from "../../utils/api";
 
 const ShopGridStandard = () => {
     const [layout, setLayout] = useState('grid three-column');
@@ -25,6 +26,20 @@ const ShopGridStandard = () => {
     const pageLimit = 15;
     let { pathname } = useLocation();
 
+    const onSearch = (searchTerm) => {
+        if(searchTerm!==""){
+            // Filter products based on the search term
+            const filteredProducts = currentData.filter((product) =>
+                product.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            // Update the current data state with the filtered products
+            setCurrentData(filteredProducts);
+        }
+        else{
+            setCurrentData(sortedProducts)
+        }
+    };
+
     const getLayout = (layout) => {
         setLayout(layout)
     }
@@ -40,12 +55,24 @@ const ShopGridStandard = () => {
     }
 
     useEffect(() => {
-        let sortedProducts = getSortedProducts(products, sortType, sortValue);
-        const filterSortedProducts = getSortedProducts(sortedProducts, filterSortType, filterSortValue);
-        sortedProducts = filterSortedProducts;
-        setSortedProducts(sortedProducts);
-        setCurrentData(sortedProducts.slice(offset, offset + pageLimit));
-    }, [offset, products, sortType, sortValue, filterSortType, filterSortValue ]);
+        if (sortType !== "category" || sortValue === "") {
+            let sortedProducts = getSortedProducts(products, sortType, sortValue);
+            const filterSortedProducts = getSortedProducts(sortedProducts, filterSortType, filterSortValue);
+            sortedProducts = filterSortedProducts;
+            setSortedProducts(sortedProducts);
+            setCurrentData(sortedProducts.slice(offset, offset + pageLimit));
+        }
+        else {
+            getData(api.products + `category/${sortValue}`)
+                .then((products) => {
+                    setSortedProducts(products); // Set sorted products to the fetched products
+                    setCurrentData(products.slice(offset, offset + pageLimit)); // Update current data
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+    }, [offset, products, sortType, sortValue, filterSortType, filterSortValue]);
 
     return (
         <Fragment>
@@ -56,11 +83,11 @@ const ShopGridStandard = () => {
 
             <LayoutOne headerTop="visible">
                 {/* breadcrumb */}
-                <Breadcrumb 
+                <Breadcrumb
                     pages={[
-                        {label: "Home", path: process.env.PUBLIC_URL + "/" },
-                        {label: "Shop", path: process.env.PUBLIC_URL + pathname }
-                    ]} 
+                        { label: "Home", path: process.env.PUBLIC_URL + "/" },
+                        { label: "Shop", path: process.env.PUBLIC_URL + pathname }
+                    ]}
                 />
 
                 <div className="shop-area pt-95 pb-100">
@@ -68,7 +95,7 @@ const ShopGridStandard = () => {
                         <div className="row">
                             <div className="col-lg-3 order-2 order-lg-1">
                                 {/* shop sidebar */}
-                                <ShopSidebar products={products} getSortParams={getSortParams} sideSpaceClass="mr-30"/>
+                                <ShopSidebar products={products} getSortParams={getSortParams} onSearch={onSearch} sideSpaceClass="mr-30" />
                             </div>
                             <div className="col-lg-9 order-1 order-lg-2">
                                 {/* shop topbar default */}

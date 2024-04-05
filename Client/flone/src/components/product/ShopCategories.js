@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-
 import { setActiveSort } from "../../helpers/product";
 
 const ShopCategories = ({ categories, getSortParams }) => {
@@ -21,18 +20,18 @@ const ShopCategories = ({ categories, getSortParams }) => {
                 </button>
               </div>
             </li>
-            {categories.map((category, key) => {
+            {categories.map((category) => {
               return (
-                <li key={key}>
+                <li key={category.id}>
                   <div className="sidebar-widget-list-left">
                     <button
                       onClick={e => {
-                        getSortParams("category", category);
+                        getSortParams("category", category.id);
                         setActiveSort(e);
                       }}
                     >
                       {" "}
-                      <span className="checkmark" /> {category}{" "}
+                      <span className="checkmark" /> {category.name}{" "}
                     </button>
                   </div>
                 </li>
