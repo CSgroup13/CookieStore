@@ -9,11 +9,7 @@ const ProductGridTwo = ({
   spaceBottomClass,
   colorClass,
   titlePriceClass,
-  category,
-  type,
-  limit,
 }) => {
-  const currency = useSelector((state) => state.currency);
   const { cartItems } = useSelector((state) => state.cart);
   const { wishlistItems } = useSelector((state) => state.wishlist);
   const { compareItems } = useSelector((state) => state.compare);
