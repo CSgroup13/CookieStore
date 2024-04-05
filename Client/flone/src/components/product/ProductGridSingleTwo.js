@@ -3,7 +3,6 @@ import { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import clsx from "clsx";
-import { getDiscountPrice } from "../../helpers/product";
 import ProductModal from "./ProductModal";
 import { addToCart } from "../../store/slices/cart-slice";
 import { addToWishlist } from "../../store/slices/wishlist-slice";
@@ -11,23 +10,14 @@ import { addToCompare } from "../../store/slices/compare-slice";
 
 const ProductGridSingleTwo = ({
   product,
-  currency,
   cartItem,
   wishlistItem,
   compareItem,
   spaceBottomClass,
   colorClass,
-  titlePriceClass
 }) => {
   const [modalShow, setModalShow] = useState(false);
-
-  const discountedPrice = getDiscountPrice(product.price, product.discount);
-  const finalProductPrice = +(product.price * currency.currencyRate).toFixed(2);
-  const finalDiscountedPrice = +(
-    discountedPrice * currency.currencyRate
-  ).toFixed(2);
   const dispatch = useDispatch();
-  product.imagePath=`/assets/img/cookies_images/${product.name}.jpg`;
 
   return (
     <Fragment>
@@ -36,7 +26,7 @@ const ProductGridSingleTwo = ({
           <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
             <img
               className="default-img"
-              src={product.imagePath}
+              src={product.image}
               alt=""
             />
           </Link>
@@ -73,7 +63,7 @@ const ProductGridSingleTwo = ({
             </button>
           </div>
         </div>
-        <div className="product-content-2">
+        {/* <div className="product-content-2">
           <div
             className={`title-price-wrap-2 ${titlePriceClass ? titlePriceClass : ""
               }`}
@@ -112,17 +102,13 @@ const ProductGridSingleTwo = ({
               <i className="fa fa-heart-o" />
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
       {/* product modal */}
       <ProductModal
         show={modalShow}
         onHide={() => setModalShow(false)}
         product={product}
-        currency={currency}
-        discountedPrice={discountedPrice}
-        finalProductPrice={finalProductPrice}
-        finalDiscountedPrice={finalDiscountedPrice}
         wishlistItem={wishlistItem}
         compareItem={compareItem}
       />

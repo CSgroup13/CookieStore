@@ -23,13 +23,16 @@ const ProductGridTwo = ({
   useEffect(() => {
     getBestSellers()
       .then((data) => {
-        setBestSellersProducts(data);
+        const productsWithImages = data.map((product) => ({
+          ...product,
+          image: `/assets/img/cookies_images/${product.name}.jpg`,
+        }));
+        setBestSellersProducts(productsWithImages);
       })
       .catch((error) => {
         console.error("Error fetching best sellers:", error);
       });
   }, []);
-
   return (
     <Fragment>
       {bestSellersProducts?.map((product) => {
@@ -39,7 +42,6 @@ const ProductGridTwo = ({
               spaceBottomClass={spaceBottomClass}
               colorClass={colorClass}
               product={product}
-              currency={currency}
               cartItem={cartItems.find(
                 (cartItem) => cartItem.id === product.id
               )}

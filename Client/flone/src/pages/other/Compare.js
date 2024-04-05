@@ -69,7 +69,7 @@ const Compare = () => {
                                       className="img-fluid"
                                       src={
                                         process.env.PUBLIC_URL +
-                                        compareItem.image[0]
+                                        compareItem.image
                                       }
                                       alt=""
                                     />
@@ -86,24 +86,6 @@ const Compare = () => {
                                     </Link>
                                   </div>
                                   <div className="compare-btn">
-                                    {compareItem.affiliateLink ? (
-                                      <a
-                                        href={compareItem.affiliateLink}
-                                        rel="noopener noreferrer"
-                                        target="_blank"
-                                      >
-                                        {" "}
-                                        Buy now{" "}
-                                      </a>
-                                    ) : compareItem.variation &&
-                                      compareItem.variation.length >= 1 ? (
-                                      <Link
-                                        to={`${process.env.PUBLIC_URL}/product/${compareItem.id}`}
-                                      >
-                                        Select Option
-                                      </Link>
-                                    ) : compareItem.stock &&
-                                      compareItem.stock > 0 ? (
                                       <button
                                         onClick={() =>
                                           dispatch(addToCart(compareItem))
@@ -129,11 +111,6 @@ const Compare = () => {
                                           ? "Added"
                                           : "Add to cart"}
                                       </button>
-                                    ) : (
-                                      <button disabled className="active">
-                                        Out of Stock
-                                      </button>
-                                    )}
                                   </div>
                                 </td>
                               );
@@ -142,61 +119,49 @@ const Compare = () => {
                           <tr>
                             <th className="title-column">Price</th>
                             {compareItems.map((compareItem, key) => {
-                              const discountedPrice = getDiscountPrice(
-                                compareItem.price,
-                                compareItem.discount
-                              );
-                              const finalProductPrice = (
-                                compareItem.price * currency.currencyRate
-                              ).toFixed(2);
-                              const finalDiscountedPrice = (
-                                discountedPrice * currency.currencyRate
-                              ).toFixed(2);
                               return (
                                 <td className="product-price" key={key}>
-                                  {discountedPrice !== null ? (
-                                    <Fragment>
-                                      <span className="amount old">
-                                        {currency.currencySymbol +
-                                          finalProductPrice}
-                                      </span>
-                                      <span className="amount">
-                                        {currency.currencySymbol +
-                                          finalDiscountedPrice}
-                                      </span>
-                                    </Fragment>
-                                  ) : (
-                                    <span className="amount">
-                                      {currency.currencySymbol +
-                                        finalProductPrice}
+                                    <span dir="rtl" className="amount">
+                                      {compareItem.price} ש"ח
                                     </span>
-                                  )}
                                 </td>
                               );
                             })}
                           </tr>
-
                           <tr>
                             <th className="title-column">Description</th>
                             {compareItems.map((compareItem, key) => {
                               return (
                                 <td className="product-desc" key={key}>
                                   <p>
-                                    {compareItem.shortDescription
-                                      ? compareItem.shortDescription
+                                    {compareItem.description
+                                      ? compareItem.description
                                       : "N/A"}
                                   </p>
                                 </td>
                               );
                             })}
                           </tr>
-
+                          <tr>
+                            <th className="title-column">Ingredients</th>
+                            {compareItems.map((compareItem, key) => {
+                              return (
+                                <td className="product-desc" key={key}>
+                                  <p>
+                                    {compareItem.ingredients
+                                      ? compareItem.ingredients.join(",")
+                                      : "N/A"}
+                                  </p>
+                                </td>
+                              );
+                            })}
+                          </tr>
                           <tr>
                             <th className="title-column">Rating</th>
                             {compareItems.map((compareItem, key) => {
                               return (
                                 <td className="product-rating" key={key}>
-                                  <Rating ratingValue={compareItem.rating} />
+                                  <Rating ratingValue={compareItem.rate} />
                                 </td>
                               );
                             })}

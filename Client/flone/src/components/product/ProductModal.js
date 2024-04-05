@@ -1,62 +1,17 @@
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
-import { EffectFade, Thumbs } from 'swiper';
 import { Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Rating from "./sub-components/ProductRating";
-import Swiper, { SwiperSlide } from "../../components/swiper";
-import { getProductCartQuantity } from "../../helpers/product";
 import { addToCart } from "../../store/slices/cart-slice";
 import { addToWishlist } from "../../store/slices/wishlist-slice";
 import { addToCompare } from "../../store/slices/compare-slice";
 
 function ProductModal({ product, show, onHide, wishlistItem, compareItem }) {
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.cart);
-
-  const [selectedProductColor, setSelectedProductColor] = useState(
-    product.variation ? product.variation[0].color : ""
-  );
-  const [selectedProductSize, setSelectedProductSize] = useState(
-    product.variation ? product.variation[0].size[0].name : ""
-  );
-  const [productStock, setProductStock] = useState(
-    product.variation ? product.variation[0].size[0].stock : product.stock
-  );
   const [quantityCount, setQuantityCount] = useState(1);
-  const productCartQty = getProductCartQuantity(
-    cartItems,
-    product,
-    selectedProductColor,
-    selectedProductSize
-  );
-
-
-  const gallerySwiperParams = {
-    spaceBetween: 10,
-    loop: true,
-    effect: "fade",
-    fadeEffect: {
-      crossFade: true
-    },
-    thumbs: { swiper: thumbsSwiper },
-    modules: [EffectFade, Thumbs],
-  };
-
-  const thumbnailSwiperParams = {
-    onSwiper: setThumbsSwiper,
-    spaceBetween: 10,
-    slidesPerView: 4,
-    touchRatio: 0.2,
-    freeMode: true,
-    loop: true,
-    slideToClickedSlide: true,
-    navigation: true
-  };
-
   const onCloseModal = () => {
-    setThumbsSwiper(null)
     onHide()
   }
 
@@ -69,7 +24,7 @@ function ProductModal({ product, show, onHide, wishlistItem, compareItem }) {
           <div className="col-md-5 col-sm-12 col-xs-12">
             <div className="product-large-image-wrapper">
               <img
-                src={product.imagePath}
+                src={product.image}
                 className="img-fluid"
                 alt="Product"
               />
@@ -90,8 +45,12 @@ function ProductModal({ product, show, onHide, wishlistItem, compareItem }) {
               <div className="pro-details-list">
                 <p>{product.description}</p>
               </div>
-              <div dir="rtl" style={{color:"brown",fontSize:"35px",marginRight:"20px"}}>
-              {product.price} ש"ח
+              <div className="pro-details-list">
+                <span>Ingredients: </span>
+                <span>{product.ingredients.join(", ")}</span>
+              </div>
+              <div dir="rtl" style={{ color: "brown", fontSize: "35px", textAlign:"center"}}>
+                {product.price} ש"ח
               </div>
               <div className="pro-details-quality">
                 <div className="cart-plus-minus">
@@ -113,11 +72,7 @@ function ProductModal({ product, show, onHide, wishlistItem, compareItem }) {
                   />
                   <button
                     onClick={() =>
-                      setQuantityCount(
-                        quantityCount < productStock - productCartQty
-                          ? quantityCount + 1
-                          : quantityCount
-                      )
+                      setQuantityCount(quantityCount + 1)
                     }
                     className="inc qtybutton"
                   >
@@ -125,24 +80,17 @@ function ProductModal({ product, show, onHide, wishlistItem, compareItem }) {
                   </button>
                 </div>
                 <div className="pro-details-cart btn-hover">
-                  {productStock && productStock > 0 ? (
                     <button
                       onClick={() =>
                         dispatch(addToCart({
                           ...product,
                           quantity: quantityCount,
-                          selectedProductColor: selectedProductColor ? selectedProductColor : product.selectedProductColor ? product.selectedProductColor : null,
-                          selectedProductSize: selectedProductSize ? selectedProductSize : product.selectedProductSize ? product.selectedProductSize : null
                         }))
                       }
-                      disabled={productCartQty >= productStock}
                     >
                       {" "}
                       Add To Cart{" "}
                     </button>
-                  ) : (
-                    <button disabled>Out of Stock</button>
-                  )}
                 </div>
                 <div className="pro-details-wishlist">
                   <button
@@ -182,10 +130,6 @@ function ProductModal({ product, show, onHide, wishlistItem, compareItem }) {
 }
 
 ProductModal.propTypes = {
-  currency: PropTypes.shape({}),
-  discountedprice: PropTypes.number,
-  finaldiscountedprice: PropTypes.number,
-  finalproductprice: PropTypes.number,
   onHide: PropTypes.func,
   product: PropTypes.shape({}),
   show: PropTypes.bool,
