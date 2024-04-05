@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Tab from "react-bootstrap/Tab";
+import emailjs from "emailjs-com";
 import Nav from "react-bootstrap/Nav";
 import { useDispatch } from "react-redux";
 import SEO from "../../components/seo";
@@ -8,11 +9,28 @@ import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import cogoToast from "cogo-toast";
 import { loginUser } from "../../store/slices/user-slice";
-import api, { postData } from "../../utils/api";
+import api, { getData, postData } from "../../utils/api";
+import { useNavigate } from "react-router-dom";
 
 const LoginRegister = () => {
+  const navigate = useNavigate();
   let { pathname } = useLocation();
   const dispatch = useDispatch();
+  const [forgotPassword, setForgotPassword] = useState(false);
+  //Registration state
+  const [registrationData, setRegistrationData] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+    firstName: "",
+    lastName: "",
+    phone: "",
+    address: "",
+  });
+  const [registrationErrors, setRegistrationErrors] = useState({});
+  const [isRegistrationValid, setIsRegistrationValid] = useState(false);
+
+  //Login state
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -20,6 +38,19 @@ const LoginRegister = () => {
   const [errors, setErrors] = useState({});
   const [isLoginValid, setIsLoginValid] = useState(false);
 
+  //Registration form validation
+  useEffect(() => {
+    // Check if there are any errors or required fields are missing
+    const noErrors = Object.keys(registrationErrors).every(
+      (key) => !registrationErrors[key]
+    );
+    const allFieldsFilled = !Object.values(registrationData).some(
+      (value) => value === "" || value === null
+    );
+    setIsRegistrationValid(noErrors && allFieldsFilled);
+  }, [registrationData, registrationErrors]);
+
+  //Login form validation
   useEffect(() => {
     // Check if there are any errors or required fields are missing
     const noErrors = Object.keys(errors).every((key) => !errors[key]);
@@ -29,7 +60,17 @@ const LoginRegister = () => {
     setIsLoginValid(noErrors && allFieldsFilled);
   }, [loginData, errors]);
 
-  // Update form data
+  // Update registration form data
+  const handleRegistrationChange = (e) => {
+    const { name, value } = e.target;
+    setRegistrationData({
+      ...registrationData,
+      [name]: value,
+    });
+    validateRegistrationField(name, value);
+  };
+
+  // Update login form data
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLoginData({
@@ -39,7 +80,40 @@ const LoginRegister = () => {
     validateField(name, value);
   };
 
-  // Validate individual field
+  // Validate individual registration field
+  const validateRegistrationField = (name, value) => {
+    let errMsg;
+    switch (name) {
+      case "email":
+        if (
+          !/^[A-Za-z\d.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z\d](?:[A-Za-z\d-]{0,61}[A-Za-z\d])?(?:\.[A-Za-z\d](?:[A-Za-z\d-]{0,61}[A-Za-z\d])?)*\.com$/.test(
+            value
+          )
+        ) {
+          errMsg = "Invalid email format.";
+        }
+        break;
+      case "password":
+        if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{7,12}$/.test(value)) {
+          errMsg =
+            "Password must be 7-12 characters long, include at least one special character, one uppercase letter, and one number.";
+        }
+        break;
+      case "confirmPassword":
+        if (value !== registrationData.password) {
+          errMsg = "Passwords do not match.";
+        }
+        break;
+      default:
+        break;
+    }
+    setRegistrationErrors({
+      ...registrationErrors,
+      [name]: errMsg,
+    });
+  };
+
+  // Validate login individual field
   const validateField = (name, value) => {
     let errMsg;
     switch (name) {
@@ -68,6 +142,40 @@ const LoginRegister = () => {
       [name]: errMsg,
     });
   };
+
+  // Handle registration form submission
+  const handleRegistrationSubmit = (event) => {
+    event.preventDefault();
+    if (isRegistrationValid) {
+      const data = new FormData(event.currentTarget);
+      postData(`${api.users}register`, {
+        email: data.get("email"),
+        password: data.get("password"),
+        firstName: data.get("firstName"),
+        lastName: data.get("lastName"),
+        phone: data.get("phone"),
+        address: data.get("address"),
+        regDate: new Date(),
+      })
+        .then((user) => {
+          cogoToast.success(`Hello ${user.firstName} ${user.lastName}`, {
+            position: "top-right",
+          });
+          dispatch(loginUser(user));
+          console.log(user);
+          navigate("/");
+        })
+        .catch((error) => {
+          cogoToast.error(error.message, { position: "bottom-left" });
+        });
+    } else {
+      cogoToast.error("Form contains errors or missing information.", {
+        position: "bottom-left",
+      });
+    }
+  };
+
+  // Handle login form submission
   const handleSubmit = (event) => {
     event.preventDefault();
     if (isLoginValid) {
@@ -82,9 +190,11 @@ const LoginRegister = () => {
       })
         .then((user) => {
           cogoToast.success(`Hello ${user.firstName} ${user.lastName}`, {
-            position: "bottom-left",
+            position: "top-right",
           });
           dispatch(loginUser(user));
+          console.log(user);
+          navigate("/");
         })
         .catch((error) => {
           cogoToast.error(error.message, { position: "bottom-left" });
@@ -95,6 +205,49 @@ const LoginRegister = () => {
       });
     }
   };
+
+  //Forgot password
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handleForgetPasswordSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    getData(`${api.users}${email}/userDetailsByEmail`)
+      .then((user) => {
+        emailjs
+          .send(
+            "service_toin4ud", // Your email service ID
+            "template_pi1v48b", // Your email template ID
+            {
+              to_name: user.firstName + " " + user.lastName,
+              to_email: email,
+              from_name: "Cookies Addiction",
+              message: `Your Password is: ${user.password}`,
+            },
+            "Ov1O19nU4lvvYar64"
+          )
+          .then((response) => {
+            console.log("Email sent:", response);
+            cogoToast.success("Password email sent. Please check your email.");
+            // Reset form fields after successful email send
+            setEmail("");
+          })
+          .catch((error) => {
+            console.error("Error sending email:", error);
+          });
+      })
+      .catch((err) => {
+        cogoToast.error(err.message);
+      });
+    setIsLoading(false);
+  };
+
   return (
     <Fragment>
       <SEO
@@ -157,9 +310,15 @@ const LoginRegister = () => {
                                 <div className="login-toggle-btn">
                                   <input type="checkbox" />
                                   <label className="ml-10">Remember me</label>
-                                  <Link to={process.env.PUBLIC_URL + "/"}>
+                                  <br />
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      setForgotPassword((state) => !state)
+                                    }
+                                  >
                                     Forgot Password?
-                                  </Link>
+                                  </button>
                                 </div>
                                 <button type="submit">
                                   <span>Login</span>
@@ -169,24 +328,97 @@ const LoginRegister = () => {
                           </div>
                         </div>
                       </Tab.Pane>
+                      {forgotPassword && (
+                        <div>
+                          <div className="login-form-container">
+                            <div className="login-register-form">
+                              <h2>Forgot Password</h2>
+                              <form onSubmit={handleForgetPasswordSubmit}>
+                                <label htmlFor="email">Email:</label>
+                                <input
+                                  type="email"
+                                  id="email"
+                                  value={email}
+                                  onChange={handleEmailChange}
+                                  placeholder="Enter your email"
+                                  required
+                                  disabled={isLoading}
+                                />
+                                <div className="button-box">
+                                  <button type="submit" disabled={isLoading}>
+                                    <span>Send Email</span>
+                                  </button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                       <Tab.Pane eventKey="register">
                         <div className="login-form-container">
                           <div className="login-register-form">
-                            <form>
+                            <form onSubmit={handleRegistrationSubmit}>
+                              {registrationErrors.email && (
+                                <p>{registrationErrors.email}</p>
+                              )}
+                              <br />
                               <input
-                                type="text"
-                                name="user-name"
-                                placeholder="Username"
-                              />
-                              <input
-                                type="password"
-                                name="user-password"
-                                placeholder="Password"
-                              />
-                              <input
-                                name="user-email"
+                                name="email"
                                 placeholder="Email"
                                 type="email"
+                                onChange={handleRegistrationChange}
+                                required
+                              />
+                              {registrationErrors.password && (
+                                <p>{registrationErrors.password}</p>
+                              )}
+                              <br />
+
+                              <input
+                                type="password"
+                                name="password"
+                                onChange={handleRegistrationChange}
+                                placeholder="Password"
+                                required
+                              />
+                              {registrationErrors.confirmPassword && (
+                                <p>{registrationErrors.confirmPassword}</p>
+                              )}
+                              <br />
+                              <input
+                                type="password"
+                                name="confirmPassword"
+                                placeholder="Confirm Password"
+                                onChange={handleRegistrationChange}
+                                required
+                              />
+                              <input
+                                type="text"
+                                name="firstName"
+                                placeholder="First Name"
+                                onChange={handleRegistrationChange}
+                                required
+                              />
+                              <input
+                                type="text"
+                                name="lastName"
+                                placeholder="Last Name"
+                                onChange={handleRegistrationChange}
+                                required
+                              />
+                              <input
+                                type="text"
+                                name="phone"
+                                placeholder="Phone"
+                                onChange={handleRegistrationChange}
+                                required
+                              />
+                              <input
+                                type="text"
+                                name="address"
+                                placeholder="Address"
+                                onChange={handleRegistrationChange}
+                                required
                               />
                               <div className="button-box">
                                 <button type="submit">

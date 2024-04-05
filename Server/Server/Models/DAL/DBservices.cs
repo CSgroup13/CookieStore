@@ -306,6 +306,63 @@ public class DBservices
     }
 
     //--------------------------------------------------------------------------------------------------
+    // This method returns user details by his email
+    //--------------------------------------------------------------------------------------------------
+    public UserClass getUserDetailsByEmail(string email)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            throw (ex);
+        }
+
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+        paramDic.Add("@email", email);
+
+        cmd = CreateCommandWithStoredProcedure("SP_getUserDetailsByEmail", con, paramDic);
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            if (dataReader.Read())
+            {
+                UserClass u = new UserClass();
+                u.id = Convert.ToInt32(dataReader["id"]);
+                u.firstName = dataReader["firstName"].ToString();
+                u.lastName = dataReader["lastName"].ToString();
+                u.email = dataReader["email"].ToString();
+                u.password = dataReader["password"].ToString();
+                u.phone = dataReader["phone"].ToString();
+                u.address = dataReader["address"].ToString();
+                u.regDate = Convert.ToDateTime(dataReader["regDate"]);
+                return u;
+            }
+            return null;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+    //--------------------------------------------------------------------------------------------------
     // This method return top 5 users by total order price
     //--------------------------------------------------------------------------------------------------
     public List<UserClass> getTop5()
@@ -687,6 +744,10 @@ public class DBservices
                 u.firstName = dataReader["firstName"].ToString();
                 u.lastName = dataReader["lastName"].ToString();
                 u.email = dataReader["email"].ToString();
+                u.password = dataReader["password"].ToString();
+                u.phone = dataReader["phone"].ToString();
+                u.address = dataReader["address"].ToString();
+                u.regDate = Convert.ToDateTime(dataReader["regDate"]);
                 return u;
             }
             return null;
@@ -1694,7 +1755,7 @@ public class DBservices
                 o.shippingMethod = (Order.ShippingMethod)dataReader["shippingMethod"];
                 o.paymentMethod = (Order.PaymentMethod)dataReader["paymentMethod"];
                 o.orderItems = getOrderItems(o.id);
-                
+
                 orders.Add(o);
             }
             return orders;

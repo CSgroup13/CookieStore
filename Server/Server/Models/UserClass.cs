@@ -34,6 +34,19 @@
             return dbs.Register(this);
         }
 
+        // return User object of forgotten password
+        public static UserClass getUserDetailsByEmail(string email)
+        {
+            DBservices dbs = new DBservices();
+            UserClass u = dbs.getUserDetailsByEmail(email);
+            if (u == null)
+            {
+                throw new Exception("Email Not Exist");
+            }
+            else
+                return u;
+        }
+
         //return User object after logging or null if it failed
         public UserClass Login()
         {

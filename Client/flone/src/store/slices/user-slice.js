@@ -1,5 +1,3 @@
-import cogoToast from "cogo-toast";
-import api, { postData } from "../../utils/api";
 const { createSlice } = require("@reduxjs/toolkit");
 
 const userSlice = createSlice({
@@ -12,11 +10,8 @@ const userSlice = createSlice({
     loginUser(state, action) {
       state.loggedUser = action.payload;
     },
-    logoutUser(state, action) {
-      return (state = {
-        loggedUser: {},
-        isAdmin: false,
-      });
+    logoutUser(state) {
+      state.loggedUser = {};
     },
   },
 });

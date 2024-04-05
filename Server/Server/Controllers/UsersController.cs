@@ -30,6 +30,20 @@ namespace Server.Controllers
                 return BadRequest(e.Message);
             }
         }
+        //get user details by email
+        // GET: api/<UsersController>/
+        [HttpGet("{email}/userDetailsByEmail")]
+        public IActionResult getUserDetailsByEmail(string email)
+        {
+            try
+            {
+                return Ok(UserClass.getUserDetailsByEmail(email));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         //get all favorite products of user by user id
         // GET: api/<UsersController>/
         [HttpGet("{userId}/products")]

@@ -12,9 +12,10 @@ const api = {
 export const getData = (endpoint) => {
   // const endpoint = api.products;
   return fetch(endpoint)
-    .then((response) => {
+    .then(async (response) => {
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        const errorText = await response.text();
+        throw new Error(errorText || "Server error");
       }
       return response.json();
     })
@@ -22,8 +23,7 @@ export const getData = (endpoint) => {
       return data;
     })
     .catch((error) => {
-      // Handle errors here
-      console.error("There was a problem with your fetch operation:", error);
+      throw new Error(error.message || "Network error");
     });
 };
 export const postData = (endpoint, payload) => {

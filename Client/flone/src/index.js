@@ -15,7 +15,6 @@ import api, { getData } from "./utils/api";
 
 getData(api.products)
   .then((products) => {
-    console.log(products);
     store.dispatch(setProducts(products));
   })
   .catch();

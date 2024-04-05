@@ -1,11 +1,13 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import cogoToast from "cogo-toast";
 import clsx from "clsx";
 import MenuCart from "./sub-components/MenuCart";
+import { logoutUser } from "../../store/slices/user-slice";
 
 const IconGroup = ({ iconWhiteClass }) => {
-  const handleClick = e => {
+  const handleClick = (e) => {
     e.currentTarget.nextSibling.classList.toggle("active");
   };
 
@@ -15,14 +17,16 @@ const IconGroup = ({ iconWhiteClass }) => {
     );
     offcanvasMobileMenu.classList.add("active");
   };
+  const dispatch = useDispatch();
+  const { loggedUser } = useSelector((state) => state.user);
   const { compareItems } = useSelector((state) => state.compare);
   const { wishlistItems } = useSelector((state) => state.wishlist);
   const { cartItems } = useSelector((state) => state.cart);
 
   return (
-    <div className={clsx("header-right-wrap", iconWhiteClass)} >
+    <div className={clsx("header-right-wrap", iconWhiteClass)}>
       <div className="same-style header-search d-none d-lg-block">
-        <button className="search-active" onClick={e => handleClick(e)}>
+        <button className="search-active" onClick={(e) => handleClick(e)}>
           <i className="pe-7s-search" />
         </button>
         <div className="search-content">
@@ -34,23 +38,42 @@ const IconGroup = ({ iconWhiteClass }) => {
           </form>
         </div>
       </div>
-      <div className="same-style account-setting d-none d-lg-block">
+      <div className="same-style account-setting">
         <button
           className="account-setting-active"
-          onClick={e => handleClick(e)}
+          style={{ color: loggedUser.firstName ? 'green' : 'black' }}
+          onClick={(e) => handleClick(e)}
         >
           <i className="pe-7s-user-female" />
         </button>
         <div className="account-dropdown">
           <ul>
-            <li>
-              <Link to={process.env.PUBLIC_URL + "/login-register"}>Login</Link>
-            </li>
-            <li>
-              <Link to={process.env.PUBLIC_URL + "/login-register"}>
-                Register
-              </Link>
-            </li>
+            {loggedUser?.firstName ? (
+              <li>
+                <Link
+                  onClick={() => {
+                    dispatch(logoutUser());
+                    cogoToast.success(
+                      `Bye ${loggedUser.firstName} ${loggedUser.lastName}`,
+                      {
+                        position: "top-right",
+                      }
+                    );
+                  }}
+                >
+                  Logout
+                </Link>
+              </li>
+            ) : (
+              <>
+                <li>
+                  <Link to={process.env.PUBLIC_URL + "/login-register"}>
+                    Login/Register
+                  </Link>
+                </li>
+              </>
+            )}
+
             <li>
               <Link to={process.env.PUBLIC_URL + "/my-account"}>
                 my account
@@ -76,10 +99,10 @@ const IconGroup = ({ iconWhiteClass }) => {
         </Link>
       </div>
       <div className="same-style cart-wrap d-none d-lg-block">
-        <button className="icon-cart" onClick={e => handleClick(e)}>
+        <button className="icon-cart" onClick={(e) => handleClick(e)}>
           <i className="pe-7s-shopbag" />
           <span className="count-style">
-          {cartItems.reduce((total, item) => total + item.quantity, 0)}
+            {cartItems.reduce((total, item) => total + item.quantity, 0)}
           </span>
         </button>
         {/* menu cart */}
@@ -108,7 +131,5 @@ const IconGroup = ({ iconWhiteClass }) => {
 IconGroup.propTypes = {
   iconWhiteClass: PropTypes.string,
 };
-
-
 
 export default IconGroup;
