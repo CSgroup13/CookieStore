@@ -15,7 +15,11 @@ import api, { getData } from "./utils/api";
 
 getData(api.products)
   .then((products) => {
-    store.dispatch(setProducts(products));
+    const productsWithImages = products.map((product) => ({
+      ...product,
+      image: `/assets/img/cookies_images/${product.name}.jpg`,
+    }));
+    store.dispatch(setProducts(productsWithImages));
   })
   .catch((error) => {
     console.error(error);
