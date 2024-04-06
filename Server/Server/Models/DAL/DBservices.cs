@@ -1650,9 +1650,6 @@ public class DBservices
         }
     }
 
-
-
-
     public Order addOrder(Order o)
     {
         SqlConnection con;
@@ -1675,10 +1672,10 @@ public class DBservices
         paramDic.Add("@totalPrice", o.totalPrice);
         paramDic.Add("@date", o.date);
         paramDic.Add("@shippingAddress", o.shippingAddress);
-        paramDic.Add("@notes", o.notes);
-        paramDic.Add("@status", (int)o.status);
         paramDic.Add("@shippingMethod", (int)o.shippingMethod);
         paramDic.Add("@paymentMethod", (int)o.paymentMethod);
+        paramDic.Add("@notes", o.notes);
+        paramDic.Add("@status", (int)o.status);
 
         cmd = CreateCommandWithStoredProcedure("SP_addOrder", con, paramDic);// create the command
         try

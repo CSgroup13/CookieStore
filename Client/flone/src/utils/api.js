@@ -9,6 +9,7 @@ const api = {
   orders: currentApi + "Order/",
   users: currentApi + "Users/",
 };
+
 export const getData = (endpoint) => {
   return fetch(endpoint)
     .then(async (response) => {
