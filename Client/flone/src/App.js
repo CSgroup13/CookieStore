@@ -1,6 +1,11 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import ScrollToTop from "./helpers/scroll-top";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import api, { getData } from "./utils/api";
+import { store } from "./store/store";
+import { useSelector } from "react-redux";
+import { setProducts } from "./store/slices/product-slice";
+import { setWishlist } from "./store/slices/wishlist-slice";
 
 // home page
 const HomeOrganicFood = lazy(() => import("./pages/home/HomeOrganicFood"));
@@ -26,81 +31,108 @@ const Checkout = lazy(() => import("./pages/other/Checkout"));
 const NotFound = lazy(() => import("./pages/other/NotFound"));
 
 const App = () => {
+  const { loggedUser } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    getData(api.products)
+      .then((products) => {
+        const productsWithImages = products.map((product) => ({
+          ...product,
+          image: `/assets/img/cookies_images/${product.name}.jpg`,
+        }));
+        store.dispatch(setProducts(productsWithImages));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+  useEffect(() => {
+    if (loggedUser?.firstName) {
+      getData(`${api.users}${loggedUser.id}/products`)
+        .then((products) => {
+          const productsWithImages = products.map((product) => ({
+            ...product,
+            image: `/assets/img/cookies_images/${product.name}.jpg`,
+          }));
+          store.dispatch(setWishlist(productsWithImages));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else store.dispatch(setWishlist([]));
+  }, [loggedUser]);
+
   return (
-      <Router>
-        <ScrollToTop>
-          <Suspense
-            fallback={
-              <div className="flone-preloader-wrapper">
-                <div className="flone-preloader">
-                  <span></span>
-                  <span></span>
-                </div>
+    <Router>
+      <ScrollToTop>
+        <Suspense
+          fallback={
+            <div className="flone-preloader-wrapper">
+              <div className="flone-preloader">
+                <span></span>
+                <span></span>
               </div>
-            }
-          >
-            <Routes>
-              
-              <Route
-                path={process.env.PUBLIC_URL + "/"}
-                element={<HomeOrganicFood/>}
-              />
-              
-              {/* Shop pages */}
-              <Route
-                path={process.env.PUBLIC_URL + "/shop-grid-standard"}
-                element={<ShopGridStandard/>}
-              />
-             
-              {/* Shop product pages */}
-              <Route
-                path={process.env.PUBLIC_URL + "/product/:id"}
-                element={<Product />}
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/product-tab-left/:id"}
-                element={<ProductTabLeft/>}
-              />
-              {/* Other pages */}
-              <Route
-                path={process.env.PUBLIC_URL + "/about"}
-                element={<About/>}
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/contact"}
-                element={<Contact/>}
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/my-account"}
-                element={<MyAccount/>}
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/login-register"}
-                element={<LoginRegister/>}
-              />
+            </div>
+          }
+        >
+          <Routes>
+            <Route
+              path={process.env.PUBLIC_URL + "/"}
+              element={<HomeOrganicFood />}
+            />
 
-              <Route
-                path={process.env.PUBLIC_URL + "/cart"}
-                element={<Cart/>}
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/wishlist"}
-                element={<Wishlist/>}
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/compare"}
-                element={<Compare/>}
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/checkout"}
-                element={<Checkout/>}
-              /> 
+            {/* Shop pages */}
+            <Route
+              path={process.env.PUBLIC_URL + "/shop-grid-standard"}
+              element={<ShopGridStandard />}
+            />
 
-              <Route path="*" element={<NotFound/>} />
-            </Routes>
-          </Suspense>
-        </ScrollToTop>
-      </Router>
+            {/* Shop product pages */}
+            <Route
+              path={process.env.PUBLIC_URL + "/product/:id"}
+              element={<Product />}
+            />
+            <Route
+              path={process.env.PUBLIC_URL + "/product-tab-left/:id"}
+              element={<ProductTabLeft />}
+            />
+            {/* Other pages */}
+            <Route
+              path={process.env.PUBLIC_URL + "/about"}
+              element={<About />}
+            />
+            <Route
+              path={process.env.PUBLIC_URL + "/contact"}
+              element={<Contact />}
+            />
+            <Route
+              path={process.env.PUBLIC_URL + "/my-account"}
+              element={<MyAccount />}
+            />
+            <Route
+              path={process.env.PUBLIC_URL + "/login-register"}
+              element={<LoginRegister />}
+            />
+
+            <Route path={process.env.PUBLIC_URL + "/cart"} element={<Cart />} />
+            <Route
+              path={process.env.PUBLIC_URL + "/wishlist"}
+              element={<Wishlist />}
+            />
+            <Route
+              path={process.env.PUBLIC_URL + "/compare"}
+              element={<Compare />}
+            />
+            <Route
+              path={process.env.PUBLIC_URL + "/checkout"}
+              element={<Checkout />}
+            />
+
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </ScrollToTop>
+    </Router>
   );
 };
 

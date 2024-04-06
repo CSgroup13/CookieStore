@@ -59,10 +59,15 @@ const ProductGridSingle = ({
                 }
                 onClick={() =>
                   loggedUser?.firstName
-                    ? dispatch(addToWishlist(product))
-                    : cogoToast.error("Must be logged in to add to Wishlist", {
-                        position: "bottom-left",
-                      })
+                    ? dispatch(
+                        addToWishlist({ ...product, userId: loggedUser.id })
+                      )
+                    : cogoToast.error(
+                        "Must be logged in to add to Wishlist",
+                        {
+                          position: "bottom-left",
+                        }
+                      )
                 }
               >
                 <i className="pe-7s-like" />

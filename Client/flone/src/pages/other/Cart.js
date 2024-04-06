@@ -80,7 +80,7 @@ const Cart = () => {
 
                                 <td className="product-price-cart">
                                   <span className="amount">
-                                    {cartItem.price}
+                                  ₪{cartItem.price}
                                   </span>
                                 </td>
 
@@ -116,7 +116,7 @@ const Cart = () => {
                                   </div>
                                 </td>
                                 <td className="product-subtotal">
-                                  {cartItem.price * cartItem.quantity}
+                                  ₪{cartItem.price * cartItem.quantity}
                                 </td>
                                 <td className="product-remove">
                                   <button

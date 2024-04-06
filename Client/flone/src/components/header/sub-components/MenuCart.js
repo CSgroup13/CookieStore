@@ -49,21 +49,13 @@ const MenuCart = () => {
                     <h6>Qty: {item.quantity}</h6>
                     <span>
                       {discountedPrice !== null
-                        ? currency.currencySymbol + finalDiscountedPrice
-                        : currency.currencySymbol + finalProductPrice}
+                        ? "₪" + finalDiscountedPrice
+                        : "₪" + finalProductPrice}
                     </span>
-                    {item.selectedProductColor && item.selectedProductSize ? (
-                      <div className="cart-item-variation">
-                        <span>Color: {item.selectedProductColor}</span>
-                        <span>Size: {item.selectedProductSize}</span>
-                      </div>
-                    ) : (
-                      ""
-                    )}
                   </div>
                   <div className="shopping-cart-delete">
                     <button
-                      onClick={() => dispatch(deleteFromCart(item.cartItemId))}
+                      onClick={() => dispatch(deleteFromCart(item.id))}
                     >
                       <i className="fa fa-times-circle" />
                     </button>
@@ -76,7 +68,7 @@ const MenuCart = () => {
             <h4>
               Total :{" "}
               <span className="shop-total">
-                {currency.currencySymbol + cartTotalPrice.toFixed(2)}
+                {"₪" + cartTotalPrice.toFixed(2)}
               </span>
             </h4>
           </div>

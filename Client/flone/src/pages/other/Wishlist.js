@@ -1,7 +1,6 @@
 import { Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
-import { getDiscountPrice } from "../../helpers/product";
 import SEO from "../../components/seo";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
@@ -12,7 +11,7 @@ const Wishlist = () => {
   const dispatch = useDispatch();
   let { pathname } = useLocation();
   
-  const currency = useSelector((state) => state.currency);
+  const {loggedUser} = useSelector((state) => state.user);
   const { wishlistItems } = useSelector((state) => state.wishlist);
   const { cartItems } = useSelector((state) => state.cart);
   
@@ -124,7 +123,7 @@ const Wishlist = () => {
                                 <td className="product-remove">
                                   <button
                                     onClick={() =>
-                                      dispatch(deleteFromWishlist(wishlistItem.id))
+                                      dispatch(deleteFromWishlist({id:wishlistItem.id,userId:loggedUser.id}))
                                     }
                                   >
                                     <i className="fa fa-times"></i>

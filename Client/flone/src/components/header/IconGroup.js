@@ -41,7 +41,7 @@ const IconGroup = ({ iconWhiteClass }) => {
       <div className="same-style account-setting">
         <button
           className="account-setting-active"
-          style={{ color: loggedUser.firstName ? 'green' : 'black' }}
+          style={{ color: loggedUser.firstName ? "green" : "black" }}
           onClick={(e) => handleClick(e)}
         >
           <i className="pe-7s-user-female" />
@@ -102,7 +102,7 @@ const IconGroup = ({ iconWhiteClass }) => {
         <button className="icon-cart" onClick={(e) => handleClick(e)}>
           <i className="pe-7s-shopbag" />
           <span className="count-style">
-            {cartItems.reduce((total, item) => total + item.quantity, 0)}
+          {cartItems && cartItems.length ? cartItems.length : 0}
           </span>
         </button>
         {/* menu cart */}
@@ -112,7 +112,7 @@ const IconGroup = ({ iconWhiteClass }) => {
         <Link className="icon-cart" to={process.env.PUBLIC_URL + "/cart"}>
           <i className="pe-7s-shopbag" />
           <span className="count-style">
-            {cartItems.reduce((total, item) => total + item.quantity, 0)}
+            {cartItems.reduce((total) => total + 1, 0)}
           </span>
         </Link>
       </div>

@@ -112,7 +112,9 @@ function ProductModal({ product, show, onHide, wishlistItem, compareItem }) {
                     }
                     onClick={() =>
                       loggedUser?.firstName
-                        ? dispatch(addToWishlist(product))
+                        ? dispatch(
+                            addToWishlist({ ...product, userId: loggedUser.id })
+                          )
                         : cogoToast.error(
                             "Must be logged in to add to Wishlist",
                             {

@@ -48,4 +48,25 @@ export const postData = (endpoint, payload) => {
       throw new Error(error.message || "Network error");
     });
 };
+
+export const deleteData = (endpoint) => {
+  const requestOptions = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json, text/plain",
+    },
+  };
+  return fetch(endpoint, requestOptions)
+    .then(async (response) => {
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText.slice(1, -1) || "Server error");
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      throw new Error(error.message || "Network error");
+    });
+};
 export default api;
