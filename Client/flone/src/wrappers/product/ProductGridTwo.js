@@ -28,7 +28,7 @@ const ProductGridTwo = ({
       .catch((error) => {
         console.error("Error fetching best sellers:", error);
       });
-  }, []);
+  }, [products]);
 
   return (
     <Fragment>
