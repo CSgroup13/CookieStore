@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { Fragment, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import Rating from "./sub-components/ProductRating";
@@ -8,26 +8,24 @@ import ProductModal from "./ProductModal";
 import { addToCart } from "../../store/slices/cart-slice";
 import { addToWishlist } from "../../store/slices/wishlist-slice";
 import { addToCompare } from "../../store/slices/compare-slice";
+import cogoToast from "cogo-toast";
 
 const ProductGridListSingle = ({
   product,
   cartItem,
   wishlistItem,
   compareItem,
-  spaceBottomClass
+  spaceBottomClass,
 }) => {
   const [modalShow, setModalShow] = useState(false);
+  const { loggedUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   return (
     <Fragment>
       <div className={clsx("product-wrap", spaceBottomClass)}>
         <div className="product-img">
-          <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
-            <img
-              className="default-img"
-              src={product.image}
-              alt=""
-            />
+          <Link onClick={() => setModalShow(true)}>
+            <img className="default-img" src={product.image} alt="" />
           </Link>
           {product.new ? (
             <div className="product-img-badges">
@@ -46,30 +44,34 @@ const ProductGridListSingle = ({
                     ? "Added to wishlist"
                     : "Add to wishlist"
                 }
-                onClick={() => dispatch(addToWishlist(product))}
+                onClick={() =>
+                  loggedUser?.firstName
+                    ? dispatch(addToWishlist(product))
+                    : cogoToast.error("Must be logged in to add to Wishlist", {
+                        position: "bottom-left",
+                      })
+                }
               >
                 <i className="pe-7s-like" />
               </button>
             </div>
             <div className="pro-same-action pro-cart">
-                <button
-                  onClick={() => dispatch(addToCart(product))}
-                  className={
-                    cartItem !== undefined && cartItem.quantity > 0
-                      ? "active"
-                      : ""
-                  }
-                  disabled={cartItem !== undefined && cartItem.quantity > 0}
-                  title={
-                    cartItem !== undefined ? "Added to cart" : "Add to cart"
-                  }
-                >
-                  {" "}
-                  <i className="pe-7s-cart"></i>{" "}
-                  {cartItem !== undefined && cartItem.quantity > 0
-                    ? "Added"
-                    : "Add to cart"}
-                </button>
+              <button
+                onClick={() => dispatch(addToCart(product))}
+                className={
+                  cartItem !== undefined && cartItem.quantity > 0
+                    ? "active"
+                    : ""
+                }
+                disabled={cartItem !== undefined && cartItem.quantity > 0}
+                title={cartItem !== undefined ? "Added to cart" : "Add to cart"}
+              >
+                {" "}
+                <i className="pe-7s-cart"></i>{" "}
+                {cartItem !== undefined && cartItem.quantity > 0
+                  ? "Added"
+                  : "Add to cart"}
+              </button>
             </div>
             <div className="pro-same-action pro-quickview">
               <button onClick={() => setModalShow(true)} title="Quick View">
@@ -80,19 +82,17 @@ const ProductGridListSingle = ({
         </div>
         <div className="product-content text-center">
           <h3>
-            <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
-              {product.name}
-            </Link>
+            <Link onClick={() => setModalShow(true)}>{product.name}</Link>
           </h3>
-          {product.rating && product.rating > 0 ? (
+          {product.rate && product.rate > 0 ? (
             <div className="product-rating">
-              <Rating ratingValue={product.rating} />
+              <Rating ratingValue={product.rate} />
             </div>
           ) : (
             ""
           )}
           <div className="product-price">
-            <span>{product.price} </span>
+            <span>₪{product.price} </span>
           </div>
         </div>
       </div>
@@ -110,7 +110,7 @@ const ProductGridListSingle = ({
                 </Link>
                 {product.new ? (
                   <div className="product-img-badges">
-                   <span className="purple">New</span>
+                    <span className="purple">New</span>
                   </div>
                 ) : (
                   ""
@@ -121,12 +121,10 @@ const ProductGridListSingle = ({
           <div className="col-xl-8 col-md-7 col-sm-6">
             <div className="shop-list-content">
               <h3>
-                <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
-                  {product.name}
-                </Link>
+                <Link onClick={() => setModalShow(true)}>{product.name}</Link>
               </h3>
               <div className="product-list-price">
-                  <span>{product.price} </span>
+                <span>₪{product.price}</span>
               </div>
               {product.rate && product.rate > 0 ? (
                 <div className="rating-review">
@@ -137,36 +135,28 @@ const ProductGridListSingle = ({
               ) : (
                 ""
               )}
-              {product.description ? (
-                <p>{product.description}</p>
-              ) : (
-                ""
-              )}
+              {product.description ? <p>{product.description}</p> : ""}
 
               <div className="shop-list-actions d-flex align-items-center">
                 <div className="shop-list-btn btn-hover">
-                    <button
-                      onClick={() => dispatch(addToCart(product))}
-                      className={
-                        cartItem !== undefined && cartItem.quantity > 0
-                          ? "active"
-                          : ""
-                      }
-                      disabled={
-                        cartItem !== undefined && cartItem.quantity > 0
-                      }
-                      title={
-                        cartItem !== undefined
-                          ? "Added to cart"
-                          : "Add to cart"
-                      }
-                    >
-                      {" "}
-                      <i className="pe-7s-cart"></i>{" "}
-                      {cartItem !== undefined && cartItem.quantity > 0
-                        ? "Added"
-                        : "Add to cart"}
-                    </button>
+                  <button
+                    onClick={() => dispatch(addToCart(product))}
+                    className={
+                      cartItem !== undefined && cartItem.quantity > 0
+                        ? "active"
+                        : ""
+                    }
+                    disabled={cartItem !== undefined && cartItem.quantity > 0}
+                    title={
+                      cartItem !== undefined ? "Added to cart" : "Add to cart"
+                    }
+                  >
+                    {" "}
+                    <i className="pe-7s-cart"></i>{" "}
+                    {cartItem !== undefined && cartItem.quantity > 0
+                      ? "Added"
+                      : "Add to cart"}
+                  </button>
                 </div>
                 <div className="shop-list-wishlist ml-10">
                   <button
@@ -219,7 +209,7 @@ ProductGridListSingle.propTypes = {
   currency: PropTypes.shape({}),
   product: PropTypes.shape({}),
   spaceBottomClass: PropTypes.string,
-  wishlistItem: PropTypes.shape({})
+  wishlistItem: PropTypes.shape({}),
 };
 
 export default ProductGridListSingle;

@@ -1215,7 +1215,8 @@ public class DBservices
         paramDic.Add("@id", p.id);
         paramDic.Add("@name", p.name);
         paramDic.Add("@price", p.price);
-        paramDic.Add("@ingredients", p.ingredients);
+        string ingredientsString = string.Join(",", p.ingredients); // Converts List to a comma-separated string
+        paramDic.Add("@ingredients", ingredientsString);
         paramDic.Add("@description", p.description);
         paramDic.Add("@rate", p.rate);
         paramDic.Add("@image", p.image);

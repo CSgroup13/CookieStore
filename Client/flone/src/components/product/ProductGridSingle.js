@@ -2,12 +2,13 @@ import { Fragment, useState } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Rating from "./sub-components/ProductRating";
 import { getDiscountPrice } from "../../helpers/product";
 import ProductModal from "./ProductModal";
 import { addToCart } from "../../store/slices/cart-slice";
 import { addToWishlist } from "../../store/slices/wishlist-slice";
+import cogoToast from "cogo-toast";
 
 const ProductGridSingle = ({
   product,
@@ -15,8 +16,9 @@ const ProductGridSingle = ({
   cartItem,
   wishlistItem,
   compareItem,
-  spaceBottomClass
+  spaceBottomClass,
 }) => {
+  const { loggedUser } = useSelector((state) => state.user);
   const [modalShow, setModalShow] = useState(false);
   const discountedPrice = getDiscountPrice(product.price, product.discount);
   const finalProductPrice = +(product.price * currency.currencyRate).toFixed(2);
@@ -30,11 +32,7 @@ const ProductGridSingle = ({
       <div className={clsx("product-wrap", spaceBottomClass)}>
         <div className="product-img">
           <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
-            <img
-              className="default-img"
-              src={product.image}
-              alt=""
-            />
+            <img className="default-img" src={product.image} alt="" />
           </Link>
           {product.discount || product.new ? (
             <div className="product-img-badges">
@@ -59,7 +57,13 @@ const ProductGridSingle = ({
                     ? "Added to wishlist"
                     : "Add to wishlist"
                 }
-                onClick={() => dispatch(addToWishlist(product))}
+                onClick={() =>
+                  loggedUser?.firstName
+                    ? dispatch(addToWishlist(product))
+                    : cogoToast.error("Must be logged in to add to Wishlist", {
+                        position: "bottom-left",
+                      })
+                }
               >
                 <i className="pe-7s-like" />
               </button>

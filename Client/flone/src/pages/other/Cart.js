@@ -4,11 +4,19 @@ import { Link, useLocation } from "react-router-dom";
 import SEO from "../../components/seo";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
-import { addToCart, decreaseQuantity, deleteFromCart, deleteAllFromCart } from "../../store/slices/cart-slice";
+import {
+  addToCart,
+  decreaseQuantity,
+  deleteFromCart,
+  deleteAllFromCart,
+} from "../../store/slices/cart-slice";
+import ProductModal from "../../components/product/ProductModal";
 
 const Cart = () => {
   let cartTotalPrice = 0;
-
+  const { wishlistItems } = useSelector((state) => state.wishlist);
+  const { compareItems } = useSelector((state) => state.compare);
+  const [modalShow, setModalShow] = useState(false);
   const [quantityCount] = useState(1);
   const dispatch = useDispatch();
   let { pathname } = useLocation();
@@ -27,7 +35,7 @@ const Cart = () => {
         <Breadcrumb
           pages={[
             { label: "Home", path: process.env.PUBLIC_URL + "/" },
-            { label: "Cart", path: process.env.PUBLIC_URL + pathname }
+            { label: "Cart", path: process.env.PUBLIC_URL + pathname },
           ]}
         />
         <div className="cart-main-area pt-90 pb-100">
@@ -51,17 +59,12 @@ const Cart = () => {
                         </thead>
                         <tbody>
                           {cartItems.map((cartItem) => {
-                            cartTotalPrice += cartItem.price * cartItem.quantity;
+                            cartTotalPrice +=
+                              cartItem.price * cartItem.quantity;
                             return (
                               <tr key={cartItem.id}>
                                 <td className="product-thumbnail">
-                                  <Link
-                                    to={
-                                      process.env.PUBLIC_URL +
-                                      "/product/" +
-                                      cartItem.id
-                                    }
-                                  >
+                                  <Link onClick={() => setModalShow(true)}>
                                     <img
                                       className="img-fluid"
                                       src={cartItem.image}
@@ -70,13 +73,7 @@ const Cart = () => {
                                   </Link>
                                 </td>
                                 <td className="product-name">
-                                  <Link
-                                    to={
-                                      process.env.PUBLIC_URL +
-                                      "/product/" +
-                                      cartItem.id
-                                    }
-                                  >
+                                  <Link onClick={() => setModalShow(true)}>
                                     {cartItem.name}
                                   </Link>
                                 </td>
@@ -106,10 +103,12 @@ const Cart = () => {
                                     <button
                                       className="inc qtybutton"
                                       onClick={() =>
-                                        dispatch(addToCart({
-                                          ...cartItem,
-                                          quantity: quantityCount
-                                        }))
+                                        dispatch(
+                                          addToCart({
+                                            ...cartItem,
+                                            quantity: quantityCount,
+                                          })
+                                        )
                                       }
                                     >
                                       +
@@ -117,7 +116,7 @@ const Cart = () => {
                                   </div>
                                 </td>
                                 <td className="product-subtotal">
-                                  {cartItem.price}
+                                  {cartItem.price * cartItem.quantity}
                                 </td>
                                 <td className="product-remove">
                                   <button
@@ -128,6 +127,20 @@ const Cart = () => {
                                     <i className="fa fa-times"></i>
                                   </button>
                                 </td>
+                                {/* product modal */}
+                                <ProductModal
+                                  show={modalShow}
+                                  onHide={() => setModalShow(false)}
+                                  product={cartItem}
+                                  wishlistItem={wishlistItems.find(
+                                    (wishlistItem) =>
+                                      wishlistItem.id === cartItem.id
+                                  )}
+                                  compareItem={compareItems.find(
+                                    (compareItem) =>
+                                      compareItem.id === cartItem.id
+                                  )}
+                                />
                               </tr>
                             );
                           })}

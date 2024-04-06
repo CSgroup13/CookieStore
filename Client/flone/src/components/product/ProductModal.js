@@ -6,28 +6,30 @@ import Rating from "./sub-components/ProductRating";
 import { addToCart } from "../../store/slices/cart-slice";
 import { addToWishlist } from "../../store/slices/wishlist-slice";
 import { addToCompare } from "../../store/slices/compare-slice";
+import cogoToast from "cogo-toast";
 
 function ProductModal({ product, show, onHide, wishlistItem, compareItem }) {
   const dispatch = useDispatch();
+  const { loggedUser } = useSelector((state) => state.user);
   const { cartItems } = useSelector((state) => state.cart);
   const [quantityCount, setQuantityCount] = useState(1);
   const onCloseModal = () => {
-    onHide()
-  }
+    onHide();
+  };
 
   return (
-    <Modal show={show} onHide={onCloseModal} className="product-quickview-modal-wrapper">
+    <Modal
+      show={show}
+      onHide={onCloseModal}
+      className="product-quickview-modal-wrapper"
+    >
       <Modal.Header closeButton></Modal.Header>
 
       <div className="modal-body">
         <div className="row">
           <div className="col-md-5 col-sm-12 col-xs-12">
             <div className="product-large-image-wrapper">
-              <img
-                src={product.image}
-                className="img-fluid"
-                alt="Product"
-              />
+              <img src={product.image} className="img-fluid" alt="Product" />
             </div>
           </div>
           <div className="col-md-7 col-sm-12 col-xs-12">
@@ -49,8 +51,15 @@ function ProductModal({ product, show, onHide, wishlistItem, compareItem }) {
                 <span>Ingredients: </span>
                 <span>{product.ingredients.join(", ")}</span>
               </div>
-              <div dir="rtl" style={{ color: "brown", fontSize: "35px", textAlign:"center"}}>
-                {product.price} ש"ח
+              <div
+                dir="rtl"
+                style={{
+                  color: "brown",
+                  fontSize: "35px",
+                  textAlign: "center",
+                }}
+              >
+                ₪{product.price}
               </div>
               <div className="pro-details-quality">
                 <div className="cart-plus-minus">
@@ -71,26 +80,26 @@ function ProductModal({ product, show, onHide, wishlistItem, compareItem }) {
                     readOnly
                   />
                   <button
-                    onClick={() =>
-                      setQuantityCount(quantityCount + 1)
-                    }
+                    onClick={() => setQuantityCount(quantityCount + 1)}
                     className="inc qtybutton"
                   >
                     +
                   </button>
                 </div>
                 <div className="pro-details-cart btn-hover">
-                    <button
-                      onClick={() =>
-                        dispatch(addToCart({
+                  <button
+                    onClick={() =>
+                      dispatch(
+                        addToCart({
                           ...product,
                           quantity: quantityCount,
-                        }))
-                      }
-                    >
-                      {" "}
-                      Add To Cart{" "}
-                    </button>
+                        })
+                      )
+                    }
+                  >
+                    {" "}
+                    Add To Cart{" "}
+                  </button>
                 </div>
                 <div className="pro-details-wishlist">
                   <button
@@ -101,7 +110,16 @@ function ProductModal({ product, show, onHide, wishlistItem, compareItem }) {
                         ? "Added to wishlist"
                         : "Add to wishlist"
                     }
-                    onClick={() => dispatch(addToWishlist(product))}
+                    onClick={() =>
+                      loggedUser?.firstName
+                        ? dispatch(addToWishlist(product))
+                        : cogoToast.error(
+                            "Must be logged in to add to Wishlist",
+                            {
+                              position: "bottom-left",
+                            }
+                          )
+                    }
                   >
                     <i className="pe-7s-like" />
                   </button>
@@ -134,7 +152,7 @@ ProductModal.propTypes = {
   product: PropTypes.shape({}),
   show: PropTypes.bool,
   wishlistItem: PropTypes.shape({}),
-  compareItem: PropTypes.shape({})
+  compareItem: PropTypes.shape({}),
 };
 
 export default ProductModal;

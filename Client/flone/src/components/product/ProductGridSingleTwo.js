@@ -1,12 +1,13 @@
 import PropTypes from "prop-types";
 import { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import clsx from "clsx";
 import ProductModal from "./ProductModal";
 import { addToCart } from "../../store/slices/cart-slice";
 import { addToWishlist } from "../../store/slices/wishlist-slice";
 import { addToCompare } from "../../store/slices/compare-slice";
+import cogoToast from "cogo-toast";
 
 const ProductGridSingleTwo = ({
   product,
@@ -17,31 +18,25 @@ const ProductGridSingleTwo = ({
   colorClass,
 }) => {
   const [modalShow, setModalShow] = useState(false);
+  const { loggedUser } = useSelector((state) => state.user);
+
   const dispatch = useDispatch();
 
   return (
     <Fragment>
       <div className={clsx("product-wrap-2", spaceBottomClass, colorClass)}>
         <div className="product-img">
-          <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
-            <img
-              className="default-img"
-              src={product.image}
-              alt=""
-            />
+          <Link onClick={() => setModalShow(true)}>
+            <img className="default-img" src={product.image} alt="" />
           </Link>
           <div className="product-action-2">
             <button
               onClick={() => dispatch(addToCart(product))}
               className={
-                cartItem !== undefined && cartItem.quantity > 0
-                  ? "active"
-                  : ""
+                cartItem !== undefined && cartItem.quantity > 0 ? "active" : ""
               }
               disabled={cartItem !== undefined && cartItem.quantity > 0}
-              title={
-                cartItem !== undefined ? "Added to cart" : "Add to cart"
-              }
+              title={cartItem !== undefined ? "Added to cart" : "Add to cart"}
             >
               {" "}
               <i className="fa fa-shopping-cart"></i>{" "}
@@ -63,29 +58,13 @@ const ProductGridSingleTwo = ({
             </button>
           </div>
         </div>
-        {/* <div className="product-content-2">
-          <div
-            className={`title-price-wrap-2 ${titlePriceClass ? titlePriceClass : ""
-              }`}
-          >
+        <div className="product-content-2">
+          <div className={"title-price-wrap-2"}>
             <h3>
-              <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
-                {product.name}
-              </Link>
+              <Link onClick={() => setModalShow(true)}>{product.name}</Link>
             </h3>
             <div className="price-2">
-              {discountedPrice !== null ? (
-                <Fragment>
-                  <span>
-                    {currency.currencySymbol + finalDiscountedPrice}
-                  </span>{" "}
-                  <span className="old">
-                    {currency.currencySymbol + finalProductPrice}
-                  </span>
-                </Fragment>
-              ) : (
-                <span>{currency.currencySymbol + finalProductPrice} </span>
-              )}
+              <span>₪{product.price}</span>
             </div>
           </div>
           <div className="pro-wishlist-2">
@@ -97,12 +76,18 @@ const ProductGridSingleTwo = ({
                   ? "Added to wishlist"
                   : "Add to wishlist"
               }
-              onClick={() => dispatch(addToWishlist(product))}
+              onClick={() =>
+                loggedUser?.firstName
+                  ? dispatch(addToWishlist(product))
+                  : cogoToast.error("Must be logged in to add to Wishlist", {
+                      position: "bottom-left",
+                    })
+              }
             >
               <i className="fa fa-heart-o" />
             </button>
           </div>
-        </div> */}
+        </div>
       </div>
       {/* product modal */}
       <ProductModal
@@ -112,7 +97,7 @@ const ProductGridSingleTwo = ({
         wishlistItem={wishlistItem}
         compareItem={compareItem}
       />
-    </Fragment >
+    </Fragment>
   );
 };
 

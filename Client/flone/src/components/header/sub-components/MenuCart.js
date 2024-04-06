@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getDiscountPrice } from "../../../helpers/product";
-import { deleteFromCart } from "../../../store/slices/cart-slice"
+import { deleteFromCart } from "../../../store/slices/cart-slice";
 
 const MenuCart = () => {
   const dispatch = useDispatch();
@@ -32,24 +32,19 @@ const MenuCart = () => {
                 : (cartTotalPrice += finalProductPrice * item.quantity);
 
               return (
-                <li key={item.id} className="single-shopping-cart" key={item.cartItemId}>
+                <li key={item.id} className="single-shopping-cart">
                   <div className="shopping-cart-img">
-                    <Link to={process.env.PUBLIC_URL + "/product/" + item.id}>
+                    <div>
                       <img
                         alt=""
-                        src={process.env.PUBLIC_URL + item.image[0]}
+                        src={process.env.PUBLIC_URL + item.image}
                         className="img-fluid"
                       />
-                    </Link>
+                    </div>
                   </div>
                   <div className="shopping-cart-title">
                     <h4>
-                      <Link
-                        to={process.env.PUBLIC_URL + "/product/" + item.id}
-                      >
-                        {" "}
-                        {item.name}{" "}
-                      </Link>
+                      <div> {item.name} </div>
                     </h4>
                     <h6>Qty: {item.quantity}</h6>
                     <span>
@@ -57,8 +52,7 @@ const MenuCart = () => {
                         ? currency.currencySymbol + finalDiscountedPrice
                         : currency.currencySymbol + finalProductPrice}
                     </span>
-                    {item.selectedProductColor &&
-                    item.selectedProductSize ? (
+                    {item.selectedProductColor && item.selectedProductSize ? (
                       <div className="cart-item-variation">
                         <span>Color: {item.selectedProductColor}</span>
                         <span>Size: {item.selectedProductSize}</span>
@@ -68,7 +62,9 @@ const MenuCart = () => {
                     )}
                   </div>
                   <div className="shopping-cart-delete">
-                    <button onClick={() => dispatch(deleteFromCart(item.cartItemId))}>
+                    <button
+                      onClick={() => dispatch(deleteFromCart(item.cartItemId))}
+                    >
                       <i className="fa fa-times-circle" />
                     </button>
                   </div>
