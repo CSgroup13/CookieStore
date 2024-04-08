@@ -17,12 +17,14 @@ import Scrollbar from '../../components/scrollbar';
 
 import { NAV } from './config-layout';
 import navConfig from './config-navigation';
+import { Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
   const pathname = usePathname();
-
+  const navigate=useNavigate();
   const upLg = useResponsive('up', 'lg');
 
   useEffect(() => {
@@ -33,11 +35,27 @@ export default function Nav({ openNav, onCloseNav }) {
   }, [pathname]);
 
   const renderMenu = (
+    <>
     <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
       {navConfig.map((item) => (
         <NavItem key={item.title} item={item} />
       ))}
     </Stack>
+    <Button
+    variant="contained"
+    color="primary"
+    sx={{
+      backgroundColor: 'black',
+      color: 'white',
+      '&:hover': {
+        backgroundColor: '#333', // Darken the background color on hover
+      },
+    }}
+    onClick={()=>navigate("/shop-grid-standard")}
+  >
+    Return To Shop
+  </Button>
+    </>
   );
 
   const renderContent = (

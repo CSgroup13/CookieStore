@@ -14,10 +14,13 @@ import { useNavigate } from "react-router-dom";
 import emailjs from "emailjs-com";
 import { useDispatch } from "react-redux";
 import { deleteAllFromCart } from "../../store/slices/cart-slice";
+import { sub } from 'date-fns';
+import { faker } from '@faker-js/faker';
+import {addNotification} from "../../store/slices/notifications-slice"
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   let cartTotalPrice = 0;
 
   let { pathname } = useLocation();
@@ -192,7 +195,7 @@ const Checkout = () => {
       }
       postData(api.orders, orderDetails)
         .then((order) => {
-          const orderDetailsMessage=`
+          const orderDetailsMessage = `
           New order received!
             Order Number: ${order.id}
             Total Price: ${order.totalPrice}
@@ -235,13 +238,23 @@ const Checkout = () => {
                 {
                   to_name: "Shaked",
                   to_email: "cookiesaddiction1@gmail.com",
-                  message:orderDetailsMessage,
+                  message: orderDetailsMessage,
                 },
                 "Ov1O19nU4lvvYar64"
               )
                 .then(() => {
                   console.log("Notification email sent to admin.");
                   dispatch(deleteAllFromCart())
+                  const newNotification = {
+                    id: faker.string.uuid(),
+                    title: 'You have new order',
+                    description: `from ${formData.firstName + " " + formData.lastName}`,
+                    avatar: null,
+                    type: 'order_placed',
+                    createdAt: sub(new Date(), { days: 1, hours: 3, minutes: 30 }),
+                    isUnRead: false,
+                  };
+                  dispatch(addNotification(newNotification));
                   navigate("/"); // Only navigate after sending the email to the admin
                 })
                 .catch((error) => {
