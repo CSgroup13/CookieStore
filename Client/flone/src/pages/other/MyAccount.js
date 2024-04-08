@@ -82,10 +82,8 @@ const MyAccount = () => {
   const handleUpdateDetailsSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const passwordsFull =
-      !!data.get("password") && !!data.get("confirmPassword");
     const passwordsMatch = data.get("password") === data.get("confirmPassword");
-    if (isUpdateDetailsValid && passwordsFull && passwordsMatch) {
+    if (isUpdateDetailsValid && passwordsMatch) {
       putData(`${api.users}update`, {
         id: loggedUser.id,
         email: data.get("email") || loggedUser.email,
@@ -143,7 +141,7 @@ const MyAccount = () => {
                       <Accordion.Body>
                         <form onSubmit={handleUpdateDetailsSubmit}>
                           <div className="myaccount-info-wrapper">
-                            <div className="myaccount-info-wrapper">
+                            <div className="account-info-wrapper">
                               <h4>My Account Information</h4>
                               <h5>Your Personal Details</h5>
                             </div>
@@ -194,7 +192,7 @@ const MyAccount = () => {
                             </div>
                             <div className="billing-back-btn">
                               <div className="billing-btn">
-                                <button type="submit">Update details</button>
+                              <button type="submit">Continue</button>
                               </div>
                             </div>
                           </div>
@@ -214,7 +212,6 @@ const MyAccount = () => {
                           <div className="myaccount-info-wrapper">
                             <div className="account-info-wrapper">
                               <h4>Change Password</h4>
-                              <h5>Your Password</h5>
                             </div>
                             <div className="row">
                               <div className="col-lg-12 col-md-12">
@@ -228,6 +225,7 @@ const MyAccount = () => {
                                   <input
                                     type="password"
                                     name="password"
+                                    required
                                     onChange={handleUpdateDetailsChange}
                                   />
                                 </div>
@@ -243,6 +241,7 @@ const MyAccount = () => {
                                   <input
                                     type="password"
                                     name="confirmPassword"
+                                    required
                                     onChange={handleUpdateDetailsChange}
                                   />
                                 </div>
@@ -269,27 +268,22 @@ const MyAccount = () => {
                         <form onSubmit={handleUpdateDetailsSubmit}>
                           <div className="myaccount-info-wrapper">
                             <div className="account-info-wrapper">
-                              <h4>Address</h4>
+                              <h4>Change address</h4>
                             </div>
-                            <div className="entries-wrapper">
-                              <div className="row">
-                                <div className="col-lg-6 col-md-6 d-flex align-items-center justify-content-center">
-                                  <div className="entries-info text-center">
-                                    <p>John Doe</p>
-                                    <p>Paul Park </p>
-                                    <p>Lorem ipsum dolor set amet</p>
-                                    <p>NYC</p>
-                                    <p>New York</p>
-                                  </div>
-                                </div>
-                                <div className="col-lg-6 col-md-6 d-flex align-items-center justify-content-center">
-                                  <div className="entries-edit-delete text-center">
-                                    <button className="edit">Edit</button>
-                                    <button>Delete</button>
-                                  </div>
-                                </div>
+                            <div className="row">
+                              <div className="billing-info">
+                                <label>Address</label>
+                                <input
+                                  type="text"
+                                  name="address"
+                                  placeholder="Address"
+                                  defaultValue={loggedUser.address}
+                                  onChange={handleUpdateDetailsChange}
+                                  required
+                                />
                               </div>
                             </div>
+
                             <div className="billing-back-btn">
                               <div className="billing-btn">
                                 <button type="submit">Continue</button>
