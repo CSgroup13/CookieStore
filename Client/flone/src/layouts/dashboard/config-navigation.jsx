@@ -27,6 +27,11 @@ const navConfig = [
     path: '/adminOrders',
     icon: icon('ic_analytics'),
   },
+  {
+    title: 'Back to store',
+    path: '/',
+    icon: icon('ic_go_back'),
+  },
 ];
 
 export default navConfig;

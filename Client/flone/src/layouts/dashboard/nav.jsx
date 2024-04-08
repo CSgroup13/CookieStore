@@ -1,31 +1,28 @@
-import { useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useEffect } from "react";
+import PropTypes from "prop-types";
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Drawer from '@mui/material/Drawer';
-import { alpha } from '@mui/material/styles';
-import ListItemButton from '@mui/material/ListItemButton';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Drawer from "@mui/material/Drawer";
+import { alpha } from "@mui/material/styles";
+import ListItemButton from "@mui/material/ListItemButton";
 
-import { usePathname } from '../../routes/hooks';
-import { RouterLink } from '../../routes/components';
+import { usePathname } from "../../routes/hooks";
+import { RouterLink } from "../../routes/components";
 
-import { useResponsive } from '../../hooks/use-responsive';
+import { useResponsive } from "../../hooks/use-responsive";
 
-import Logo from '../../components/logo';
-import Scrollbar from '../../components/scrollbar';
+import Logo from "../../components/logo";
+import Scrollbar from "../../components/scrollbar";
 
-import { NAV } from './config-layout';
-import navConfig from './config-navigation';
-import { Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { NAV } from "./config-layout";
+import navConfig from "./config-navigation";
 
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
   const pathname = usePathname();
-  const navigate=useNavigate();
-  const upLg = useResponsive('up', 'lg');
+  const upLg = useResponsive("up", "lg");
 
   useEffect(() => {
     if (openNav) {
@@ -36,25 +33,25 @@ export default function Nav({ openNav, onCloseNav }) {
 
   const renderMenu = (
     <>
-    <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
-      {navConfig.map((item) => (
-        <NavItem key={item.title} item={item} />
-      ))}
-    </Stack>
-    <Button
-    variant="contained"
-    color="primary"
-    sx={{
-      backgroundColor: 'black',
-      color: 'white',
-      '&:hover': {
-        backgroundColor: '#333', // Darken the background color on hover
-      },
-    }}
-    onClick={()=>navigate("/shop-grid-standard")}
-  >
-    Return To Shop
-  </Button>
+      <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
+        {navConfig.map((item) => (
+          <NavItem key={item.title} item={item} />
+        ))}
+      </Stack>
+      {/* <Button
+        variant="contained"
+        color="primary"
+        sx={{
+          backgroundColor: "black",
+          color: "white",
+          "&:hover": {
+            backgroundColor: "#333", // Darken the background color on hover
+          },
+        }}
+        onClick={() => navigate("/shop-grid-standard")}
+      >
+        Return To Shop
+      </Button> */}
     </>
   );
 
@@ -62,10 +59,10 @@ export default function Nav({ openNav, onCloseNav }) {
     <Scrollbar
       sx={{
         height: 1,
-        '& .simplebar-content': {
+        "& .simplebar-content": {
           height: 1,
-          display: 'flex',
-          flexDirection: 'column',
+          display: "flex",
+          flexDirection: "column",
         },
       }}
     >
@@ -88,7 +85,7 @@ export default function Nav({ openNav, onCloseNav }) {
         <Box
           sx={{
             height: 1,
-            position: 'fixed',
+            position: "fixed",
             width: NAV.WIDTH,
             borderRight: (theme) => `dashed 1px ${theme.palette.divider}`,
           }}
@@ -131,15 +128,15 @@ function NavItem({ item }) {
       sx={{
         minHeight: 44,
         borderRadius: 0.75,
-        typography: 'body2',
-        color: 'text.secondary',
-        textTransform: 'capitalize',
-        fontWeight: 'fontWeightMedium',
+        typography: "body2",
+        color: "text.secondary",
+        textTransform: "capitalize",
+        fontWeight: "fontWeightMedium",
         ...(active && {
-          color: 'primary.main',
-          fontWeight: 'fontWeightSemiBold',
+          color: "primary.main",
+          fontWeight: "fontWeightSemiBold",
           bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
-          '&:hover': {
+          "&:hover": {
             bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
           },
         }),
