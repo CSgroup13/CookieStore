@@ -5,27 +5,32 @@ import FooterOne from "../wrappers/footer/FooterOne";
 import ScrollToTop from "../components/scroll-to-top";
 
 const LayoutOne = ({
+  showHeaderAndFooter,
   children,
   headerContainerClass,
   headerTop,
   headerPaddingClass,
-  headerPositionClass
+  headerPositionClass,
 }) => {
   return (
     <Fragment>
-      <HeaderOne
-        layout={headerContainerClass}
-        top={headerTop}
-        headerPaddingClass={headerPaddingClass}
-        headerPositionClass={headerPositionClass}
-      />
+      {showHeaderAndFooter && (
+        <HeaderOne
+          layout={headerContainerClass}
+          top={headerTop}
+          headerPaddingClass={headerPaddingClass}
+          headerPositionClass={headerPositionClass}
+        />
+      )}
       {children}
-      <FooterOne
-        backgroundColorClass="bg-gray"
-        spaceTopClass="pt-100"
-        spaceBottomClass="pb-70"
-      />
-      <ScrollToTop/>
+      {showHeaderAndFooter && (
+        <FooterOne
+          backgroundColorClass="bg-gray"
+          spaceTopClass="pt-100"
+          spaceBottomClass="pb-70"
+        />
+      )}
+      <ScrollToTop />
     </Fragment>
   );
 };
@@ -35,7 +40,7 @@ LayoutOne.propTypes = {
   headerContainerClass: PropTypes.string,
   headerPaddingClass: PropTypes.string,
   headerPositionClass: PropTypes.string,
-  headerTop: PropTypes.string
+  headerTop: PropTypes.string,
 };
 
 export default LayoutOne;

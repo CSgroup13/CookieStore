@@ -1,135 +1,153 @@
-import { Fragment, useState, useEffect } from 'react';
-import Paginator from 'react-hooks-paginator';
+import { Fragment, useState, useEffect } from "react";
+import Paginator from "react-hooks-paginator";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom"
-import { getSortedProducts } from '../../helpers/product';
+import { useLocation } from "react-router-dom";
+import { getSortedProducts } from "../../helpers/product";
 import SEO from "../../components/seo";
-import LayoutOne from '../../layouts/LayoutOne';
-import Breadcrumb from '../../wrappers/breadcrumb/Breadcrumb';
-import ShopSidebar from '../../wrappers/product/ShopSidebar';
-import ShopTopbar from '../../wrappers/product/ShopTopbar';
-import ShopProducts from '../../wrappers/product/ShopProducts';
+import LayoutOne from "../../layouts/LayoutOne";
+import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
+import ShopSidebar from "../../wrappers/product/ShopSidebar";
+import ShopTopbar from "../../wrappers/product/ShopTopbar";
+import ShopProducts from "../../wrappers/product/ShopProducts";
 import api, { getData } from "../../utils/api";
 
-const ShopGridStandard = () => {
-    const [layout, setLayout] = useState('grid three-column');
-    const [sortType, setSortType] = useState('');
-    const [sortValue, setSortValue] = useState('');
-    const [filterSortType, setFilterSortType] = useState('');
-    const [filterSortValue, setFilterSortValue] = useState('');
-    const [offset, setOffset] = useState(0);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [currentData, setCurrentData] = useState([]);
-    const [sortedProducts, setSortedProducts] = useState([]);
-    const { products } = useSelector((state) => state.product);
-    const pageLimit = 15;
-    let { pathname } = useLocation();
-
-    const onSearch = (searchTerm) => {
-        if (searchTerm !== "") {
-            // Filter products based on the search term
-            const filteredProducts = sortedProducts.filter((product) =>
-                product.name.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            // Update the current data state with the filtered products
-            setCurrentData(filteredProducts);
-        }
-        else {
-            setCurrentData(sortedProducts)
-        }
-    };
-
-    const getLayout = (layout) => {
-        setLayout(layout)
+const ShopGridStandard = ({ showHeaderAndFooter }) => {
+  const [layout, setLayout] = useState("grid three-column");
+  const [sortType, setSortType] = useState("");
+  const [sortValue, setSortValue] = useState("");
+  const [filterSortType, setFilterSortType] = useState("");
+  const [filterSortValue, setFilterSortValue] = useState("");
+  const [offset, setOffset] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentData, setCurrentData] = useState([]);
+  const [sortedProducts, setSortedProducts] = useState([]);
+  const { products } = useSelector((state) => state.product);
+  const pageLimit = 15;
+  let { pathname } = useLocation();
+  const onSearch = (searchTerm) => {
+    if (searchTerm !== "") {
+      // Filter products based on the search term
+      const filteredProducts = sortedProducts.filter((product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      // Update the current data state with the filtered products
+      setCurrentData(filteredProducts);
+    } else {
+      setCurrentData(sortedProducts);
     }
+  };
 
-    const getSortParams = (sortType, sortValue) => {
-        setSortType(sortType);
-        setSortValue(sortValue);
+  const getLayout = (layout) => {
+    setLayout(layout);
+  };
+
+  const getSortParams = (sortType, sortValue) => {
+    setSortType(sortType);
+    setSortValue(sortValue);
+  };
+
+  const getFilterSortParams = (sortType, sortValue) => {
+    setFilterSortType(sortType);
+    setFilterSortValue(sortValue);
+  };
+
+  useEffect(() => {
+    if (sortType !== "category" || sortValue === "") {
+      let sortedProducts = getSortedProducts(products, sortType, sortValue);
+      const filterSortedProducts = getSortedProducts(
+        sortedProducts,
+        filterSortType,
+        filterSortValue
+      );
+      sortedProducts = filterSortedProducts;
+      setSortedProducts(sortedProducts);
+      setCurrentData(sortedProducts.slice(offset, offset + pageLimit));
+    } else {
+      getData(api.products + `category/${sortValue}`)
+        .then((productsFromApi) => {
+          let matchingProducts = products.filter((storeProduct) =>
+            productsFromApi.some(
+              (apiProduct) => apiProduct.id === storeProduct.id
+            )
+          );
+          const filterSortedProducts = getSortedProducts(
+            matchingProducts,
+            filterSortType,
+            filterSortValue
+          );
+          matchingProducts = filterSortedProducts;
+          setSortedProducts(matchingProducts); // Set sorted products to the fetched products
+          setCurrentData(matchingProducts.slice(offset, offset + pageLimit)); // Update current data
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
+  }, [offset, products, sortType, sortValue, filterSortType, filterSortValue]);
 
-    const getFilterSortParams = (sortType, sortValue) => {
-        setFilterSortType(sortType);
-        setFilterSortValue(sortValue);
-    }
+  return (
+    <Fragment>
+      <SEO
+        titleTemplate="Shop Page"
+        description="Shop page of flone react minimalist eCommerce template."
+      />
 
-    useEffect(() => {
-        if (sortType !== "category" || sortValue === "") {
-            let sortedProducts = getSortedProducts(products, sortType, sortValue);
-            const filterSortedProducts = getSortedProducts(sortedProducts, filterSortType, filterSortValue);
-            sortedProducts = filterSortedProducts;
-            setSortedProducts(sortedProducts);
-            setCurrentData(sortedProducts.slice(offset, offset + pageLimit));
-        }
-        else {
-            getData(api.products + `category/${sortValue}`)
-                .then((productsFromApi) => {
-                    let matchingProducts = products.filter((storeProduct) =>
-                        productsFromApi.some((apiProduct) => apiProduct.id === storeProduct.id)
-                    );
-                    const filterSortedProducts = getSortedProducts(matchingProducts, filterSortType, filterSortValue);
-                    matchingProducts = filterSortedProducts;
-                    setSortedProducts(matchingProducts); // Set sorted products to the fetched products
-                    setCurrentData(matchingProducts.slice(offset, offset + pageLimit)); // Update current data
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        }
-    }, [offset, products, sortType, sortValue, filterSortType, filterSortValue]);
+      <LayoutOne headerTop="visible" showHeaderAndFooter={showHeaderAndFooter}>
+        {/* breadcrumb */}
+        {showHeaderAndFooter && (
+          <Breadcrumb
+            pages={[
+              { label: "Home", path: process.env.PUBLIC_URL + "/" },
+              { label: "Shop", path: process.env.PUBLIC_URL + pathname },
+            ]}
+          />
+        )}
 
-    return (
-        <Fragment>
-            <SEO
-                titleTemplate="Shop Page"
-                description="Shop page of flone react minimalist eCommerce template."
-            />
-
-            <LayoutOne headerTop="visible">
-                {/* breadcrumb */}
-                <Breadcrumb
-                    pages={[
-                        { label: "Home", path: process.env.PUBLIC_URL + "/" },
-                        { label: "Shop", path: process.env.PUBLIC_URL + pathname }
-                    ]}
+        <div className="shop-area pt-95 pb-100">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-3 order-2 order-lg-1">
+                {/* shop sidebar */}
+                <ShopSidebar
+                  products={products}
+                  getSortParams={getSortParams}
+                  onSearch={onSearch}
+                  sideSpaceClass="mr-30"
+                />
+              </div>
+              <div className="col-lg-9 order-1 order-lg-2">
+                {/* shop topbar default */}
+                <ShopTopbar
+                  getLayout={getLayout}
+                  getFilterSortParams={getFilterSortParams}
+                  productCount={products.length}
+                  sortedProductCount={currentData.length}
                 />
 
-                <div className="shop-area pt-95 pb-100">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-lg-3 order-2 order-lg-1">
-                                {/* shop sidebar */}
-                                <ShopSidebar products={products} getSortParams={getSortParams} onSearch={onSearch} sideSpaceClass="mr-30" />
-                            </div>
-                            <div className="col-lg-9 order-1 order-lg-2">
-                                {/* shop topbar default */}
-                                <ShopTopbar getLayout={getLayout} getFilterSortParams={getFilterSortParams} productCount={products.length} sortedProductCount={currentData.length} />
+                {/* shop page content default */}
+                <ShopProducts layout={layout} products={currentData} />
 
-                                {/* shop page content default */}
-                                <ShopProducts layout={layout} products={currentData} />
-
-                                {/* shop product pagination */}
-                                <div className="pro-pagination-style text-center mt-30">
-                                    <Paginator
-                                        totalRecords={sortedProducts.length}
-                                        pageLimit={pageLimit}
-                                        pageNeighbours={2}
-                                        setOffset={setOffset}
-                                        currentPage={currentPage}
-                                        setCurrentPage={setCurrentPage}
-                                        pageContainerClass="mb-0 mt-0"
-                                        pagePrevText="«"
-                                        pageNextText="»"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                {/* shop product pagination */}
+                <div className="pro-pagination-style text-center mt-30">
+                  <Paginator
+                    totalRecords={sortedProducts.length}
+                    pageLimit={pageLimit}
+                    pageNeighbours={2}
+                    setOffset={setOffset}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    pageContainerClass="mb-0 mt-0"
+                    pagePrevText="«"
+                    pageNextText="»"
+                  />
                 </div>
-            </LayoutOne>
-        </Fragment>
-    )
-}
-
+              </div>
+            </div>
+          </div>
+        </div>
+      </LayoutOne>
+    </Fragment>
+  );
+};
 
 export default ShopGridStandard;

@@ -9,6 +9,7 @@ import { addToCart } from "../../store/slices/cart-slice";
 import { addToWishlist } from "../../store/slices/wishlist-slice";
 import { addToCompare } from "../../store/slices/compare-slice";
 import cogoToast from "cogo-toast";
+import ProductModalEdit from "./ProductModalEdit";
 
 const ProductGridListSingle = ({
   product,
@@ -18,7 +19,7 @@ const ProductGridListSingle = ({
   spaceBottomClass,
 }) => {
   const [modalShow, setModalShow] = useState(false);
-  const { loggedUser } = useSelector((state) => state.user);
+  const { isAdmin, loggedUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   return (
     <Fragment>
@@ -49,12 +50,9 @@ const ProductGridListSingle = ({
                     ? dispatch(
                         addToWishlist({ ...product, userId: loggedUser.id })
                       )
-                    : cogoToast.error(
-                        "Must be logged in to add to Wishlist",
-                        {
-                          position: "bottom-left",
-                        }
-                      )
+                    : cogoToast.error("Must be logged in to add to Wishlist", {
+                        position: "bottom-left",
+                      })
                 }
               >
                 <i className="pe-7s-like" />
@@ -208,13 +206,23 @@ const ProductGridListSingle = ({
         </div>
       </div>
       {/* product modal */}
-      <ProductModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-        product={product}
-        wishlistItem={wishlistItem}
-        compareItem={compareItem}
-      />
+      {isAdmin ? (
+        <ProductModalEdit
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+          product={product}
+          wishlistItem={wishlistItem}
+          compareItem={compareItem}
+        />
+      ) : (
+        <ProductModal
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+          product={product}
+          wishlistItem={wishlistItem}
+          compareItem={compareItem}
+        />
+      )}
     </Fragment>
   );
 };

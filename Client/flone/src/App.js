@@ -3,7 +3,7 @@ import ScrollToTop from "./helpers/scroll-top";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import api, { getData } from "./utils/api";
 import { store } from "./store/store";
-import {useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { setProducts } from "./store/slices/product-slice";
 import { setWishlist } from "./store/slices/wishlist-slice";
 import ThemeProvider from "./theme";
@@ -39,7 +39,7 @@ const NotFound = lazy(() => import("./pages/other/NotFound"));
 
 const App = () => {
   const { loggedUser } = useSelector((state) => state.user);
-  
+
   useEffect(() => {
     getData(api.products)
       .then((products) => {
@@ -92,7 +92,7 @@ const App = () => {
               {/* Shop pages */}
               <Route
                 path={process.env.PUBLIC_URL + "/shop-grid-standard"}
-                element={<ShopGridStandard />}
+                element={<ShopGridStandard showHeaderAndFooter={true} />}
               />
 
               {/* Shop product pages */}

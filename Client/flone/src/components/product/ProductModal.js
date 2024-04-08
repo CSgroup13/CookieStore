@@ -11,7 +11,6 @@ import cogoToast from "cogo-toast";
 function ProductModal({ product, show, onHide, wishlistItem, compareItem }) {
   const dispatch = useDispatch();
   const { loggedUser } = useSelector((state) => state.user);
-  const { cartItems } = useSelector((state) => state.cart);
   const [quantityCount, setQuantityCount] = useState(1);
   const onCloseModal = () => {
     onHide();
