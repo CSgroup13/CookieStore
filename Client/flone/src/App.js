@@ -12,6 +12,7 @@ import DashboardLayout from "./layouts/dashboard";
 export const IndexPage = lazy(() => import("./pages/app"));
 export const UserPage = lazy(() => import("./pages/user"));
 export const ProductsPage = lazy(() => import("./pages/products"));
+export const OrdersPage = lazy(() => import("./pages/orders"));
 
 // home page
 const HomeOrganicFood = lazy(() => import("./pages/home/HomeOrganicFood"));
@@ -167,7 +168,16 @@ const App = () => {
                   </DashboardLayout>
                 }
               />
-
+              <Route
+                path={process.env.PUBLIC_URL + "/adminOrders"}
+                element={
+                  <DashboardLayout>
+                    <Suspense>
+                      <OrdersPage />
+                    </Suspense>
+                  </DashboardLayout>
+                }
+              />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

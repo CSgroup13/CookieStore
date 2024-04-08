@@ -23,7 +23,7 @@ import api, {getData} from "../../../utils/api"
 import { useEffect } from 'react';
 // ----------------------------------------------------------------------
 
-export default function UserPage() {
+export default function OrdersPage() {
   const [users,setUsers]=useState([]);
 
   useEffect(()=>{
