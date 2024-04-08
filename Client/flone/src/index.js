@@ -11,7 +11,6 @@ import "yet-another-react-lightbox/plugins/thumbnails.css";
 import "./assets/scss/style.scss";
 import "./i18n";
 import { Suspense } from "react";
-import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 
 const container = document.getElementById("root");
