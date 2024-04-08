@@ -6,7 +6,12 @@ import { store } from "./store/store";
 import { useSelector } from "react-redux";
 import { setProducts } from "./store/slices/product-slice";
 import { setWishlist } from "./store/slices/wishlist-slice";
+import ThemeProvider from "./theme";
+import DashboardLayout from "./layouts/dashboard";
 
+export const IndexPage = lazy(() => import("./pages/app"));
+export const UserPage = lazy(() => import("./pages/user"));
+export const ProductsPage = lazy(() => import("./pages/products"));
 // home page
 const HomeOrganicFood = lazy(() => import("./pages/home/HomeOrganicFood"));
 // shop pages
@@ -63,76 +68,111 @@ const App = () => {
   }, [loggedUser]);
 
   return (
-    <Router>
-      <ScrollToTop>
-        <Suspense
-          fallback={
-            <div className="flone-preloader-wrapper">
-              <div className="flone-preloader">
-                <span></span>
-                <span></span>
+    <ThemeProvider>
+      <Router>
+        <ScrollToTop>
+          <Suspense
+            fallback={
+              <div className="flone-preloader-wrapper">
+                <div className="flone-preloader">
+                  <span></span>
+                  <span></span>
+                </div>
               </div>
-            </div>
-          }
-        >
-          <Routes>
-            <Route
-              path={process.env.PUBLIC_URL + "/"}
-              element={<HomeOrganicFood />}
-            />
+            }
+          >
+            <Routes>
+              <Route
+                path={process.env.PUBLIC_URL + "/"}
+                element={<HomeOrganicFood />}
+              />
 
-            {/* Shop pages */}
-            <Route
-              path={process.env.PUBLIC_URL + "/shop-grid-standard"}
-              element={<ShopGridStandard />}
-            />
+              {/* Shop pages */}
+              <Route
+                path={process.env.PUBLIC_URL + "/shop-grid-standard"}
+                element={<ShopGridStandard />}
+              />
 
-            {/* Shop product pages */}
-            <Route
-              path={process.env.PUBLIC_URL + "/product/:id"}
-              element={<Product />}
-            />
-            <Route
-              path={process.env.PUBLIC_URL + "/product-tab-left/:id"}
-              element={<ProductTabLeft />}
-            />
-            {/* Other pages */}
-            <Route
-              path={process.env.PUBLIC_URL + "/about"}
-              element={<About />}
-            />
-            <Route
-              path={process.env.PUBLIC_URL + "/contact"}
-              element={<Contact />}
-            />
-            <Route
-              path={process.env.PUBLIC_URL + "/my-account"}
-              element={<MyAccount />}
-            />
-            <Route
-              path={process.env.PUBLIC_URL + "/login-register"}
-              element={<LoginRegister />}
-            />
+              {/* Shop product pages */}
+              <Route
+                path={process.env.PUBLIC_URL + "/product/:id"}
+                element={<Product />}
+              />
+              <Route
+                path={process.env.PUBLIC_URL + "/product-tab-left/:id"}
+                element={<ProductTabLeft />}
+              />
+              {/* Other pages */}
+              <Route
+                path={process.env.PUBLIC_URL + "/about"}
+                element={<About />}
+              />
+              <Route
+                path={process.env.PUBLIC_URL + "/contact"}
+                element={<Contact />}
+              />
+              <Route
+                path={process.env.PUBLIC_URL + "/my-account"}
+                element={<MyAccount />}
+              />
+              <Route
+                path={process.env.PUBLIC_URL + "/login-register"}
+                element={<LoginRegister />}
+              />
 
-            <Route path={process.env.PUBLIC_URL + "/cart"} element={<Cart />} />
-            <Route
-              path={process.env.PUBLIC_URL + "/wishlist"}
-              element={<Wishlist />}
-            />
-            <Route
-              path={process.env.PUBLIC_URL + "/compare"}
-              element={<Compare />}
-            />
-            <Route
-              path={process.env.PUBLIC_URL + "/checkout"}
-              element={<Checkout />}
-            />
+              <Route
+                path={process.env.PUBLIC_URL + "/cart"}
+                element={<Cart />}
+              />
+              <Route
+                path={process.env.PUBLIC_URL + "/wishlist"}
+                element={<Wishlist />}
+              />
+              <Route
+                path={process.env.PUBLIC_URL + "/compare"}
+                element={<Compare />}
+              />
+              <Route
+                path={process.env.PUBLIC_URL + "/checkout"}
+                element={<Checkout />}
+              />
+              <Route
+                path={process.env.PUBLIC_URL + "/adminDashboard"}
+                element={
+                  <DashboardLayout>
+                    <Suspense>
+                      <IndexPage />
+                    </Suspense>
+                  </DashboardLayout>
+                }
+              />
+              <Route
+                path={process.env.PUBLIC_URL + "/adminUsers"}
+                element={
+                  <DashboardLayout>
+                    <Suspense>
+                      <UserPage />
+                    </Suspense>
+                  </DashboardLayout>
+                }
+              />
+              <Route
+                path={process.env.PUBLIC_URL + "/adminProducts"}
+                element={
+                  <DashboardLayout>
+                    <Suspense>
+                      <ProductsPage />
+                    </Suspense>
+                  </DashboardLayout>
+                }
+              />
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </ScrollToTop>
-    </Router>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </ScrollToTop>
+      </Router>
+    </ThemeProvider>
   );
 };
 
