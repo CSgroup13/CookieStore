@@ -8,9 +8,9 @@ import SEO from "../../components/seo";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import cogoToast from "cogo-toast";
+import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../store/slices/user-slice";
 import api, { getData, postData } from "../../utils/api";
-import { useNavigate } from "react-router-dom";
 
 const LoginRegister = () => {
   const navigate = useNavigate();
