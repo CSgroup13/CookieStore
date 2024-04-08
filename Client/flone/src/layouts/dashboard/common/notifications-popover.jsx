@@ -22,6 +22,8 @@ import { fToNow } from '../../../utils/format-time';
 
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
+import {useSelector } from "react-redux";
+import {setNotifications} from "../../../store/slices/notifications-slice"
 
 // ----------------------------------------------------------------------
 
@@ -74,10 +76,8 @@ const NOTIFICATIONS = [
 ];
 
 export default function NotificationsPopover() {
-  const [notifications, setNotifications] = useState(NOTIFICATIONS);
-
+  const {notifications} = useSelector(state => state.notifications);
   const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
-
   const [open, setOpen] = useState(null);
 
   const handleOpen = (event) => {

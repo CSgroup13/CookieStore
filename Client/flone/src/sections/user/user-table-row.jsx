@@ -135,7 +135,6 @@ export default function UserTableRow({
           Delete
         </MenuItem>
       </Popover>
-
       <Dialog open={openEditDialog} onClose={handleEditDialogClose}>
         <DialogTitle>Edit User</DialogTitle>
         <DialogContent>
