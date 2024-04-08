@@ -122,7 +122,7 @@ const Compare = () => {
                               return (
                                 <td className="product-price" key={key}>
                                     <span dir="rtl" className="amount">
-                                      {compareItem.price} ש"ח
+                                    ₪{compareItem.price}
                                     </span>
                                 </td>
                               );

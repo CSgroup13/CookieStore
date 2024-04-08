@@ -88,7 +88,7 @@ const Wishlist = () => {
 
                                 <td className="product-price-cart">
                                     <span dir="rtl" className="amount">
-                                      {wishlistItem.price} ש"ח
+                                    ₪{wishlistItem.price}
                                     </span>
                                 </td>
 
