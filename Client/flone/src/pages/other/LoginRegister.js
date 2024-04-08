@@ -290,7 +290,9 @@ const LoginRegister = () => {
                         <div className="login-form-container">
                           <div className="login-register-form">
                             <form onSubmit={handleSubmit}>
-                              {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
+                              {errors.email && (
+                                <p style={{ color: "red" }}>{errors.email}</p>
+                              )}
                               <br />
                               <input
                                 type="text"
@@ -299,7 +301,11 @@ const LoginRegister = () => {
                                 value={loginData.email}
                                 onChange={handleChange}
                               />
-                              {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
+                              {errors.password && (
+                                <p style={{ color: "red" }}>
+                                  {errors.password}
+                                </p>
+                              )}
                               <br />
                               <input
                                 type="password"
@@ -361,7 +367,9 @@ const LoginRegister = () => {
                           <div className="login-register-form">
                             <form onSubmit={handleRegistrationSubmit}>
                               {registrationErrors.email && (
-                                <p style={{ color: "red" }}>{registrationErrors.email}</p>
+                                <p style={{ color: "red" }}>
+                                  {registrationErrors.email}
+                                </p>
                               )}
                               <br />
                               <input
@@ -372,7 +380,9 @@ const LoginRegister = () => {
                                 required
                               />
                               {registrationErrors.password && (
-                                <p style={{ color: "red" }}>{registrationErrors.password}</p>
+                                <p style={{ color: "red" }}>
+                                  {registrationErrors.password}
+                                </p>
                               )}
                               <br />
 
@@ -384,7 +394,9 @@ const LoginRegister = () => {
                                 required
                               />
                               {registrationErrors.confirmPassword && (
-                                <p style={{ color: "red" }}>{registrationErrors.confirmPassword}</p>
+                                <p style={{ color: "red" }}>
+                                  {registrationErrors.confirmPassword}
+                                </p>
                               )}
                               <br />
                               <input
