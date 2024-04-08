@@ -13,7 +13,10 @@ const userSlice = createSlice({
     logoutUser(state) {
       state.loggedUser = {};
     },
+    setAdmin(state) {
+      state.isAdmin = true;
+    }
   },
 });
-export const { loginUser, logoutUser } = userSlice.actions;
+export const { loginUser, logoutUser, setAdmin } = userSlice.actions;
 export default userSlice.reducer;

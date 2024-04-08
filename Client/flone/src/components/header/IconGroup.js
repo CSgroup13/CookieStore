@@ -18,7 +18,7 @@ const IconGroup = ({ iconWhiteClass }) => {
     offcanvasMobileMenu.classList.add("active");
   };
   const dispatch = useDispatch();
-  const { loggedUser } = useSelector((state) => state.user);
+  const { loggedUser, isAdmin } = useSelector((state) => state.user);
   const { compareItems } = useSelector((state) => state.compare);
   const { wishlistItems } = useSelector((state) => state.wishlist);
   const { cartItems } = useSelector((state) => state.cart);
@@ -49,39 +49,46 @@ const IconGroup = ({ iconWhiteClass }) => {
         <div className="account-dropdown">
           <ul>
             {loggedUser?.firstName ? (
-              <li>
-                <Link
-                  onClick={() => {
-                    dispatch(logoutUser());
-                    cogoToast.success(
-                      `Bye ${loggedUser.firstName} ${loggedUser.lastName}`,
-                      {
-                        position: "top-right",
-                      }
-                    );
-                  }}
-                >
-                  Logout
-                </Link>
-              </li>
-            ) : (
               <>
-                <li>
-                  <Link to={process.env.PUBLIC_URL + "/login-register"}>
-                    Login/Register
+                {isAdmin ? (
+                  <li>
+                    <Link to={process.env.PUBLIC_URL + "/adminDashboard"}>
+                      Manage
+                    </Link>
+                  </li>
+                ) : (
+                  <li>
+                    <Link to={process.env.PUBLIC_URL + "/my-account"}>
+                      My Account
+                    </Link>
+                  </li>
+                )}
+                < li >
+                  <Link
+                    onClick={() => {
+                      dispatch(logoutUser());
+                      cogoToast.success(
+                        `Bye ${loggedUser.firstName} ${loggedUser.lastName}`,
+                        {
+                          position: "top-right",
+                        }
+                      );
+                    }}
+                  >
+                    Logout
                   </Link>
                 </li>
               </>
+            ) : (
+              <li>
+                <Link to={process.env.PUBLIC_URL + "/login-register"}>
+                  Login/Register
+                </Link>
+              </li>
             )}
-
-            <li>
-              <Link to={process.env.PUBLIC_URL + "/my-account"}>
-                my account
-              </Link>
-            </li>
           </ul>
         </div>
-      </div>
+      </div >
       <div className="same-style header-compare">
         <Link to={process.env.PUBLIC_URL + "/compare"}>
           <i className="pe-7s-shuffle" />
@@ -102,7 +109,7 @@ const IconGroup = ({ iconWhiteClass }) => {
         <button className="icon-cart" onClick={(e) => handleClick(e)}>
           <i className="pe-7s-shopbag" />
           <span className="count-style">
-          {cartItems && cartItems.length ? cartItems.length : 0}
+            {cartItems && cartItems.length ? cartItems.length : 0}
           </span>
         </button>
         {/* menu cart */}
@@ -124,7 +131,7 @@ const IconGroup = ({ iconWhiteClass }) => {
           <i className="pe-7s-menu" />
         </button>
       </div>
-    </div>
+    </div >
   );
 };
 
