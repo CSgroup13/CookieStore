@@ -11,7 +11,7 @@ import ShopTopbar from "../../wrappers/product/ShopTopbar";
 import ShopProducts from "../../wrappers/product/ShopProducts";
 import api, { getData } from "../../utils/api";
 
-const ShopGridStandard = ({ showHeaderAndFooter }) => {
+const ShopGridStandard = ({ hideHeaderAndFooter }) => {
   const [layout, setLayout] = useState("grid three-column");
   const [sortType, setSortType] = useState("");
   const [sortValue, setSortValue] = useState("");
@@ -92,9 +92,9 @@ const ShopGridStandard = ({ showHeaderAndFooter }) => {
         description="Shop page of flone react minimalist eCommerce template."
       />
 
-      <LayoutOne headerTop="visible" showHeaderAndFooter={showHeaderAndFooter}>
+      <LayoutOne headerTop="visible" hideHeaderAndFooter={hideHeaderAndFooter}>
         {/* breadcrumb */}
-        {showHeaderAndFooter && (
+        {!hideHeaderAndFooter && (
           <Breadcrumb
             pages={[
               { label: "Home", path: process.env.PUBLIC_URL + "/" },

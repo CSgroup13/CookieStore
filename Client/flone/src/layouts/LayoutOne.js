@@ -5,7 +5,7 @@ import FooterOne from "../wrappers/footer/FooterOne";
 import ScrollToTop from "../components/scroll-to-top";
 
 const LayoutOne = ({
-  showHeaderAndFooter,
+  hideHeaderAndFooter,
   children,
   headerContainerClass,
   headerTop,
@@ -14,7 +14,7 @@ const LayoutOne = ({
 }) => {
   return (
     <Fragment>
-      {showHeaderAndFooter && (
+      {!hideHeaderAndFooter && (
         <HeaderOne
           layout={headerContainerClass}
           top={headerTop}
@@ -23,7 +23,7 @@ const LayoutOne = ({
         />
       )}
       {children}
-      {showHeaderAndFooter && (
+      {!hideHeaderAndFooter && (
         <FooterOne
           backgroundColorClass="bg-gray"
           spaceTopClass="pt-100"

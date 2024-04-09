@@ -92,7 +92,7 @@ const App = () => {
               {/* Shop pages */}
               <Route
                 path={process.env.PUBLIC_URL + "/shop-grid-standard"}
-                element={<ShopGridStandard showHeaderAndFooter={true} />}
+                element={<ShopGridStandard />}
               />
 
               {/* Shop product pages */}

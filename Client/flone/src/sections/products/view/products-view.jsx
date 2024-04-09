@@ -9,7 +9,7 @@ export default function ProductsView() {
       <Typography variant="h4" sx={{ mb: 5 }}>
         Products
       </Typography>
-      <ShopGridStandard showHeaderAndFooter={false} />
+      <ShopGridStandard hideHeaderAndFooter={true} />
     </Container>
   );
 }
