@@ -171,9 +171,6 @@ export default function UserPage() {
                 {dataFiltered
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => {
-                    {
-                      console.log(row);
-                    }
                     return (
                       <UserTableRow
                         key={row.id}
