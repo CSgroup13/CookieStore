@@ -60,16 +60,16 @@ export default function AppView() {
     );
 
     let lastWeekSales = 0;
-
+    let totalItems = 0;
     orders.forEach((order) => {
       const orderDate = new Date(order.date);
-
+      totalItems += order.orderItems.length;
       if (orderDate >= lastWeekStart && orderDate <= lastWeekEnd) {
         lastWeekSales += order.totalPrice;
       }
     });
     setDashboardData((dashboardData) => {
-      return { ...dashboardData, totalSales: lastWeekSales };
+      return { ...dashboardData, totalItems, totalSales: lastWeekSales };
     });
   }, [orders]);
 
@@ -127,7 +127,7 @@ export default function AppView() {
         <Grid xs={12} sm={6} md={4}>
           <AppWidgetSummary
             title="Item Orders"
-            total={1723315}
+            total={dashboardData.totalItems}
             color="warning"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
           />

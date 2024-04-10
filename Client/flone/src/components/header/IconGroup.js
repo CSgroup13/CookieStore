@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import cogoToast from "cogo-toast";
 import clsx from "clsx";
 import MenuCart from "./sub-components/MenuCart";
-import { logoutUser } from "../../store/slices/user-slice";
+import { logoutUser, setAdmin } from "../../store/slices/user-slice";
 
 const IconGroup = ({ iconWhiteClass }) => {
   const handleClick = (e) => {
@@ -63,10 +63,11 @@ const IconGroup = ({ iconWhiteClass }) => {
                     </Link>
                   </li>
                 )}
-                < li >
+                <li>
                   <Link
                     onClick={() => {
                       dispatch(logoutUser());
+                      dispatch(setAdmin(false));
                       cogoToast.success(
                         `Bye ${loggedUser.firstName} ${loggedUser.lastName}`,
                         {
@@ -88,7 +89,7 @@ const IconGroup = ({ iconWhiteClass }) => {
             )}
           </ul>
         </div>
-      </div >
+      </div>
       <div className="same-style header-compare">
         <Link to={process.env.PUBLIC_URL + "/compare"}>
           <i className="pe-7s-shuffle" />
@@ -131,7 +132,7 @@ const IconGroup = ({ iconWhiteClass }) => {
           <i className="pe-7s-menu" />
         </button>
       </div>
-    </div >
+    </div>
   );
 };
 

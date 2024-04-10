@@ -46,11 +46,7 @@ const App = () => {
   useEffect(() => {
     getData(api.products)
       .then((products) => {
-        const productsWithImages = products.map((product) => ({
-          ...product,
-          image: `/assets/img/cookies_images/${product.name}.jpg`,
-        }));
-        store.dispatch(setProducts(productsWithImages));
+        store.dispatch(setProducts(products));
       })
       .catch((error) => {
         console.error(error);
@@ -61,11 +57,8 @@ const App = () => {
     if (loggedUser?.firstName) {
       getData(`${api.users}${loggedUser.id}/products`)
         .then((products) => {
-          const productsWithImages = products.map((product) => ({
-            ...product,
-            image: `/assets/img/cookies_images/${product.name}.jpg`,
-          }));
-          store.dispatch(setWishlist(productsWithImages));
+          store.dispatch(setWishlist(products));
+          // store.dispatch
         })
         .catch((error) => {
           console.error(error);
@@ -161,46 +154,50 @@ const App = () => {
                 path={process.env.PUBLIC_URL + "/checkout"}
                 element={<Checkout />}
               />
-              <Route
-                path={process.env.PUBLIC_URL + "/adminDashboard"}
-                element={
-                  <DashboardLayout>
-                    <Suspense>
-                      <IndexPage/>
-                    </Suspense>
-                  </DashboardLayout>
-                }
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/adminUsers"}
-                element={
-                  <DashboardLayout>
-                    <Suspense>
-                      <UserPage/>
-                    </Suspense>
-                  </DashboardLayout>
-                }
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/adminProducts"}
-                element={
-                  <DashboardLayout>
-                    <Suspense>
-                      <ProductsPage />
-                    </Suspense>
-                  </DashboardLayout>
-                }
-              />
-              <Route
-                path={process.env.PUBLIC_URL + "/adminOrders"}
-                element={
-                  <DashboardLayout>
-                    <Suspense>
-                      <OrdersPage/>
-                    </Suspense>
-                  </DashboardLayout>
-                }
-              />
+              {isAdmin ? (
+                <>
+                  <Route
+                    path={process.env.PUBLIC_URL + "/adminDashboard"}
+                    element={
+                      <DashboardLayout>
+                        <Suspense>
+                          <IndexPage />
+                        </Suspense>
+                      </DashboardLayout>
+                    }
+                  />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/adminUsers"}
+                    element={
+                      <DashboardLayout>
+                        <Suspense>
+                          <UserPage />
+                        </Suspense>
+                      </DashboardLayout>
+                    }
+                  />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/adminProducts"}
+                    element={
+                      <DashboardLayout>
+                        <Suspense>
+                          <ProductsPage />
+                        </Suspense>
+                      </DashboardLayout>
+                    }
+                  />
+                  <Route
+                    path={process.env.PUBLIC_URL + "/adminOrders"}
+                    element={
+                      <DashboardLayout>
+                        <Suspense>
+                          <OrdersPage />
+                        </Suspense>
+                      </DashboardLayout>
+                    }
+                  />
+                </>
+              ) : null}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
