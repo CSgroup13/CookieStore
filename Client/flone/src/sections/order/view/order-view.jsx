@@ -1,23 +1,18 @@
 import { useState } from 'react';
-
 import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
-import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
-
 import Scrollbar from 'src/components/scrollbar';
-
 import TableNoData from '../table-no-data';
 import UserTableRow from '../user-table-row';
 import UserTableHead from '../user-table-head';
 import TableEmptyRows from '../table-empty-rows';
 import UserTableToolbar from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-import api, { getData,deleteData } from "../../../utils/api"
+import api, { deleteData } from "../../../utils/api"
 import { useDispatch, useSelector } from "react-redux";
 import { setUsers } from "../../../store/slices/user-slice";
 
@@ -136,10 +131,6 @@ export default function OrderPage() {
 
   return (
     <Container>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Users</Typography>
-      </Stack>
-
       <Card>
         <UserTableToolbar
           numSelected={selected.length}

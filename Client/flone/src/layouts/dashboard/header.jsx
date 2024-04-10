@@ -13,7 +13,6 @@ import { bgBlur } from '../../theme/css';
 
 import Iconify from '../../components/iconify';
 
-import Searchbar from './common/searchbar';
 import { NAV, HEADER } from './config-layout';
 import NotificationsPopover from './common/notifications-popover';
 
@@ -31,8 +30,6 @@ export default function Header({ onOpenNav }) {
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
       )}
-
-      <Searchbar />
 
       <Box sx={{ flexGrow: 1 }} />
 

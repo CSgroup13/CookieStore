@@ -103,7 +103,7 @@ const ShopGridStandard = ({ hideHeaderAndFooter }) => {
           />
         )}
 
-        <div className="shop-area pt-95 pb-100">
+        <div className="shop-area pt-95 pb-100" style={hideHeaderAndFooter ? { paddingTop: "0px" } : {}}>
           <div className="container">
             <div className="row">
               <div className="col-lg-3 order-2 order-lg-1">
