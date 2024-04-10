@@ -80,7 +80,7 @@ const Cart = () => {
 
                                 <td className="product-price-cart">
                                   <span className="amount">
-                                  ₪{cartItem.price}
+                                    ₪{cartItem.price}
                                   </span>
                                 </td>
 
@@ -240,17 +240,11 @@ const Cart = () => {
                         </h4>
                       </div>
                       <h5>
-                        Total products{" "}
-                        <span>
-                          {currency.currencySymbol + cartTotalPrice.toFixed(2)}
-                        </span>
+                        Total products <span>₪{cartTotalPrice.toFixed(2)}</span>
                       </h5>
 
                       <h4 className="grand-totall-title">
-                        Grand Total{" "}
-                        <span>
-                          {currency.currencySymbol + cartTotalPrice.toFixed(2)}
-                        </span>
+                        Grand Total <span>₪{cartTotalPrice.toFixed(2)}</span>
                       </h4>
                       <Link to={process.env.PUBLIC_URL + "/checkout"}>
                         Proceed to Checkout
