@@ -17,22 +17,16 @@ import UserTableHead from '../user-table-head';
 import TableEmptyRows from '../table-empty-rows';
 import UserTableToolbar from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-import api, { getData,deleteData } from "../../../utils/api"
-import { useEffect } from 'react';
+import api, {deleteData } from "../../../utils/api"
+import { useDispatch, useSelector } from "react-redux";
+import { setUsers } from "../../../store/slices/user-slice";
+
 // ----------------------------------------------------------------------
 
 export default function UserPage() {
-  const [users, setUsers] = useState([]);
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    getData(api.users)
-      .then((users) => {
-        setUsers(users);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [])
+  const { users } = useSelector((state) => state.user);
 
   const [page, setPage] = useState(0);
 
@@ -64,11 +58,11 @@ export default function UserPage() {
   };
 
   const deleteUser = (userId) => {
-    setUsers(prevUsers => prevUsers.filter((user) => user.id !== userId));
+    dispatch(setUsers(prevUsers => prevUsers.filter((user) => user.id !== userId)));
   }
 
   const updateUser = (updatedUser) => {
-    setUsers((prevUsers) => {
+    dispatch(setUsers((prevUsers) => {
       return prevUsers.map((user) => {
         if (user.id === updatedUser.id) {
           return updatedUser;
@@ -76,7 +70,7 @@ export default function UserPage() {
           return user;
         }
       });
-    });
+    }));
   };
 
   const deleteSelected = () => {

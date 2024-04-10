@@ -3,14 +3,12 @@ import { useState } from 'react';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
 import TableNoData from '../table-no-data';
@@ -19,22 +17,16 @@ import UserTableHead from '../user-table-head';
 import TableEmptyRows from '../table-empty-rows';
 import UserTableToolbar from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-import api, {getData} from "../../../utils/api"
-import { useEffect } from 'react';
+import api, { getData,deleteData } from "../../../utils/api"
+import { useDispatch, useSelector } from "react-redux";
+import { setUsers } from "../../../store/slices/user-slice";
+
 // ----------------------------------------------------------------------
 
-export default function OrdersPage() {
-  const [users,setUsers]=useState([]);
+export default function OrderPage() {
+  const dispatch = useDispatch();
 
-  useEffect(()=>{
-    getData(api.users)
-    .then((users) => {
-      setUsers(users);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  },[])
+  const { users } = useSelector((state) => state.user);
 
   const [page, setPage] = useState(0);
 
@@ -58,18 +50,53 @@ export default function OrdersPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name);
+      const newSelecteds = users.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const deleteUser = (userId) => {
+    dispatch(setUsers(prevUsers => prevUsers.filter((user) => user.id !== userId)));
+  }
+
+  const updateUser = (updatedUser) => {
+    dispatch(setUsers((prevUsers) => {
+      return prevUsers.map((user) => {
+        if (user.id === updatedUser.id) {
+          return updatedUser;
+        } else {
+          return user;
+        }
+      });
+    }));
+  };
+
+  const deleteSelected = () => {
+    // Iterate over the selected array and delete each selected user
+    selected.forEach((userId) => {
+      // Call your delete API here to delete the user by ID
+      deleteData(api.users + "remove/" + userId)
+        .then((deleted) => {
+          if (deleted) {
+            deleteUser(userId)
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+    // Clear the selected array after deletion
+    setSelected([]);
+  };
+  
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
+
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -82,6 +109,7 @@ export default function OrdersPage() {
     }
     setSelected(newSelected);
   };
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -105,14 +133,11 @@ export default function OrdersPage() {
 
   const notFound = !dataFiltered.length && !!filterName;
 
+
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Users</Typography>
-
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
-          New User
-        </Button>
       </Stack>
 
       <Card>
@@ -120,6 +145,7 @@ export default function OrdersPage() {
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
+          onDelete={deleteSelected}
         />
 
         <Scrollbar>
@@ -145,19 +171,25 @@ export default function OrdersPage() {
               <TableBody>
                 {dataFiltered
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <UserTableRow
-                      key={row.id}
-                      name={row.firstName +" "+ row.lastName}
-                      email={row.email}
-                      password={row.password}
-                      phone={row.phone}
-                      address={row.address}
-                      regDate={row.regDate}
-                      selected={selected.indexOf(row.name) !== -1}
-                      handleClick={(event) => handleClick(event, row.name)}
-                    />
-                  ))}
+                  .map((row) => {
+                    { console.log(row) }
+                    return (
+                      <UserTableRow
+                        key={row.id}
+                        id={row.id}
+                        name={row.firstName + " " + row.lastName}
+                        email={row.email}
+                        password={row.password}
+                        phone={row.phone}
+                        address={row.address}
+                        regDate={row.regDate}
+                        selected={selected.indexOf(row.id) !== -1}
+                        handleClick={(event) => handleClick(event, row.id)}
+                        deleteUser={deleteUser}
+                        updateUser={updateUser}
+                      />
+                    )
+                  })}
 
                 <TableEmptyRows
                   height={77}
@@ -169,7 +201,6 @@ export default function OrdersPage() {
             </Table>
           </TableContainer>
         </Scrollbar>
-
         <TablePagination
           page={page}
           component="div"

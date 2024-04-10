@@ -3,10 +3,14 @@ const { createSlice } = require("@reduxjs/toolkit");
 const userSlice = createSlice({
   name: "user",
   initialState: {
+    users: [],
     loggedUser: {},
     isAdmin: false,
   },
   reducers: {
+    setUsers(state, action) {
+      state.users = action.payload;
+    },
     loginUser(state, action) {
       state.loggedUser = action.payload;
     },
@@ -18,5 +22,5 @@ const userSlice = createSlice({
     },
   },
 });
-export const { loginUser, logoutUser, setAdmin } = userSlice.actions;
+export const { setUsers, loginUser, logoutUser, setAdmin } = userSlice.actions;
 export default userSlice.reducer;

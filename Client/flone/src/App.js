@@ -1,13 +1,15 @@
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy, useEffect,useState } from "react";
 import ScrollToTop from "./helpers/scroll-top";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import api, { getData } from "./utils/api";
 import { store } from "./store/store";
-import { useSelector } from "react-redux";
 import { setProducts } from "./store/slices/product-slice";
 import { setWishlist } from "./store/slices/wishlist-slice";
 import ThemeProvider from "./theme";
 import DashboardLayout from "./layouts/dashboard";
+import {useSelector, useDispatch } from "react-redux";
+import { setUsers } from "./store/slices/user-slice";
+import { setOrders } from "./store/slices/order-slice";
 
 export const IndexPage = lazy(() => import("./pages/app"));
 export const UserPage = lazy(() => import("./pages/user"));
@@ -39,6 +41,7 @@ const NotFound = lazy(() => import("./pages/other/NotFound"));
 
 const App = () => {
   const { loggedUser, isAdmin } = useSelector((state) => state.user);
+  const dispatch=useDispatch();
 
   useEffect(() => {
     getData(api.products)
@@ -49,6 +52,7 @@ const App = () => {
         console.error(error);
       });
   }, []);
+
   useEffect(() => {
     if (loggedUser?.firstName) {
       getData(`${api.users}${loggedUser.id}/products`)
@@ -60,6 +64,25 @@ const App = () => {
           console.error(error);
         });
     } else store.dispatch(setWishlist([]));
+
+    if(isAdmin){
+      getData(api.users)
+      .then((users) => {
+        dispatch(setUsers(users))
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+      getData(api.orders)
+      .then((orders) => {
+        dispatch(setOrders(orders))
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    }
   }, [loggedUser]);
 
   return (
