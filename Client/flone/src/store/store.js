@@ -17,6 +17,7 @@ import compareReducer from "./slices/compare-slice";
 import wishlistReducer from "./slices/wishlist-slice";
 import userReducer from "./slices/user-slice";
 import notificationsReducer from "./slices/notifications-slice";
+import orderReducer from "./slices/order-slice";
 
 const persistConfig = {
   key: "flone",
@@ -28,11 +29,12 @@ const persistConfig = {
 export const rootReducer = combineReducers({
   user: userReducer,
   product: productReducer,
+  order: orderReducer,
   currency: currencyReducer,
   cart: cartReducer,
   compare: compareReducer,
   wishlist: wishlistReducer,
-  notifications:notificationsReducer
+  notifications: notificationsReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
