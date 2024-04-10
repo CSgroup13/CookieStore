@@ -51,7 +51,7 @@ namespace Server.Controllers
         }
 
         //update order
-        // POST api/<OrderController>
+        // PUT api/<OrderController>
         [HttpPut("updateOrder")]
         public IActionResult updateOrder([FromBody] Order updatedOrder)
         {

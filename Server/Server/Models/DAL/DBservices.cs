@@ -1915,6 +1915,7 @@ public class DBservices
 
         Dictionary<string, object> paramDic = new Dictionary<string, object>();
 
+        paramDic.Add("@id", o.id);
         paramDic.Add("@userId", o.userId);
         paramDic.Add("@totalPrice", o.totalPrice);
         paramDic.Add("@date", o.date);
