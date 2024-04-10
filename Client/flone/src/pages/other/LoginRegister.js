@@ -1,5 +1,5 @@
-import React, { Fragment, useEffect, useState} from "react";
-import { useLocation ,useNavigate } from "react-router-dom";
+import React, { Fragment, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Tab from "react-bootstrap/Tab";
 import emailjs from "emailjs-com";
 import Nav from "react-bootstrap/Nav";
@@ -192,7 +192,7 @@ const LoginRegister = () => {
           });
           dispatch(loginUser(user));
           if (user.email === "cookiesaddiction1@gmail.com")
-            dispatch(setAdmin());
+            dispatch(setAdmin(true));
           navigate("/");
         })
         .catch((error) => {

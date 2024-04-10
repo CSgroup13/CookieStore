@@ -13,9 +13,9 @@ const userSlice = createSlice({
     logoutUser(state) {
       state.loggedUser = {};
     },
-    setAdmin(state) {
-      state.isAdmin = true;
-    }
+    setAdmin(state, action) {
+      state.isAdmin = action.payload;
+    },
   },
 });
 export const { loginUser, logoutUser, setAdmin } = userSlice.actions;
