@@ -29,6 +29,13 @@
             return dbs.getAllCategories();
         }
 
+        //return how many cookies sold per category
+        public static Dictionary<string, int> GetCookiesSumCategory()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetCookiesSumCategory();
+        }
+
         //return category details
         public static Category getCategoryById(int id)
         {

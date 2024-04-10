@@ -1,18 +1,23 @@
-import { useState } from 'react';
-import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
-import Container from '@mui/material/Container';
-import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
-import TablePagination from '@mui/material/TablePagination';
-import Scrollbar from 'src/components/scrollbar';
-import TableNoData from '../table-no-data';
-import UserTableRow from '../user-table-row';
-import UserTableHead from '../user-table-head';
-import TableEmptyRows from '../table-empty-rows';
-import UserTableToolbar from '../user-table-toolbar';
-import { emptyRows, applyFilter, getComparator } from '../utils';
-import api, {deleteData } from "../../../utils/api"
+import { useState } from "react";
+
+import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
+import Table from "@mui/material/Table";
+import Container from "@mui/material/Container";
+import TableBody from "@mui/material/TableBody";
+import Typography from "@mui/material/Typography";
+import TableContainer from "@mui/material/TableContainer";
+import TablePagination from "@mui/material/TablePagination";
+
+import Scrollbar from "src/components/scrollbar";
+
+import TableNoData from "../table-no-data";
+import UserTableRow from "../user-table-row";
+import UserTableHead from "../user-table-head";
+import TableEmptyRows from "../table-empty-rows";
+import UserTableToolbar from "../user-table-toolbar";
+import { emptyRows, applyFilter, getComparator } from "../utils";
+import api, { deleteData } from "../../../utils/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsers } from "../../../store/slices/user-slice";
 
@@ -25,20 +30,20 @@ export default function UserPage() {
 
   const [page, setPage] = useState(0);
 
-  const [order, setOrder] = useState('asc');
+  const [order, setOrder] = useState("asc");
 
   const [selected, setSelected] = useState([]);
 
-  const [orderBy, setOrderBy] = useState('name');
+  const [orderBy, setOrderBy] = useState("name");
 
-  const [filterName, setFilterName] = useState('');
+  const [filterName, setFilterName] = useState("");
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleSort = (event, id) => {
-    const isAsc = orderBy === id && order === 'asc';
-    if (id !== '') {
-      setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === id && order === "asc";
+    if (id !== "") {
+      setOrder(isAsc ? "desc" : "asc");
       setOrderBy(id);
     }
   };
@@ -53,19 +58,15 @@ export default function UserPage() {
   };
 
   const deleteUser = (userId) => {
-    dispatch(setUsers(prevUsers => prevUsers.filter((user) => user.id !== userId)));
-  }
+    dispatch(setUsers(users.filter((user) => user.id !== userId)));
+  };
 
   const updateUser = (updatedUser) => {
-    dispatch(setUsers((prevUsers) => {
-      return prevUsers.map((user) => {
-        if (user.id === updatedUser.id) {
-          return updatedUser;
-        } else {
-          return user;
-        }
-      });
-    }));
+    dispatch(
+      setUsers(
+        users.map((user) => (user.id === updatedUser.id ? updatedUser : user))
+      )
+    );
   };
 
   const deleteSelected = () => {
@@ -75,7 +76,7 @@ export default function UserPage() {
       deleteData(api.users + "remove/" + userId)
         .then((deleted) => {
           if (deleted) {
-            deleteUser(userId)
+            deleteUser(userId);
           }
         })
         .catch((error) => {
@@ -85,7 +86,7 @@ export default function UserPage() {
     // Clear the selected array after deletion
     setSelected([]);
   };
-  
+
   const handleClick = (event, id) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
@@ -104,7 +105,6 @@ export default function UserPage() {
     }
     setSelected(newSelected);
   };
-
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -128,9 +128,17 @@ export default function UserPage() {
 
   const notFound = !dataFiltered.length && !!filterName;
 
-
   return (
     <Container>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        mb={5}
+      >
+        <Typography variant="h4">Users</Typography>
+      </Stack>
+
       <Card>
         <UserTableToolbar
           numSelected={selected.length}
@@ -140,7 +148,7 @@ export default function UserPage() {
         />
 
         <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
+          <TableContainer sx={{ overflow: "unset" }}>
             <Table sx={{ minWidth: 800 }}>
               <UserTableHead
                 order={order}
@@ -150,19 +158,22 @@ export default function UserPage() {
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'name', label: 'Name' },
-                  { id: 'email', label: 'Email' },
-                  { id: 'password', label: 'Password' },
-                  { id: 'phone', label: 'Phone' },
-                  { id: 'address', label: 'Address' },
-                  { id: 'regDate', label: 'Registration Date' },
-                  { id: '' },
+                  { id: "name", label: "Name" },
+                  { id: "email", label: "Email" },
+                  { id: "password", label: "Password" },
+                  { id: "phone", label: "Phone" },
+                  { id: "address", label: "Address" },
+                  { id: "regDate", label: "Registration Date" },
+                  { id: "" },
                 ]}
               />
               <TableBody>
                 {dataFiltered
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => {
+                    {
+                      console.log(row);
+                    }
                     return (
                       <UserTableRow
                         key={row.id}
@@ -178,7 +189,7 @@ export default function UserPage() {
                         deleteUser={deleteUser}
                         updateUser={updateUser}
                       />
-                    )
+                    );
                   })}
 
                 <TableEmptyRows

@@ -10,44 +10,47 @@ import AppTasks from "../app-tasks";
 import AppNewsUpdate from "../app-news-update";
 import AppOrderTimeline from "../app-order-timeline";
 import AppCurrentVisits from "../app-current-visits";
-import AppWebsiteVisits from "../app-website-visits";
+import StoreAnalytics from "../app-store-analytics";
 import AppWidgetSummary from "../app-widget-summary";
 import AppTrafficBySite from "../app-traffic-by-site";
 import AppCurrentSubject from "../app-current-subject";
 import AppConversionRates from "../app-conversion-rates";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import api, { getData } from "src/utils/api";
 // ----------------------------------------------------------------------
 export default function AppView() {
-  const [orders, setOrders] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [dashboardData, setDashboardData] = useState({
-    totalSales: 0,
-    totalUsers: 0,
-    totalItems: 0,
-  });
+  const { orders } = useSelector((state) => state.order);
+  const { users } = useSelector((state) => state.user);
+  const [cookiesPerCategory, setCookiesPerCategory] = useState([]);
+  const [dashboardData, setDashboardData] = useState({});
 
-  useEffect(() => {
-    getData(api.orders)
-      .then((orders) => {
-        console.log(orders);
-        setOrders(orders);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    getData(api.users)
-      .then((users) => {
-        setUsers(users);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
+  function calculateNewUsers(startDate, endDate) {
+    let totalUsers = 0;
+    users.forEach((user) => {
+      const regDate = new Date(user.regDate);
+      if (regDate >= startDate && regDate <= endDate) {
+        totalUsers++;
+      }
+    });
+    return totalUsers;
+  }
+
+  function calculateOrdersAndIncome(startDate, endDate) {
+    let totalOrders = 0;
+    let totalIncome = 0;
+    orders.forEach((order) => {
+      const orderDate = new Date(order.date);
+      if (orderDate >= startDate && orderDate <= endDate) {
+        totalOrders++;
+        totalIncome += order.totalPrice;
+      }
+    });
+    return { totalOrders, totalIncome };
+  }
 
   useEffect(() => {
     const today = new Date();
-
     const lastWeekStart = new Date(
       today.getFullYear(),
       today.getMonth(),
@@ -58,45 +61,82 @@ export default function AppView() {
       today.getMonth(),
       lastWeekStart.getDate() + 6
     );
-
-    let lastWeekSales = 0;
-    let totalItems = 0;
-    orders.forEach((order) => {
-      const orderDate = new Date(order.date);
-      totalItems += order.orderItems.length;
-      if (orderDate >= lastWeekStart && orderDate <= lastWeekEnd) {
-        lastWeekSales += order.totalPrice;
-      }
-    });
-    setDashboardData((dashboardData) => {
-      return { ...dashboardData, totalItems, totalSales: lastWeekSales };
-    });
-  }, [orders]);
-
-  useEffect(() => {
-    const today = new Date();
-
-    const lastMonthStart = new Date(
-      today.getFullYear(),
-      today.getMonth() - 1,
-      1
+    const totalUsers = calculateNewUsers(lastWeekStart, lastWeekEnd);
+    const { totalOrders, totalIncome } = calculateOrdersAndIncome(
+      lastWeekStart,
+      lastWeekEnd
     );
+    setDashboardData(totalIncome, totalUsers, totalOrders);
+    getData(`${api.categories}GetCookiesSumCategory`)
+      .then((categories) => {
+        const transformedData = [];
+        for (const category in categories) {
+          if (categories.hasOwnProperty(category)) {
+            transformedData.push({
+              label: category,
+              value: categories[category],
+            });
+          }
+        }
+        setCookiesPerCategory(transformedData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
-    let recentUsersCount = 0;
+  // // Function to get the start and end dates of each month of the current year
+  // function getMonthRange(year) {
+  //   const months = [];
+  //   for (let month = 0; month < 12; month++) {
+  //     const startDate = new Date(year, month, 1);
+  //     const endDate = new Date(year, month + 1, 0);
+  //     months.push({ startDate, endDate });
+  //   }
+  //   return months;
+  // }
 
-    users.forEach((user) => {
-      const regDate = new Date(user.regDate);
+  // // Function to calculate metrics for each month
+  // function calculateMetricsForMonth(startDate, endDate) {
+  //   const totalUsers = calculateNewUsers(users, startDate, endDate);
+  //   const { totalOrders, totalIncome } = calculateOrdersAndIncome(
+  //     startDate,
+  //     endDate
+  //   );
+  //   return { income: totalIncome, users: totalUsers, orders: totalOrders };
+  // }
 
-      if (regDate >= lastMonthStart && regDate <= today) {
-        recentUsersCount++;
-      }
-    });
+  // // Function to generate data for the component
+  // function generateChartData(year) {
+  //   const monthRange = getMonthRange(year);
+  //   const chartData = monthRange.map(({ startDate, endDate }) => {
+  //     const month = startDate.toLocaleString("en-us", { month: "short" });
+  //     const { income, users, orders } = calculateMetricsForMonth(
+  //       startDate,
+  //       endDate
+  //     );
+  //     return {
+  //       month,
+  //       income,
+  //       users,
+  //       orders,
+  //     };
+  //   });
+  //   console.log(chartData);
+  //   return chartData;
+  // }
 
-    setDashboardData((dashboardData) => {
-      return { ...dashboardData, totalUsers: recentUsersCount };
-    });
-  }, [users]);
+  // // Generate data for the current year
+  // const currentYear = new Date().getFullYear();
+  // const chartData = generateChartData(currentYear);
 
+  // // Format the data for the component
+  // const labels = chartData.map(data => `${data.month}/${currentYear}`);
+  // const series = [
+  //   { name: "Income", type: "column", fill: "solid", data: chartData.map(data => data.income) },
+  //   { name: "Users", type: "area", fill: "gradient", data: chartData.map(data => data.users) },
+  //   { name: "Orders", type: "line", fill: "solid", data: chartData.map(data => data.orders) }
+  // ];
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" sx={{ mb: 5 }}>
@@ -106,8 +146,8 @@ export default function AppView() {
       <Grid container spacing={3}>
         <Grid xs={12} sm={6} md={4}>
           <AppWidgetSummary
-            title="Weekly Sales"
-            total={dashboardData.totalSales}
+            title="Weekly Income"
+            total={dashboardData.totalIncome ? dashboardData.totalIncome : 0}
             color="success"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
           />
@@ -116,7 +156,7 @@ export default function AppView() {
         <Grid xs={12} sm={6} md={4}>
           <AppWidgetSummary
             title="New Users"
-            total={dashboardData.totalUsers}
+            total={dashboardData.totalUsers ? dashboardData.totalUsers : 0}
             color="info"
             icon={
               <img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />
@@ -126,64 +166,27 @@ export default function AppView() {
 
         <Grid xs={12} sm={6} md={4}>
           <AppWidgetSummary
-            title="Item Orders"
-            total={dashboardData.totalItems}
+            title="Orders"
+            total={dashboardData.totalOrders ? dashboardData.totalOrders : 0}
             color="warning"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
           />
         </Grid>
-        <Grid xs={12} md={6} lg={8}>
-          <AppWebsiteVisits
-            title="Website Visits"
-            subheader="(+43%) than last year"
+        {/* <Grid xs={12} md={6} lg={8}>
+          <StoreAnalytics
+            title="Store Analytics"
             chart={{
-              labels: [
-                "01/01/2003",
-                "02/01/2003",
-                "03/01/2003",
-                "04/01/2003",
-                "05/01/2003",
-                "06/01/2003",
-                "07/01/2003",
-                "08/01/2003",
-                "09/01/2003",
-                "10/01/2003",
-                "11/01/2003",
-              ],
-              series: [
-                {
-                  name: "Team A",
-                  type: "column",
-                  fill: "solid",
-                  data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
-                },
-                {
-                  name: "Team B",
-                  type: "area",
-                  fill: "gradient",
-                  data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
-                },
-                {
-                  name: "Team C",
-                  type: "line",
-                  fill: "solid",
-                  data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
-                },
-              ],
+              labels,
+              series,
             }}
           />
-        </Grid>
+        </Grid> */}
 
         <Grid xs={12} md={6} lg={4}>
           <AppCurrentVisits
-            title="Current Visits"
+            title="Cookies Per Category"
             chart={{
-              series: [
-                { label: "America", value: 4344 },
-                { label: "Asia", value: 5435 },
-                { label: "Europe", value: 1443 },
-                { label: "Africa", value: 4443 },
-              ],
+              series: cookiesPerCategory,
             }}
           />
         </Grid>

@@ -1447,6 +1447,57 @@ public class DBservices
         }
 
     }
+    //--------------------------------------------------------------------------------------------------
+    // This method how many cookies sold per category
+    //--------------------------------------------------------------------------------------------------
+    public Dictionary<string, int> GetCookiesSumCategory()
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+
+        try
+        {
+
+            cmd = CreateCommandWithStoredProcedure("SP_GetCookiesSumCategory", con, null);// create the command
+
+            Dictionary<string, int> cookiesSumByCategory = new Dictionary<string, int>();
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dataReader.Read())
+            {
+                string categoryName = dataReader["category_name"].ToString();
+                int cookiesSum = Convert.ToInt32(dataReader["total_cookies_purchased"]);
+
+                cookiesSumByCategory.Add(categoryName, cookiesSum);
+            }
+
+            return cookiesSumByCategory;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+    }
 
     //--------------------------------------------------------------------------------------------------
     // This method return category by id

@@ -8,6 +8,27 @@ namespace Server.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
+        //get all categories
+        // GET: api/<CategoryController>
+        [HttpGet]
+        public IActionResult getAllCategories()
+        {
+            try
+            {
+                return Ok(Category.getAllCategories());
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
+        }
+        //get how many cookies sold per category
+        [HttpGet("GetCookiesSumCategory")]
+        public IActionResult GetCookiesSumCategory()
+        {
+            try
+            {
+                return Ok(Category.GetCookiesSumCategory());
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
+        }
         //add category to DB
         // POST api/<CategoryController>
         [HttpPost]
@@ -23,17 +44,6 @@ namespace Server.Controllers
             }
         }
 
-        //get all categories
-        // GET: api/<CategoryController>
-        [HttpGet]
-        public IActionResult getAllCategories()
-        {
-            try
-            {
-                return Ok(Category.getAllCategories());
-            }
-            catch (Exception ex) { return BadRequest(ex.Message); }
-        }
 
         //get category details
         // GET: api/<CategoryController>
