@@ -1,7 +1,7 @@
 import { Fragment, useState } from "react";
 import { useLocation } from "react-router-dom";
 import SEO from "../../components/seo";
-import LayoutOne from "../../layouts/LayoutOne";
+import LayoutThree from "../../layouts/LayoutThree";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import emailjs from "emailjs-com";
 import cogoToast from "cogo-toast";
@@ -56,7 +56,7 @@ const Contact = () => {
         titleTemplate="Contact"
         description="Contact page of flone react minimalist eCommerce template."
       />
-      <LayoutOne headerTop="visible">
+      <LayoutThree headerTop="visible">
         {/* breadcrumb */}
         <Breadcrumb
           pages={[
@@ -160,7 +160,7 @@ const Contact = () => {
             </div>
           </div>
         </div>
-      </LayoutOne>
+      </LayoutThree>
     </Fragment>
   );
 };

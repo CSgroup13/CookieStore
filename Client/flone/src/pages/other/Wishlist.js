@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import SEO from "../../components/seo";
-import LayoutOne from "../../layouts/LayoutOne";
+import LayoutThree from "../../layouts/LayoutThree";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import { addToCart } from "../../store/slices/cart-slice";
 import { deleteFromWishlist, deleteAllFromWishlist } from "../../store/slices/wishlist-slice"
@@ -22,7 +22,7 @@ const Wishlist = () => {
         titleTemplate="Wishlist"
         description="Wishlist page of flone react minimalist eCommerce template."
       />
-      <LayoutOne headerTop="visible">
+      <LayoutThree headerTop="visible">
         {/* breadcrumb */}
         <Breadcrumb 
           pages={[
@@ -176,7 +176,7 @@ const Wishlist = () => {
             )}
           </div>
         </div>
-      </LayoutOne>
+      </LayoutThree>
     </Fragment>
   );
 };

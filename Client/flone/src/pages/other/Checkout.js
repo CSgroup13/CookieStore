@@ -1,18 +1,17 @@
 import { Fragment } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getDiscountPrice } from "../../helpers/product";
 import SEO from "../../components/seo";
-import LayoutOne from "../../layouts/LayoutOne";
+import LayoutThree from "../../layouts/LayoutThree";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { useState, useEffect } from "react";
 import Paypal from "./PayPal";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
-
 const Checkout = () => {
-  let cartTotalPrice = 0;
+  const { totalPrice } = useSelector((state) => state.cart);
+
   const initialOptions = {
     "client-id":
       "AXOHJgQSrZkQA98vO5RL3R-3g-mUSDbD_VR1N17zk-GUH4CdCVryLJsZDlk7DOArvvuF9cFUe9ziufET",
@@ -175,7 +174,7 @@ const Checkout = () => {
   return (
     <Fragment>
       <SEO titleTemplate="Checkout" />
-      <LayoutOne headerTop="visible">
+      <LayoutThree headerTop="visible">
         {/* breadcrumb */}
         <Breadcrumb
           pages={[
@@ -375,38 +374,13 @@ const Checkout = () => {
                         <div className="your-order-middle">
                           <ul>
                             {cartItems.map((cartItem, key) => {
-                              const discountedPrice = getDiscountPrice(
-                                cartItem.price,
-                                cartItem.discount
-                              );
-                              const finalProductPrice = (
-                                cartItem.price * currency.currencyRate
-                              ).toFixed(2);
-                              const finalDiscountedPrice = (
-                                discountedPrice * currency.currencyRate
-                              ).toFixed(2);
-
-                              discountedPrice != null
-                                ? (cartTotalPrice +=
-                                    finalDiscountedPrice * cartItem.quantity)
-                                : (cartTotalPrice +=
-                                    finalProductPrice * cartItem.quantity);
                               return (
                                 <li key={key}>
                                   <span className="order-middle-left">
                                     {cartItem.name} X {cartItem.quantity}
                                   </span>{" "}
-                                  <span className="order-price">
-                                    {discountedPrice !== null
-                                      ? "₪" +
-                                        (
-                                          finalDiscountedPrice *
-                                          cartItem.quantity
-                                        ).toFixed(2)
-                                      : "₪" +
-                                        (
-                                          finalProductPrice * cartItem.quantity
-                                        ).toFixed(2)}
+                                  <span className="order-price">₪
+                                    {(cartItem.price * cartItem.quantity).toFixed(2)}
                                   </span>
                                 </li>
                               );
@@ -422,7 +396,7 @@ const Checkout = () => {
                         <div className="your-order-total">
                           <ul>
                             <li className="order-total">Total</li>
-                            <li>{"₪" + cartTotalPrice.toFixed(2)}</li>
+                            <li>{"₪" + totalPrice.toFixed(2)}</li>
                           </ul>
                         </div>
                       </div>
@@ -461,7 +435,7 @@ const Checkout = () => {
             )}
           </div>
         </div>
-      </LayoutOne>
+      </LayoutThree>
     </Fragment>
   );
 };

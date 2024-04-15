@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getDiscountPrice } from "../../helpers/product";
 import SEO from "../../components/seo";
-import LayoutOne from "../../layouts/LayoutOne";
+import LayoutThree from "../../layouts/LayoutThree";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import Rating from "../../components/product/sub-components/ProductRating";
 import { addToCart } from "../../store/slices/cart-slice";
@@ -23,7 +23,7 @@ const Compare = () => {
         titleTemplate="Compare"
         description="Compare page of flone react minimalist eCommerce template."
       />
-      <LayoutOne headerTop="visible">
+      <LayoutThree headerTop="visible">
         {/* breadcrumb */}
         <Breadcrumb 
           pages={[
@@ -181,7 +181,7 @@ const Compare = () => {
             )}
           </div>
         </div>
-      </LayoutOne>
+      </LayoutThree>
     </Fragment>
   );
 };

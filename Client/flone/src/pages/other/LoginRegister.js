@@ -5,7 +5,7 @@ import emailjs from "emailjs-com";
 import Nav from "react-bootstrap/Nav";
 import { useDispatch } from "react-redux";
 import SEO from "../../components/seo";
-import LayoutOne from "../../layouts/LayoutOne";
+import LayoutThree from "../../layouts/LayoutThree";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import cogoToast from "cogo-toast";
 import { loginUser, setAdmin } from "../../store/slices/user-slice";
@@ -257,7 +257,7 @@ const LoginRegister = () => {
         titleTemplate="Login"
         description="Login page of flone react minimalist eCommerce template."
       />
-      <LayoutOne headerTop="visible">
+      <LayoutThree headerTop="visible">
         {/* breadcrumb */}
         <Breadcrumb
           pages={[
@@ -316,22 +316,18 @@ const LoginRegister = () => {
                                 onChange={handleChange}
                               />
                               <div className="button-box">
+                                <button type="submit">
+                                  <span>Login</span>
+                                </button>
                                 <div className="login-toggle-btn">
-                                  <input type="checkbox" />
-                                  <label className="ml-10">Remember me</label>
-                                  <br />
-                                  <button
-                                    type="button"
+                                  <a
                                     onClick={() =>
                                       setForgotPassword((state) => !state)
                                     }
                                   >
                                     Forgot Password?
-                                  </button>
+                                  </a>
                                 </div>
-                                <button type="submit">
-                                  <span>Login</span>
-                                </button>
                               </div>
                             </form>
                           </div>
@@ -451,7 +447,7 @@ const LoginRegister = () => {
             </div>
           </div>
         </div>
-      </LayoutOne>
+      </LayoutThree>
     </Fragment>
   );
 };

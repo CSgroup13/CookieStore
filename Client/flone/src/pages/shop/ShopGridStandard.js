@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { getSortedProducts } from "../../helpers/product";
 import SEO from "../../components/seo";
-import LayoutOne from "../../layouts/LayoutOne";
+import LayoutThree from "../../layouts/LayoutThree";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import ShopSidebar from "../../wrappers/product/ShopSidebar";
 import ShopTopbar from "../../wrappers/product/ShopTopbar";
@@ -92,7 +92,7 @@ const ShopGridStandard = ({ hideHeaderAndFooter }) => {
         description="Shop page of flone react minimalist eCommerce template."
       />
 
-      <LayoutOne headerTop="visible" hideHeaderAndFooter={hideHeaderAndFooter}>
+      <LayoutThree headerTop="visible" hideHeaderAndFooter={hideHeaderAndFooter}>
         {/* breadcrumb */}
         {!hideHeaderAndFooter && (
           <Breadcrumb
@@ -145,7 +145,7 @@ const ShopGridStandard = ({ hideHeaderAndFooter }) => {
             </div>
           </div>
         </div>
-      </LayoutOne>
+      </LayoutThree>
     </Fragment>
   );
 };

@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Accordion from "react-bootstrap/Accordion";
 import SEO from "../../components/seo";
-import LayoutOne from "../../layouts/LayoutOne";
+import LayoutThree from "../../layouts/LayoutThree";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import { useDispatch, useSelector } from "react-redux";
 import api, { putData } from "src/utils/api";
@@ -116,7 +116,7 @@ const MyAccount = () => {
         titleTemplate="My Account"
         description="My Account page of flone react minimalist eCommerce template."
       />
-      <LayoutOne headerTop="visible">
+      <LayoutThree headerTop="visible">
         {/* breadcrumb */}
         <Breadcrumb
           pages={[
@@ -317,7 +317,7 @@ const MyAccount = () => {
             )}
           </div>
         </div>
-      </LayoutOne>
+      </LayoutThree>
     </Fragment>
   );
 };

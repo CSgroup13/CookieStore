@@ -1,59 +1,42 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import SEO from "../../components/seo";
-import LayoutOne from "../../layouts/LayoutOne";
+import LayoutThree from "../../layouts/LayoutThree";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import {
   addToCart,
   decreaseQuantity,
   deleteFromCart,
   deleteAllFromCart,
+  setDiscount 
 } from "../../store/slices/cart-slice";
 import ProductModal from "../../components/product/ProductModal";
 import cogoToast from 'cogo-toast';
 
 const Cart = () => {
+  const dispatch = useDispatch();
+  let { pathname } = useLocation();
+  const { totalPrice, cartItems, discount } = useSelector((state) => state.cart);
+
+  const [couponValue, setCouponValue] = useState('');
+  const validCoupon = "DISCOUNT10";
 
   const { wishlistItems } = useSelector((state) => state.wishlist);
   const { compareItems } = useSelector((state) => state.compare);
   const [modalShow, setModalShow] = useState(false);
-  const dispatch = useDispatch();
-  let { pathname } = useLocation();
-  const [quantityCount] = useState(1);
-  const currency = useSelector((state) => state.currency);
-  const { cartItems } = useSelector((state) => state.cart);
 
-  const [couponValue, setCouponValue] = useState('');
-  const [cartTotalPrice, setCartTotalPrice] = useState(0);
-  const [couponApplied, setCouponApplied] = useState(false);
-  const validCoupon = "DISCOUNT10";
 
   // Function to handle input value change
   const handleChange = (event) => {
     setCouponValue(event.target.value);
   };
 
-  // Calculate total price whenever cart items change
-  useEffect(() => {
-    let totalPrice = 0;
-    cartItems.forEach((item) => {
-      totalPrice += item.price * item.quantity;
-    });
-    if(couponApplied){
-      const discount = (100 - Number(couponValue.slice(-2)))/100;
-      setCartTotalPrice(totalPrice*discount);
-    }
-    else{
-      setCartTotalPrice(totalPrice);
-    }
-  }, [cartItems,couponApplied]);
-
   // Apply coupon
   const handleCoupon = (event) => {
     event.preventDefault();
-    if (couponValue === validCoupon && !couponApplied) {
-      setCouponApplied(true);
+    if (couponValue === validCoupon && discount===0) {
+      dispatch(setDiscount(10));
       cogoToast.success(
         `Coupon has been applied!`,
         {
@@ -68,7 +51,7 @@ const Cart = () => {
         }
       );
     }
-    else if (couponApplied) {
+    else if (discount!==0) {
       cogoToast.error(
         `Coupon already applied.`,
         {
@@ -85,7 +68,7 @@ const Cart = () => {
         description="Cart page of flone react minimalist eCommerce template."
       />
 
-      <LayoutOne headerTop="visible">
+      <LayoutThree headerTop="visible">
         {/* breadcrumb */}
         <Breadcrumb
           pages={[
@@ -158,7 +141,7 @@ const Cart = () => {
                                       dispatch(
                                         addToCart({
                                           ...cartItem,
-                                          quantity: quantityCount,
+                                          quantity: 1,
                                         })
                                       )
                                     }
@@ -257,7 +240,7 @@ const Cart = () => {
                       </h5>
 
                       <h4 className="grand-totall-title">
-                        Total Price<span>₪{(cartTotalPrice).toFixed(2)}</span>
+                        Total Price<span>₪{(totalPrice).toFixed(2)}</span>
                       </h4>
 
                       <Link to={process.env.PUBLIC_URL + "/checkout"}>
@@ -286,7 +269,7 @@ const Cart = () => {
             )}
           </div>
         </div>
-      </LayoutOne>
+      </LayoutThree>
     </Fragment>
   );
 };

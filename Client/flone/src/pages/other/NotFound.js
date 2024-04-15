@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { Link, useLocation } from "react-router-dom"; 
 import SEO from "../../components/seo";
-import LayoutOne from "../../layouts/LayoutOne";
+import LayoutThree from "../../layouts/LayoutThree";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 
 const NotFound = () => {
@@ -13,7 +13,7 @@ const NotFound = () => {
         titleTemplate="Not Found"
         description="404 of flone react minimalist eCommerce template."
       />
-      <LayoutOne headerTop="visible">
+      <LayoutThree headerTop="visible">
         {/* breadcrumb */}
         <Breadcrumb 
           pages={[
@@ -52,7 +52,7 @@ const NotFound = () => {
             </div>
           </div>
         </div>
-      </LayoutOne>
+      </LayoutThree>
     </Fragment>
   );
 };

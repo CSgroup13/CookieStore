@@ -9,23 +9,25 @@ import { deleteAllFromCart } from "src/store/slices/cart-slice";
 import { faker } from "@faker-js/faker";
 import { addNotification } from "src/store/slices/notifications-slice";
 import { sub } from "date-fns";
+import { useSelector } from "react-redux";
+import {setDiscount} from "../../store/slices/cart-slice";
 
 const Paypal = ({ formData, cartItems, loggedUser }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [{ isPending }] = usePayPalScriptReducer();
-  const { totalPrice, orderItems } = cartItems.reduce(
+  const { totalPrice} = useSelector((state) => state.cart);
+
+  const { orderItems } = cartItems.reduce(
     (accumulator, currentItem) => {
-      const itemPrice = currentItem.price * currentItem.quantity;
       const orderItem = {
         productId: currentItem.id,
         quantity: currentItem.quantity,
       };
       accumulator.orderItems.push(orderItem);
-      accumulator.totalPrice += itemPrice;
       return accumulator;
     },
-    { totalPrice: 0, orderItems: [] }
+    { orderItems: [] }
   );
 
   const orderDetails = {
@@ -43,7 +45,7 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
       purchase_units: [
         {
           amount: {
-            value: totalPrice,
+            value: totalPrice.toFixed(2),
           },
         },
       ],
@@ -115,6 +117,7 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
                   )
                   .then(() => {
                     dispatch(deleteAllFromCart());
+                    dispatch(setDiscount(0));
                     const newNotification = {
                       id: faker.string.uuid(),
                       title: "You have new order",
