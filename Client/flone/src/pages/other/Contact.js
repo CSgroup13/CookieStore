@@ -70,8 +70,7 @@ const Contact = () => {
                       <i className="fa fa-phone" />
                     </div>
                     <div className="contact-info-dec">
-                      <p>+012 345 678 102</p>
-                      <p>+012 345 678 102</p>
+                      <p>050-524-0094</p>
                     </div>
                   </div>
                   <div className="single-contact-info">
@@ -84,11 +83,6 @@ const Contact = () => {
                           cookiesaddiction1@email.com
                         </a>
                       </p>
-                      <p>
-                        <a href="https://yourwebsitename.com">
-                          yourwebsitename.com
-                        </a>
-                      </p>
                     </div>
                   </div>
                   <div className="single-contact-info">
@@ -96,36 +90,16 @@ const Contact = () => {
                       <i className="fa fa-map-marker" />
                     </div>
                     <div className="contact-info-dec">
-                      <p>Address goes here, </p>
-                      <p>street, Crossroad 123.</p>
+                      <p>Haanafa 5</p>
+                      <p>Kadima</p>
                     </div>
                   </div>
                   <div className="contact-social text-center">
                     <h3>Follow Us</h3>
                     <ul>
                       <li>
-                        <a href="//facebook.com">
-                          <i className="fa fa-facebook" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="//pinterest.com">
-                          <i className="fa fa-pinterest-p" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="//thumblr.com">
-                          <i className="fa fa-tumblr" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="//vimeo.com">
-                          <i className="fa fa-vimeo" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="//twitter.com">
-                          <i className="fa fa-twitter" />
+                        <a href="https://www.instagram.com/cookiesaddicttion/">
+                          <i className="fa fa-instagram" />
                         </a>
                       </li>
                     </ul>
