@@ -74,7 +74,6 @@ export default function UserTableRow({
     delete updatedUser.name;
     updatedUser.firstName=firstName
     updatedUser.lastName=lastName
-    console.log(updatedUser)
     putData(api.users + "update", updatedUser)
       .then((user) => {
         updateUser(user);

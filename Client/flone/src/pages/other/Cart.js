@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import SEO from "../../components/seo";
@@ -11,18 +11,73 @@ import {
   deleteAllFromCart,
 } from "../../store/slices/cart-slice";
 import ProductModal from "../../components/product/ProductModal";
+import cogoToast from 'cogo-toast';
 
 const Cart = () => {
-  let cartTotalPrice = 0;
+
   const { wishlistItems } = useSelector((state) => state.wishlist);
   const { compareItems } = useSelector((state) => state.compare);
   const [modalShow, setModalShow] = useState(false);
-  const [quantityCount] = useState(1);
   const dispatch = useDispatch();
   let { pathname } = useLocation();
-
+  const [quantityCount] = useState(1);
   const currency = useSelector((state) => state.currency);
   const { cartItems } = useSelector((state) => state.cart);
+
+  const [couponValue, setCouponValue] = useState('');
+  const [cartTotalPrice, setCartTotalPrice] = useState(0);
+  const [couponApplied, setCouponApplied] = useState(false);
+  const validCoupon = "DISCOUNT10";
+
+  // Function to handle input value change
+  const handleChange = (event) => {
+    setCouponValue(event.target.value);
+  };
+
+  // Calculate total price whenever cart items change
+  useEffect(() => {
+    let totalPrice = 0;
+    cartItems.forEach((item) => {
+      totalPrice += item.price * item.quantity;
+    });
+    if(couponApplied){
+      const discount = (100 - Number(couponValue.slice(-2)))/100;
+      setCartTotalPrice(totalPrice*discount);
+    }
+    else{
+      setCartTotalPrice(totalPrice);
+    }
+  }, [cartItems,couponApplied]);
+
+  // Apply coupon
+  const handleCoupon = (event) => {
+    event.preventDefault();
+    if (couponValue === validCoupon && !couponApplied) {
+      setCouponApplied(true);
+      cogoToast.success(
+        `Coupon has been applied!`,
+        {
+          position: "bottom-left",
+        }
+      );
+    } else if (couponValue !== validCoupon) {
+      cogoToast.error(
+        `Invalid coupon!`,
+        {
+          position: "bottom-left",
+        }
+      );
+    }
+    else if (couponApplied) {
+      cogoToast.error(
+        `Coupon already applied.`,
+        {
+          position: "bottom-left",
+        }
+      );
+    }
+  };
+
   return (
     <Fragment>
       <SEO
@@ -58,92 +113,88 @@ const Cart = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {cartItems.map((cartItem) => {
-                            cartTotalPrice +=
-                              cartItem.price * cartItem.quantity;
-                            return (
-                              <tr key={cartItem.id}>
-                                <td className="product-thumbnail">
-                                  <Link onClick={() => setModalShow(true)}>
-                                    <img
-                                      className="img-fluid"
-                                      src={cartItem.image}
-                                      alt=""
-                                    />
-                                  </Link>
-                                </td>
-                                <td className="product-name">
-                                  <Link onClick={() => setModalShow(true)}>
-                                    {cartItem.name}
-                                  </Link>
-                                </td>
+                          {cartItems.map((cartItem) => (
+                            <tr key={cartItem.id}>
+                              <td className="product-thumbnail">
+                                <Link onClick={() => setModalShow(true)}>
+                                  <img
+                                    className="img-fluid"
+                                    src={cartItem.image}
+                                    alt=""
+                                  />
+                                </Link>
+                              </td>
+                              <td className="product-name">
+                                <Link onClick={() => setModalShow(true)}>
+                                  {cartItem.name}
+                                </Link>
+                              </td>
 
-                                <td className="product-price-cart">
-                                  <span className="amount">
-                                    ₪{cartItem.price}
-                                  </span>
-                                </td>
+                              <td className="product-price-cart">
+                                <span className="amount">
+                                  ₪{cartItem.price}
+                                </span>
+                              </td>
 
-                                <td className="product-quantity">
-                                  <div className="cart-plus-minus">
-                                    <button
-                                      className="dec qtybutton"
-                                      onClick={() =>
-                                        dispatch(decreaseQuantity(cartItem))
-                                      }
-                                    >
-                                      -
-                                    </button>
-                                    <input
-                                      className="cart-plus-minus-box"
-                                      type="text"
-                                      value={cartItem.quantity}
-                                      readOnly
-                                    />
-                                    <button
-                                      className="inc qtybutton"
-                                      onClick={() =>
-                                        dispatch(
-                                          addToCart({
-                                            ...cartItem,
-                                            quantity: quantityCount,
-                                          })
-                                        )
-                                      }
-                                    >
-                                      +
-                                    </button>
-                                  </div>
-                                </td>
-                                <td className="product-subtotal">
-                                  ₪{cartItem.price * cartItem.quantity}
-                                </td>
-                                <td className="product-remove">
+                              <td className="product-quantity">
+                                <div className="cart-plus-minus">
                                   <button
+                                    className="dec qtybutton"
                                     onClick={() =>
-                                      dispatch(deleteFromCart(cartItem.id))
+                                      dispatch(decreaseQuantity(cartItem))
                                     }
                                   >
-                                    <i className="fa fa-times"></i>
+                                    -
                                   </button>
-                                </td>
-                                {/* product modal */}
-                                <ProductModal
-                                  show={modalShow}
-                                  onHide={() => setModalShow(false)}
-                                  product={cartItem}
-                                  wishlistItem={wishlistItems.find(
-                                    (wishlistItem) =>
-                                      wishlistItem.id === cartItem.id
-                                  )}
-                                  compareItem={compareItems.find(
-                                    (compareItem) =>
-                                      compareItem.id === cartItem.id
-                                  )}
-                                />
-                              </tr>
-                            );
-                          })}
+                                  <input
+                                    className="cart-plus-minus-box"
+                                    type="text"
+                                    value={cartItem.quantity}
+                                    readOnly
+                                  />
+                                  <button
+                                    className="inc qtybutton"
+                                    onClick={() =>
+                                      dispatch(
+                                        addToCart({
+                                          ...cartItem,
+                                          quantity: quantityCount,
+                                        })
+                                      )
+                                    }
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                              </td>
+                              <td className="product-subtotal">
+                                ₪{cartItem.price * cartItem.quantity}
+                              </td>
+                              <td className="product-remove">
+                                <button
+                                  onClick={() =>
+                                    dispatch(deleteFromCart(cartItem.id))
+                                  }
+                                >
+                                  <i className="fa fa-times"></i>
+                                </button>
+                              </td>
+                              {/* product modal */}
+                              <ProductModal
+                                show={modalShow}
+                                onHide={() => setModalShow(false)}
+                                product={cartItem}
+                                wishlistItem={wishlistItems.find(
+                                  (wishlistItem) =>
+                                    wishlistItem.id === cartItem.id
+                                )}
+                                compareItem={compareItems.find(
+                                  (compareItem) =>
+                                    compareItem.id === cartItem.id
+                                )}
+                              />
+                            </tr>
+                          ))}
                         </tbody>
                       </table>
                     </div>
@@ -170,50 +221,6 @@ const Cart = () => {
 
                 <div className="row">
                   <div className="col-lg-4 col-md-6">
-                    <div className="cart-tax">
-                      <div className="title-wrap">
-                        <h4 className="cart-bottom-title section-bg-gray">
-                          Estimate Shipping And Tax
-                        </h4>
-                      </div>
-                      <div className="tax-wrapper">
-                        <p>
-                          Enter your destination to get a shipping estimate.
-                        </p>
-                        <div className="tax-select-wrapper">
-                          <div className="tax-select">
-                            <label>* Country</label>
-                            <select className="email s-email s-wid">
-                              <option>Bangladesh</option>
-                              <option>Albania</option>
-                              <option>Åland Islands</option>
-                              <option>Afghanistan</option>
-                              <option>Belgium</option>
-                            </select>
-                          </div>
-                          <div className="tax-select">
-                            <label>* Region / State</label>
-                            <select className="email s-email s-wid">
-                              <option>Bangladesh</option>
-                              <option>Albania</option>
-                              <option>Åland Islands</option>
-                              <option>Afghanistan</option>
-                              <option>Belgium</option>
-                            </select>
-                          </div>
-                          <div className="tax-select">
-                            <label>* Zip/Postal Code</label>
-                            <input type="text" />
-                          </div>
-                          <button className="cart-btn-2" type="submit">
-                            Get A Quote
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="col-lg-4 col-md-6">
                     <div className="discount-code-wrapper">
                       <div className="title-wrap">
                         <h4 className="cart-bottom-title section-bg-gray">
@@ -222,8 +229,14 @@ const Cart = () => {
                       </div>
                       <div className="discount-code">
                         <p>Enter your coupon code if you have one.</p>
-                        <form>
-                          <input type="text" required name="name" />
+                        <form onSubmit={handleCoupon}>
+                          <input
+                            type="text"
+                            required
+                            name="name"
+                            value={couponValue}
+                            onChange={handleChange}
+                          />
                           <button className="cart-btn-2" type="submit">
                             Apply Coupon
                           </button>
@@ -240,12 +253,13 @@ const Cart = () => {
                         </h4>
                       </div>
                       <h5>
-                        Total products <span>₪{cartTotalPrice.toFixed(2)}</span>
+                        Total products <span>{cartItems.length} cookies</span>
                       </h5>
 
                       <h4 className="grand-totall-title">
-                        Grand Total <span>₪{cartTotalPrice.toFixed(2)}</span>
+                        Total Price<span>₪{(cartTotalPrice).toFixed(2)}</span>
                       </h4>
+
                       <Link to={process.env.PUBLIC_URL + "/checkout"}>
                         Proceed to Checkout
                       </Link>
