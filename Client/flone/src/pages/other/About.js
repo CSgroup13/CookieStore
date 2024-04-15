@@ -1,14 +1,8 @@
 import { Fragment } from "react";
 import { useLocation } from "react-router-dom";
 import SEO from "../../components/seo";
-import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import SectionTitleWithText from "../../components/section-title/SectionTitleWithText";
-import BannerOne from "../../wrappers/banner/BannerOne";
-import TextGridOne from "../../wrappers/text-grid/TextGridOne";
-import FunFactOne from "../../wrappers/fun-fact/FunFactOne";
-import TeamMemberOne from "../../wrappers/team-member/TeamMemberOne";
-import BrandLogoSliderOne from "../../wrappers/brand-logo/BrandLogoSliderOne";
 import LayoutThree from "../../layouts/LayoutThree";
 
 const About = () => {
