@@ -86,6 +86,7 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
                 {
                   to_name: formData.firstName + " " + formData.lastName,
                   to_email: formData.email,
+                  from_email:"cookiesaddiction1@gmail.com",
                   from_name: "Cookies Addiction",
                   message: `Your delicious cookies order (Order Number ${order.id}) has been successfully placed!🍪🎉 
         Thank you for choosing us!`,
