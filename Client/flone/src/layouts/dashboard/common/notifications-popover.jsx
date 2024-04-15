@@ -77,6 +77,7 @@ const NOTIFICATIONS = [
 
 export default function NotificationsPopover() {
   const {notifications} = useSelector(state => state.notifications);
+  console.log(notifications);
   const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
   const [open, setOpen] = useState(null);
 

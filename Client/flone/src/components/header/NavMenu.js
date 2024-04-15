@@ -1,11 +1,8 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 
 const NavMenu = ({ menuWhiteClass, sidebarMenu }) => {
-  const { t } = useTranslation();
-
   return (
     <div
       className={clsx(
@@ -17,30 +14,26 @@ const NavMenu = ({ menuWhiteClass, sidebarMenu }) => {
       <nav>
         <ul>
           <li>
-            <Link to={process.env.PUBLIC_URL + "/"}>
-              {t("Home")}
-            </Link>
+            <Link to={process.env.PUBLIC_URL + "/"}>{"Home"}</Link>
           </li>
           <li>
             <Link to={process.env.PUBLIC_URL + "/shop-grid-standard"}>
-              {t("Shop")}
+              {"Shop"}
             </Link>
           </li>
 
           <li>
-            <Link to={process.env.PUBLIC_URL + "/about"}>{t("about_us")}</Link>
+            <Link to={process.env.PUBLIC_URL + "/about"}>{"About us"}</Link>
           </li>
           {/* <ul className="submenu">
               <li>
                 <Link to={process.env.PUBLIC_URL + "/not-found"}>
-                  {t("404_page")}
+                  {"404_page"}
                 </Link>
               </li>
             </ul> */}
           <li>
-            <Link to={process.env.PUBLIC_URL + "/contact"}>
-              {t("contact_us")}
-            </Link>
+            <Link to={process.env.PUBLIC_URL + "/contact"}>{"Contact us"}</Link>
           </li>
         </ul>
       </nav>

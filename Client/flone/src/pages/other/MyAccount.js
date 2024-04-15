@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Accordion from "react-bootstrap/Accordion";
 import SEO from "../../components/seo";
 import LayoutOne from "../../layouts/LayoutOne";
@@ -127,176 +127,194 @@ const MyAccount = () => {
 
         <div className="myaccount-area pb-80 pt-100">
           <div className="container">
-            <div className="row">
-              <div className="ms-auto me-auto col-lg-9">
-                <div className="myaccount-wrapper">
-                  <Accordion defaultActiveKey="0">
-                    <Accordion.Item
-                      eventKey="0"
-                      className="single-my-account mb-20"
-                    >
-                      <Accordion.Header className="panel-heading">
-                        <span>1 .</span> Edit your account information{" "}
-                      </Accordion.Header>
-                      <Accordion.Body>
-                        <form onSubmit={handleUpdateDetailsSubmit}>
-                          <div className="myaccount-info-wrapper">
-                            <div className="account-info-wrapper">
-                              <h4>My Account Information</h4>
-                              <h5>Your Personal Details</h5>
-                            </div>
-                            <div className="billing-info">
-                              {updateDetailsErrors.email && (
-                                <p style={{ color: "red" }}>
-                                  {updateDetailsErrors.email}
-                                </p>
-                              )}
-                              <input
-                                name="email"
-                                placeholder="Email"
-                                defaultValue={loggedUser.email}
-                                type="email"
-                                onChange={handleUpdateDetailsChange}
-                                required
-                              />
-                            </div>
-                            <div className="billing-info">
-                              <input
-                                type="text"
-                                name="firstName"
-                                defaultValue={loggedUser.firstName}
-                                placeholder="First Name"
-                                onChange={handleUpdateDetailsChange}
-                                required
-                              />
-                            </div>
-                            <div className="billing-info">
-                              <input
-                                type="text"
-                                name="lastName"
-                                defaultValue={loggedUser.lastName}
-                                placeholder="Last Name"
-                                onChange={handleUpdateDetailsChange}
-                                required
-                              />
-                            </div>
-                            <div className="billing-info">
-                              <input
-                                type="text"
-                                name="phone"
-                                defaultValue={loggedUser.phone}
-                                placeholder="Phone"
-                                onChange={handleUpdateDetailsChange}
-                                required
-                              />
-                            </div>
-                            <div className="billing-back-btn">
-                              <div className="billing-btn">
-                              <button type="submit">Continue</button>
+            {loggedUser?.firstName ? (
+              <div className="row">
+                <div className="ms-auto me-auto col-lg-9">
+                  <div className="myaccount-wrapper">
+                    <Accordion defaultActiveKey="0">
+                      <Accordion.Item
+                        eventKey="0"
+                        className="single-my-account mb-20"
+                      >
+                        <Accordion.Header className="panel-heading">
+                          <span>1 .</span> Edit your account information{" "}
+                        </Accordion.Header>
+                        <Accordion.Body>
+                          <form onSubmit={handleUpdateDetailsSubmit}>
+                            <div className="myaccount-info-wrapper">
+                              <div className="account-info-wrapper">
+                                <h4>My Account Information</h4>
+                                <h5>Your Personal Details</h5>
                               </div>
-                            </div>
-                          </div>
-                        </form>
-                      </Accordion.Body>
-                    </Accordion.Item>
-
-                    <Accordion.Item
-                      eventKey="1"
-                      className="single-my-account mb-20"
-                    >
-                      <Accordion.Header className="panel-heading">
-                        <span>2 .</span> Change your password
-                      </Accordion.Header>
-                      <Accordion.Body>
-                        <form onSubmit={handleUpdateDetailsSubmit}>
-                          <div className="myaccount-info-wrapper">
-                            <div className="account-info-wrapper">
-                              <h4>Change Password</h4>
-                            </div>
-                            <div className="row">
-                              <div className="col-lg-12 col-md-12">
-                                <div className="billing-info">
-                                  {updateDetailsErrors.password && (
-                                    <p style={{ color: "red" }}>
-                                      {updateDetailsErrors.password}
-                                    </p>
-                                  )}
-                                  <label>Password</label>
-                                  <input
-                                    type="password"
-                                    name="password"
-                                    required
-                                    onChange={handleUpdateDetailsChange}
-                                  />
-                                </div>
-                              </div>
-                              <div className="col-lg-12 col-md-12">
-                                <div className="billing-info">
-                                  {updateDetailsErrors.confirmPassword && (
-                                    <p style={{ color: "red" }}>
-                                      {updateDetailsErrors.confirmPassword}
-                                    </p>
-                                  )}
-                                  <label>Password Confirm</label>
-                                  <input
-                                    type="password"
-                                    name="confirmPassword"
-                                    required
-                                    onChange={handleUpdateDetailsChange}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            <div className="billing-back-btn">
-                              <div className="billing-btn">
-                                <button type="submit">Continue</button>
-                              </div>
-                            </div>
-                          </div>
-                        </form>
-                      </Accordion.Body>
-                    </Accordion.Item>
-
-                    <Accordion.Item
-                      eventKey="2"
-                      className="single-my-account mb-20"
-                    >
-                      <Accordion.Header className="panel-heading">
-                        <span>3 .</span> Modify your address
-                      </Accordion.Header>
-                      <Accordion.Body>
-                        <form onSubmit={handleUpdateDetailsSubmit}>
-                          <div className="myaccount-info-wrapper">
-                            <div className="account-info-wrapper">
-                              <h4>Change address</h4>
-                            </div>
-                            <div className="row">
                               <div className="billing-info">
-                                <label>Address</label>
+                                {updateDetailsErrors.email && (
+                                  <p style={{ color: "red" }}>
+                                    {updateDetailsErrors.email}
+                                  </p>
+                                )}
                                 <input
-                                  type="text"
-                                  name="address"
-                                  placeholder="Address"
-                                  defaultValue={loggedUser.address}
+                                  name="email"
+                                  placeholder="Email"
+                                  defaultValue={loggedUser.email}
+                                  type="email"
                                   onChange={handleUpdateDetailsChange}
                                   required
                                 />
                               </div>
-                            </div>
-
-                            <div className="billing-back-btn">
-                              <div className="billing-btn">
-                                <button type="submit">Continue</button>
+                              <div className="billing-info">
+                                <input
+                                  type="text"
+                                  name="firstName"
+                                  defaultValue={loggedUser.firstName}
+                                  placeholder="First Name"
+                                  onChange={handleUpdateDetailsChange}
+                                  required
+                                />
+                              </div>
+                              <div className="billing-info">
+                                <input
+                                  type="text"
+                                  name="lastName"
+                                  defaultValue={loggedUser.lastName}
+                                  placeholder="Last Name"
+                                  onChange={handleUpdateDetailsChange}
+                                  required
+                                />
+                              </div>
+                              <div className="billing-info">
+                                <input
+                                  type="text"
+                                  name="phone"
+                                  defaultValue={loggedUser.phone}
+                                  placeholder="Phone"
+                                  onChange={handleUpdateDetailsChange}
+                                  required
+                                />
+                              </div>
+                              <div className="billing-back-btn">
+                                <div className="billing-btn">
+                                  <button type="submit">Continue</button>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </form>
-                      </Accordion.Body>
-                    </Accordion.Item>
-                  </Accordion>
+                          </form>
+                        </Accordion.Body>
+                      </Accordion.Item>
+
+                      <Accordion.Item
+                        eventKey="1"
+                        className="single-my-account mb-20"
+                      >
+                        <Accordion.Header className="panel-heading">
+                          <span>2 .</span> Change your password
+                        </Accordion.Header>
+                        <Accordion.Body>
+                          <form onSubmit={handleUpdateDetailsSubmit}>
+                            <div className="myaccount-info-wrapper">
+                              <div className="account-info-wrapper">
+                                <h4>Change Password</h4>
+                              </div>
+                              <div className="row">
+                                <div className="col-lg-12 col-md-12">
+                                  <div className="billing-info">
+                                    {updateDetailsErrors.password && (
+                                      <p style={{ color: "red" }}>
+                                        {updateDetailsErrors.password}
+                                      </p>
+                                    )}
+                                    <label>Password</label>
+                                    <input
+                                      type="password"
+                                      name="password"
+                                      required
+                                      onChange={handleUpdateDetailsChange}
+                                    />
+                                  </div>
+                                </div>
+                                <div className="col-lg-12 col-md-12">
+                                  <div className="billing-info">
+                                    {updateDetailsErrors.confirmPassword && (
+                                      <p style={{ color: "red" }}>
+                                        {updateDetailsErrors.confirmPassword}
+                                      </p>
+                                    )}
+                                    <label>Password Confirm</label>
+                                    <input
+                                      type="password"
+                                      name="confirmPassword"
+                                      required
+                                      onChange={handleUpdateDetailsChange}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="billing-back-btn">
+                                <div className="billing-btn">
+                                  <button type="submit">Continue</button>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                        </Accordion.Body>
+                      </Accordion.Item>
+
+                      <Accordion.Item
+                        eventKey="2"
+                        className="single-my-account mb-20"
+                      >
+                        <Accordion.Header className="panel-heading">
+                          <span>3 .</span> Modify your address
+                        </Accordion.Header>
+                        <Accordion.Body>
+                          <form onSubmit={handleUpdateDetailsSubmit}>
+                            <div className="myaccount-info-wrapper">
+                              <div className="account-info-wrapper">
+                                <h4>Change address</h4>
+                              </div>
+                              <div className="row">
+                                <div className="billing-info">
+                                  <label>Address</label>
+                                  <input
+                                    type="text"
+                                    name="address"
+                                    placeholder="Address"
+                                    defaultValue={loggedUser.address}
+                                    onChange={handleUpdateDetailsChange}
+                                    required
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="billing-back-btn">
+                                <div className="billing-btn">
+                                  <button type="submit">Continue</button>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                        </Accordion.Body>
+                      </Accordion.Item>
+                    </Accordion>
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="row">
+                <div className="col-lg-12">
+                  <div className="item-empty-area text-center">
+                    <div className="item-empty-area__icon mb-30">
+                      <i className="pe-7s-user-female"></i>
+                    </div>
+                    <div className="item-empty-area__text">
+                      You are not logged in <br />{" "}
+                      <Link to={process.env.PUBLIC_URL + "/login-register"}>
+                        Login / Register
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </LayoutOne>
