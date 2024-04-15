@@ -10,13 +10,14 @@ import { faker } from "@faker-js/faker";
 import { addNotification } from "src/store/slices/notifications-slice";
 import { sub } from "date-fns";
 import { useSelector } from "react-redux";
-import {setDiscount} from "../../store/slices/cart-slice";
+import { setDiscount } from "../../store/slices/cart-slice";
+import { FUNDING } from "@paypal/react-paypal-js";
 
 const Paypal = ({ formData, cartItems, loggedUser }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [{ isPending }] = usePayPalScriptReducer();
-  const { totalPrice} = useSelector((state) => state.cart);
+  const { totalPrice } = useSelector((state) => state.cart);
 
   const { orderItems } = cartItems.reduce(
     (accumulator, currentItem) => {
@@ -71,14 +72,13 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
             Postal Code: ${formData.postalCode}
             Phone: ${formData.phone}
             Email: ${formData.email}
-            Shipping Method: ${
-              formData.shipping === "1" ? "Shipping" : "Pickup"
-            }
+            Shipping Method: ${formData.shipping === "1" ? "Shipping" : "Pickup"
+              }
             Payment Method: "Paypal"
             Notes: ${formData.notes}
             Order Items: ${cartItems
-              .map((item) => `${item.name}: ${item.quantity}`)
-              .join(", ")}
+                .map((item) => `${item.name}: ${item.quantity}`)
+                .join(", ")}
             `;
             // Sending confirmation email to the user
             emailjs
@@ -121,9 +121,8 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
                     const newNotification = {
                       id: faker.string.uuid(),
                       title: "You have new order",
-                      description: `from ${
-                        formData.firstName + " " + formData.lastName
-                      }`,
+                      description: `from ${formData.firstName + " " + formData.lastName
+                        }`,
                       avatar: null,
                       type: "order_placed",
                       createdAt: sub(new Date(), {
@@ -163,8 +162,9 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
         <PayPalButtons
           style={{
             layout: "vertical",
-            shape: "pill",
+            color: "blue",
           }}
+          fundingSource={FUNDING.PAYPAL}
           createOrder={(data, actions) => onCreateOrder(data, actions)}
           onApprove={(data, actions) => onApproveOrder(data, actions)}
         />
