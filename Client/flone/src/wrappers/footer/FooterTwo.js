@@ -13,15 +13,22 @@ const FooterTwo = ({
   footerLogo,
   backgroundImage
 }) => {
+
+  const openWhatsAppChat = () => {
+    const phoneNumber = "+972505240094"; // Your WhatsApp number
+    const message = "היי, יש לי שאלה בקשר להזמנת עוגיות באתר"; // Default message
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+  };
+
   return (
     <footer
       className={clsx("footer-area", backgroundColorClass, spaceLeftClass, spaceRightClass, backgroundImage && "bg-img")}
       style={{
-        backgroundImage: ` ${
-          backgroundImage
+        backgroundImage: ` ${backgroundImage
             ? `url(${process.env.PUBLIC_URL + backgroundImage})`
             : `url()`
-        }`
+          }`
       }}
     >
       <div
@@ -39,36 +46,16 @@ const FooterTwo = ({
               />
             </Link>
           </div>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim
-          </p>
-          <div className="footer-social">
+          <div className="footer-social" style={{marginTop:"20px"}}>
             <ul>
               <li>
-                <a href="//www.facebook.com">
-                  <i className="fa fa-facebook" />
+                <a href="https://www.instagram.com/cookiesaddicttion/" target="_blank">
+                  <i className="fa fa-instagram" style={{ fontSize: "26px" }}/>
                 </a>
               </li>
               <li>
-                <a href="//www.dribbble.com">
-                  <i className="fa fa-dribbble" />
-                </a>
-              </li>
-              <li>
-                <a href="//www.pinterest.com">
-                  <i className="fa fa-pinterest-p" />
-                </a>
-              </li>
-              <li>
-                <a href="//www.twitter.com">
-                  <i className="fa fa-twitter" />
-                </a>
-              </li>
-              <li>
-                <a href="//www.linkedin.com">
-                  <i className="fa fa-linkedin" />
+                <a onClick={openWhatsAppChat}>
+                  <i className="fa fa-whatsapp" style={{ fontSize: "26px" }}/>
                 </a>
               </li>
             </ul>

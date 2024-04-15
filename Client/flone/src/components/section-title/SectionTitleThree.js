@@ -9,7 +9,7 @@ const SectionTitleThree = ({
 }) => {
   return (
     <div className={clsx("section-title-5", positionClass, spaceClass)}>
-      <h2 className={clsx(colorClass)}>{titleText}</h2>
+      <h2 className={clsx(colorClass)} style={{fontFamily:"cursive"}}>{titleText}</h2>
     </div>
   );
 };

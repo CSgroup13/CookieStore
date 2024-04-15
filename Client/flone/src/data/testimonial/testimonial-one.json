@@ -1,16 +1,32 @@
 [
   {
-    "id": "1",
-    "image": "/assets/img/testimonial/testi-1.png",
-    "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-    "customerName": "Grace Alvarado",
-    "title": "customer"
+    "id": "3",
+    "content": "The products are amazing! They are so tasty and surprising. Thank you very much for the excellent service!",
+    "customerName": "Uri Levi",
+    "title": "Satisfied Customer"
   },
   {
-    "id": "2",
-    "image": "/assets/img/testimonial/testi-1.png",
-    "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-    "customerName": "John Doe",
-    "title": "customer"
+    "id": "4",
+    "content": "I am very satisfied with the products I purchased. They were exactly what I was looking for. Thank you very much!",
+    "customerName": "Sarah Abraham",
+    "title": "Satisfied Customer"
+  },
+  {
+    "id": "5",
+    "content": "I have ordered from this store several times and each time I was satisfied with the service and the products. Excellent quality!",
+    "customerName": "Daniel Cohen",
+    "title": "Satisfied Customer"
+  },
+  {
+    "id": "6",
+    "content": "This store provides excellent service and high-quality products. I am so happy with my purchase!",
+    "customerName": "Abigail Jerusalemite",
+    "title": "Satisfied Customer"
+  },
+  {
+    "id": "7",
+    "content": "The products I purchased here were amazing! They added a lot of flavor and color to my event. I will definitely come back again!",
+    "customerName": "Ethan Levi",
+    "title": "Satisfied Customer"
   }
 ]
