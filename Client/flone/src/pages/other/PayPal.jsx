@@ -164,7 +164,6 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
           style={{
             layout: "vertical",
             shape: "pill",
-            tagline: 'false',
           }}
           createOrder={(data, actions) => onCreateOrder(data, actions)}
           onApprove={(data, actions) => onApproveOrder(data, actions)}
