@@ -24,9 +24,11 @@ const Contact = () => {
     emailjs
       .send(
         "service_toin4ud",
-        "template_0134u4t",
+        "template_pi1v48b",
         {
+          from_name: formData.name,
           to_name: "Shaked",
+          from_email: formData.email,
           to_email: "cookiesaddiction1@gmail.com",
           message:
             "Subject: " +
@@ -41,6 +43,12 @@ const Contact = () => {
         cogoToast.success("Your Message was sent successfully!", {
           position: "top-right",
         });
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        })
       });
   };
   return (
@@ -90,7 +98,7 @@ const Contact = () => {
                       <i className="fa fa-map-marker" />
                     </div>
                     <div className="contact-info-dec">
-                      <p>Haanafa 5</p>
+                      <p>Hanafa 5</p>
                       <p>Kadima</p>
                     </div>
                   </div>
@@ -98,8 +106,8 @@ const Contact = () => {
                     <h3>Follow Us</h3>
                     <ul>
                       <li>
-                        <a href="https://www.instagram.com/cookiesaddicttion/">
-                          <i className="fa fa-instagram" />
+                        <a href="https://www.instagram.com/cookiesaddicttion/" target="_blank">
+                          <i className="fa fa-instagram" style={{ fontSize: "26px" }} />
                         </a>
                       </li>
                     </ul>

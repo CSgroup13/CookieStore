@@ -226,6 +226,7 @@ const LoginRegister = () => {
             {
               to_name: user.firstName + " " + user.lastName,
               to_email: email,
+              from_email: "cookiesAddiction1@gmail.com",
               from_name: "Cookies Addiction",
               message: `Your Password is: ${user.password}`,
             },
