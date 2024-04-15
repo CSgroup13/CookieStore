@@ -58,11 +58,6 @@ const Compare = () => {
                                     </button>
                                   </div>
                                   <Link
-                                    to={
-                                      process.env.PUBLIC_URL +
-                                      "/product/" +
-                                      compareItem.id
-                                    }
                                     className="image"
                                   >
                                     <img
@@ -76,11 +71,6 @@ const Compare = () => {
                                   </Link>
                                   <div className="product-title">
                                     <Link
-                                      to={
-                                        process.env.PUBLIC_URL +
-                                        "/product/" +
-                                        compareItem.id
-                                      }
                                     >
                                       {compareItem.name}
                                     </Link>

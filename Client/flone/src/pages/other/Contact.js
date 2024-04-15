@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import SEO from "../../components/seo";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
-import GoogleMap from "../../components/google-map";
 import emailjs from "emailjs-com";
 import cogoToast from "cogo-toast";
 
@@ -67,9 +66,6 @@ const Contact = () => {
         />
         <div className="contact-area pt-100 pb-100">
           <div className="container">
-            <div className="contact-map mb-10">
-              <GoogleMap lat={47.444} lng={-122.176} />
-            </div>
             <div className="custom-row-2">
               <div className="col-12 col-lg-4 col-md-5">
                 <div className="contact-info-wrap">
