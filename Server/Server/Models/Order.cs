@@ -27,8 +27,7 @@ namespace Server.Models
 
         public enum PaymentMethod
         {
-            Bit=1,
-            Cash=2
+            Paypal=1,
         }
 
         public Status status { get; set; }

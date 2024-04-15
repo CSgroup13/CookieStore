@@ -86,6 +86,7 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
                 {
                   to_name: formData.firstName + " " + formData.lastName,
                   to_email: formData.email,
+                  from_email: "cookiesaddiction1@gmail.com",
                   from_name: "Cookies Addiction",
                   message: `Your delicious cookies order (Order Number ${order.id}) has been successfully placed!🍪🎉 
         Thank you for choosing us!`,
@@ -157,7 +158,11 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
         <p>LOADING...</p>
       ) : (
         <PayPalButtons
-          style={{ layout: "vertical", shape: "pill" }}
+          style={{
+            layout: "vertical",
+            shape: "pill",
+            tagline: 'false',
+          }}
           createOrder={(data, actions) => onCreateOrder(data, actions)}
           onApprove={(data, actions) => onApproveOrder(data, actions)}
         />

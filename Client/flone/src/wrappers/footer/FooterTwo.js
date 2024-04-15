@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 const FooterTwo = ({
   backgroundColorClass,
-  copyrightColorClass,
   spaceLeftClass,
   spaceRightClass,
   footerTopBackgroundColorClass,
@@ -64,19 +63,6 @@ const FooterTwo = ({
       </div>
       <div className="footer-bottom text-center">
         <div className="container">
-          <div className={clsx("copyright-2", copyrightColorClass)}>
-            <p>
-              &copy; {new Date().getFullYear()}{" "}
-              <a
-                href="//www.hasthemes.com"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Flone
-              </a>
-              . All Rights Reserved.
-            </p>
-          </div>
         </div>
       </div>
     </footer>
