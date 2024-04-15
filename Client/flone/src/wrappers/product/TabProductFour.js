@@ -9,9 +9,9 @@ import ProductGridTwo from "./ProductGridTwo";
 const TabProductFour = ({ spaceBottomClass, productTabClass }) => {
   return (
     <div className={clsx("product-area", spaceBottomClass)}>
-      <div className="container">
+      <div className="container" style={{paddingTop:"80px"}}>
         <SectionTitleThree
-          titleText="Featured Product"
+          titleText="Best Sellers"
           positionClass="text-center"
         />
         <Tab.Container defaultActiveKey="bestSeller">
@@ -22,11 +22,6 @@ const TabProductFour = ({ spaceBottomClass, productTabClass }) => {
               productTabClass
             )}
           >
-            <Nav.Item>
-              <Nav.Link eventKey="bestSeller">
-                <h4>Best Sellers</h4>
-              </Nav.Link>
-            </Nav.Item>
           </Nav>
           <Tab.Content>
             <Tab.Pane eventKey="bestSeller">
@@ -34,7 +29,7 @@ const TabProductFour = ({ spaceBottomClass, productTabClass }) => {
                 <ProductGridTwo
                   type="bestSeller"
                   limit={8}
-                  spaceBottomClass="mb-25"
+                  spaceBottomClass="mb-0"
                 />
               </div>
             </Tab.Pane>
