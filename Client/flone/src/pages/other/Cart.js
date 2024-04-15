@@ -9,23 +9,23 @@ import {
   decreaseQuantity,
   deleteFromCart,
   deleteAllFromCart,
-  setDiscount 
+  setDiscount,
 } from "../../store/slices/cart-slice";
 import ProductModal from "../../components/product/ProductModal";
-import cogoToast from 'cogo-toast';
+import cogoToast from "cogo-toast";
 
 const Cart = () => {
   const dispatch = useDispatch();
   let { pathname } = useLocation();
-  const { totalPrice, cartItems, discount } = useSelector((state) => state.cart);
-
-  const [couponValue, setCouponValue] = useState('');
+  const { totalPrice, cartItems, discount } = useSelector(
+    (state) => state.cart
+  );
+  const [couponValue, setCouponValue] = useState("");
   const validCoupon = "DISCOUNT10";
 
   const { wishlistItems } = useSelector((state) => state.wishlist);
   const { compareItems } = useSelector((state) => state.compare);
   const [modalShow, setModalShow] = useState(false);
-
 
   // Function to handle input value change
   const handleChange = (event) => {
@@ -35,29 +35,19 @@ const Cart = () => {
   // Apply coupon
   const handleCoupon = (event) => {
     event.preventDefault();
-    if (couponValue === validCoupon && discount===0) {
+    if (couponValue === validCoupon && discount === 0) {
       dispatch(setDiscount(10));
-      cogoToast.success(
-        `Coupon has been applied!`,
-        {
-          position: "bottom-left",
-        }
-      );
+      cogoToast.success(`Coupon has been applied!`, {
+        position: "bottom-left",
+      });
     } else if (couponValue !== validCoupon) {
-      cogoToast.error(
-        `Invalid coupon!`,
-        {
-          position: "bottom-left",
-        }
-      );
-    }
-    else if (discount!==0) {
-      cogoToast.error(
-        `Coupon already applied.`,
-        {
-          position: "bottom-left",
-        }
-      );
+      cogoToast.error(`Invalid coupon!`, {
+        position: "bottom-left",
+      });
+    } else if (discount !== 0) {
+      cogoToast.error(`Coupon already applied.`, {
+        position: "bottom-left",
+      });
     }
   };
 
@@ -240,7 +230,7 @@ const Cart = () => {
                       </h5>
 
                       <h4 className="grand-totall-title">
-                        Total Price<span>₪{(totalPrice).toFixed(2)}</span>
+                        Total Price<span>₪{totalPrice.toFixed(2)}</span>
                       </h4>
 
                       <Link to={process.env.PUBLIC_URL + "/checkout"}>

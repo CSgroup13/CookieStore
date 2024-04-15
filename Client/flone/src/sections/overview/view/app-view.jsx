@@ -1,29 +1,23 @@
-import { faker } from "@faker-js/faker";
-
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
-
-import Iconify from "src/components/iconify";
-
-import AppTasks from "../app-tasks";
-import AppNewsUpdate from "../app-news-update";
-import AppOrderTimeline from "../app-order-timeline";
 import AppCurrentVisits from "../app-current-visits";
 import StoreAnalytics from "../app-store-analytics";
 import AppWidgetSummary from "../app-widget-summary";
-import AppTrafficBySite from "../app-traffic-by-site";
-import AppCurrentSubject from "../app-current-subject";
-import AppConversionRates from "../app-conversion-rates";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import api, { getData } from "src/utils/api";
+import { onValue, push, ref, set } from "firebase/database";
+import { db } from "src/config";
+import { addNotification } from "src/store/slices/notifications-slice";
+
 // ----------------------------------------------------------------------
 export default function AppView() {
   const { orders } = useSelector((state) => state.order);
   const { users } = useSelector((state) => state.user);
   const [cookiesPerCategory, setCookiesPerCategory] = useState([]);
   const [dashboardData, setDashboardData] = useState({});
+  const dispatch = useDispatch();
 
   function calculateNewUsers(startDate, endDate) {
     let totalUsers = 0;
@@ -50,6 +44,23 @@ export default function AppView() {
   }
 
   useEffect(() => {
+    onValue(
+      ref(db),
+      (snapshot) => {
+        if (snapshot.exists()) {
+          // Data exists at the specified database path
+          const data = snapshot.val();
+          // dispatch(addNotification(data));
+          console.log("Data updated:", data);
+        } else {
+          // Data does not exist at the specified database path
+          console.log("No data available");
+        }
+      },
+      (error) => {
+        console.error("Error listening for data changes:", error);
+      }
+    );
     const today = new Date();
     const lastWeekStart = new Date(
       today.getFullYear(),

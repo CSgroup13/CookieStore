@@ -10,6 +10,7 @@
     "@mui/lab": "^5.0.0-alpha.147",
     "@mui/material": "^5.15.15",
     "@paypal/react-paypal-js": "^8.2.0",
+    "@react-firebase/database": "^0.3.11",
     "@reduxjs/toolkit": "^1.8.6",
     "animate.css": "^4.1.1",
     "apexcharts": "^3.43.0",

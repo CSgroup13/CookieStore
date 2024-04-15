@@ -92,7 +92,10 @@ const ShopGridStandard = ({ hideHeaderAndFooter }) => {
         description="Shop page of flone react minimalist eCommerce template."
       />
 
-      <LayoutThree headerTop="visible" hideHeaderAndFooter={hideHeaderAndFooter}>
+      <LayoutThree
+        headerTop="visible"
+        hideHeaderAndFooter={hideHeaderAndFooter}
+      >
         {/* breadcrumb */}
         {!hideHeaderAndFooter && (
           <Breadcrumb
@@ -103,7 +106,10 @@ const ShopGridStandard = ({ hideHeaderAndFooter }) => {
           />
         )}
 
-        <div className="shop-area pt-95 pb-100" style={hideHeaderAndFooter ? { paddingTop: "0px" } : {}}>
+        <div
+          className="shop-area pt-95 pb-100"
+          style={hideHeaderAndFooter ? { paddingTop: "0px" } : {}}
+        >
           <div className="container">
             <div className="row">
               <div className="col-lg-3 order-2 order-lg-1">

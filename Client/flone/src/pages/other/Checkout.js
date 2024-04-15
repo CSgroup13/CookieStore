@@ -19,7 +19,6 @@ const Checkout = () => {
     intent: "capture",
   };
   let { pathname } = useLocation();
-  const currency = useSelector((state) => state.currency);
   const { cartItems } = useSelector((state) => state.cart);
   const { loggedUser } = useSelector((state) => state.user);
   // List of cities in Israel

@@ -12,6 +12,9 @@ import { sub } from "date-fns";
 import { useSelector } from "react-redux";
 import { setDiscount } from "../../store/slices/cart-slice";
 import { FUNDING } from "@paypal/react-paypal-js";
+// import database from "src/config";
+import { push, ref } from "firebase/database";
+import { db } from "src/config";
 
 const Paypal = ({ formData, cartItems, loggedUser }) => {
   const navigate = useNavigate();
@@ -72,13 +75,14 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
             Postal Code: ${formData.postalCode}
             Phone: ${formData.phone}
             Email: ${formData.email}
-            Shipping Method: ${formData.shipping === "1" ? "Shipping" : "Pickup"
-              }
+            Shipping Method: ${
+              formData.shipping === "1" ? "Shipping" : "Pickup"
+            }
             Payment Method: "Paypal"
             Notes: ${formData.notes}
             Order Items: ${cartItems
-                .map((item) => `${item.name}: ${item.quantity}`)
-                .join(", ")}
+              .map((item) => `${item.name}: ${item.quantity}`)
+              .join(", ")}
             `;
             // Sending confirmation email to the user
             emailjs
@@ -119,10 +123,11 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
                     dispatch(deleteAllFromCart());
                     dispatch(setDiscount(0));
                     const newNotification = {
-                      id: faker.string.uuid(),
+                      id: order.id,
                       title: "You have new order",
-                      description: `from ${formData.firstName + " " + formData.lastName
-                        }`,
+                      description: `from ${
+                        formData.firstName + " " + formData.lastName
+                      }`,
                       avatar: null,
                       type: "order_placed",
                       createdAt: sub(new Date(), {
@@ -132,7 +137,22 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
                       }),
                       isUnRead: true,
                     };
-                    dispatch(addNotification(newNotification));
+                    push((ref(db), newNotification));
+                    // database
+                    //   .ref("notifications")
+                    //   .push(newNotification)
+                    //   .then(() => {
+                    //     console.log(
+                    //       "Order successfully written to the database"
+                    //     );
+                    //   })
+                    //   .catch((error) => {
+                    //     console.error(
+                    //       "Error writing order to the database:",
+                    //       error
+                    //     );
+                    //   });
+                    // dispatch(addNotification(newNotification));
                     navigate("/"); // Only navigate after sending the email to the admin
                   })
                   .catch((error) => {
@@ -162,7 +182,7 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
         <PayPalButtons
           style={{
             layout: "vertical",
-            color: "blue",
+            shape: "pill",
           }}
           fundingSource={FUNDING.PAYPAL}
           createOrder={(data, actions) => onCreateOrder(data, actions)}
