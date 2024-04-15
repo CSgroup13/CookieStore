@@ -122,7 +122,6 @@ export default function AppView() {
         orders,
       };
     });
-    console.log(chartData);
     return chartData;
   }
 

@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import SEO from "../../components/seo";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
-import GoogleMap from "../../components/google-map"
+import GoogleMap from "../../components/google-map";
 import emailjs from "emailjs-com";
 import cogoToast from "cogo-toast";
 
@@ -13,32 +13,36 @@ const Contact = () => {
     name: "",
     email: "",
     subject: "",
-    message: ""
-  })
+    message: "",
+  });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
-  const handleSubmit = () => {
-    emailjs.send(
-      "service_toin4ud",
-      "template_0134u4t",
-      {
-        to_name: "Shaked",
-        to_email: "cookiesaddiction1@gmail.com",
-        message: "Subject: " + formData.subject + "\n\n" + "Message: " + formData.message,
-      },
-      "Ov1O19nU4lvvYar64"
-    )
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    emailjs
+      .send(
+        "service_toin4ud",
+        "template_0134u4t",
+        {
+          to_name: "Shaked",
+          to_email: "cookiesaddiction1@gmail.com",
+          message:
+            "Subject: " +
+            formData.subject +
+            "\n\n" +
+            "Message: " +
+            formData.message,
+        },
+        "Ov1O19nU4lvvYar64"
+      )
       .then(() => {
-        cogoToast.success(
-          "Your Message was sent successfully!",
-          {
-            position: "top-right",
-          }
-        );
-      })
-  }
+        cogoToast.success("Your Message was sent successfully!", {
+          position: "top-right",
+        });
+      });
+  };
   return (
     <Fragment>
       <SEO
@@ -50,7 +54,7 @@ const Contact = () => {
         <Breadcrumb
           pages={[
             { label: "Home", path: process.env.PUBLIC_URL + "/" },
-            { label: "Contact", path: process.env.PUBLIC_URL + pathname }
+            { label: "Contact", path: process.env.PUBLIC_URL + pathname },
           ]}
         />
         <div className="contact-area pt-100 pb-100">
@@ -136,10 +140,20 @@ const Contact = () => {
                   <form className="contact-form-style" onSubmit={handleSubmit}>
                     <div className="row">
                       <div className="col-lg-6">
-                        <input name="name" placeholder="Name*" type="text" onChange={handleChange} />
+                        <input
+                          name="name"
+                          placeholder="Name*"
+                          type="text"
+                          onChange={handleChange}
+                        />
                       </div>
                       <div className="col-lg-6">
-                        <input name="email" placeholder="Email*" type="email" onChange={handleChange} />
+                        <input
+                          name="email"
+                          placeholder="Email*"
+                          type="email"
+                          onChange={handleChange}
+                        />
                       </div>
                       <div className="col-lg-12">
                         <input

@@ -9,7 +9,6 @@ import "swiper/swiper-bundle.min.css";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import "./assets/scss/style.scss";
-import "./i18n";
 import { Suspense } from "react";
 import { HelmetProvider } from "react-helmet-async";
 

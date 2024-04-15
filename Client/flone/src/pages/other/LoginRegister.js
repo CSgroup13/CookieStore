@@ -158,7 +158,7 @@ const LoginRegister = () => {
       })
         .then((user) => {
           cogoToast.success(`Hello ${user.firstName} ${user.lastName}`, {
-            position: "top-right",
+            position: "top-center",
           });
           dispatch(loginUser(user));
           navigate("/");
@@ -188,7 +188,7 @@ const LoginRegister = () => {
       })
         .then((user) => {
           cogoToast.success(`Hello ${user.firstName} ${user.lastName}`, {
-            position: "top-right",
+            position: "top-center",
           });
           dispatch(loginUser(user));
           if (user.email === "cookiesaddiction1@gmail.com")
