@@ -7,9 +7,9 @@ import AppWidgetSummary from "../app-widget-summary";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import api, { getData } from "src/utils/api";
-import { onValue, push, ref, set } from "firebase/database";
-import { db } from "src/config";
-import { addNotification } from "src/store/slices/notifications-slice";
+import { getDatabase, onValue, ref } from "firebase/database";
+import { app } from "src/config";
+import { setNotifications } from "src/store/slices/notifications-slice";
 
 // ----------------------------------------------------------------------
 export default function AppView() {
@@ -44,14 +44,23 @@ export default function AppView() {
   }
 
   useEffect(() => {
+    const db = getDatabase(app);
     onValue(
       ref(db),
       (snapshot) => {
         if (snapshot.exists()) {
           // Data exists at the specified database path
           const data = snapshot.val();
-          // dispatch(addNotification(data));
-          console.log("Data updated:", data);
+          let notification = [];
+          for (const orderId in data) {
+            if (Object.hasOwnProperty.call(data, orderId)) {
+              notification = [
+                ...notification,
+                { ...data[orderId], id: data[orderId].id.toString() },
+              ];
+            }
+          }
+          dispatch(setNotifications(notification));
         } else {
           // Data does not exist at the specified database path
           console.log("No data available");
@@ -65,12 +74,12 @@ export default function AppView() {
     const lastWeekStart = new Date(
       today.getFullYear(),
       today.getMonth(),
-      today.getDate() - today.getDay() - 7
+      today.getDate() - 7
     );
     const lastWeekEnd = new Date(
       today.getFullYear(),
       today.getMonth(),
-      lastWeekStart.getDate() + 6
+      today.getDate() + 1
     );
     const totalUsers = calculateNewUsers(lastWeekStart, lastWeekEnd);
     const { totalOrders, totalIncome } = calculateOrdersAndIncome(

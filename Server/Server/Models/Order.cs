@@ -28,6 +28,7 @@ namespace Server.Models
         public enum PaymentMethod
         {
             Paypal=1,
+            Cash
         }
 
         public Status status { get; set; }

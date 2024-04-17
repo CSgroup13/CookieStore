@@ -18,7 +18,6 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 // Initialize Realtime Database and get a reference to the service
-export const db = getDatabase(app);
+// export const db = getDatabase(app);

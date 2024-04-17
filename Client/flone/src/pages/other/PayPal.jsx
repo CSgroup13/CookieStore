@@ -6,15 +6,13 @@ import { useNavigate } from "react-router-dom";
 import emailjs from "emailjs-com";
 import { useDispatch } from "react-redux";
 import { deleteAllFromCart } from "src/store/slices/cart-slice";
-import { faker } from "@faker-js/faker";
-import { addNotification } from "src/store/slices/notifications-slice";
 import { sub } from "date-fns";
 import { useSelector } from "react-redux";
 import { setDiscount } from "../../store/slices/cart-slice";
 import { FUNDING } from "@paypal/react-paypal-js";
 // import database from "src/config";
-import { push, ref } from "firebase/database";
-import { db } from "src/config";
+import { getDatabase, push, ref } from "firebase/database";
+import { app } from "src/config";
 
 const Paypal = ({ formData, cartItems, loggedUser }) => {
   const navigate = useNavigate();
@@ -122,6 +120,7 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
                   .then(() => {
                     dispatch(deleteAllFromCart());
                     dispatch(setDiscount(0));
+                    const db = getDatabase(app);
                     const newNotification = {
                       id: order.id,
                       title: "You have new order",

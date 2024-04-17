@@ -75,7 +75,8 @@ const NOTIFICATIONS = [
   },
 ];
 
-export default function NotificationsPopover() {
+export default function 
+NotificationsPopover() {
   const {notifications} = useSelector(state => state.notifications);
   const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
   const [open, setOpen] = useState(null);
@@ -182,7 +183,7 @@ export default function NotificationsPopover() {
 
 NotificationItem.propTypes = {
   notification: PropTypes.shape({
-    createdAt: PropTypes.instanceOf(Date),
+    createdAt: PropTypes.string,
     id: PropTypes.string,
     isUnRead: PropTypes.bool,
     title: PropTypes.string,
