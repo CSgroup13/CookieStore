@@ -7,8 +7,8 @@ import { setProducts } from "./store/slices/product-slice";
 import { setWishlist } from "./store/slices/wishlist-slice";
 import ThemeProvider from "./theme";
 import DashboardLayout from "./layouts/dashboard";
-import {useSelector, useDispatch } from "react-redux";
-import { setUsers } from "./store/slices/user-slice";
+import { useSelector, useDispatch } from "react-redux";
+import { setUserOrders, setUsers } from "./store/slices/user-slice";
 import { setOrders } from "./store/slices/order-slice";
 
 export const IndexPage = lazy(() => import("./pages/app"));
@@ -34,6 +34,7 @@ const LoginRegister = lazy(() => import("./pages/other/LoginRegister"));
 
 const Cart = lazy(() => import("./pages/other/Cart"));
 const Wishlist = lazy(() => import("./pages/other/Wishlist"));
+const UserOrders = lazy(() => import("./pages/other/UserOrders"));
 const Compare = lazy(() => import("./pages/other/Compare"));
 const Checkout = lazy(() => import("./pages/other/Checkout"));
 
@@ -41,7 +42,7 @@ const NotFound = lazy(() => import("./pages/other/NotFound"));
 
 const App = () => {
   const { loggedUser, isAdmin } = useSelector((state) => state.user);
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getData(api.products)
@@ -63,24 +64,36 @@ const App = () => {
         .catch((error) => {
           console.error(error);
         });
-    } else store.dispatch(setWishlist([]));
 
-    if(isAdmin){
+      getData(`${api.users}${loggedUser.id}/orders`)
+        .then((userOrders) => {
+          store.dispatch(setUserOrders(userOrders));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+    else {
+      store.dispatch(setWishlist([]));
+      store.dispatch(setUserOrders([]));
+    }
+    
+    if (isAdmin) {
       getData(api.users)
-      .then((users) => {
-        dispatch(setUsers(users))
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+        .then((users) => {
+          dispatch(setUsers(users))
+        })
+        .catch((error) => {
+          console.error(error);
+        });
 
       getData(api.orders)
-      .then((orders) => {
-        dispatch(setOrders(orders))
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+        .then((orders) => {
+          dispatch(setOrders(orders))
+        })
+        .catch((error) => {
+          console.error(error);
+        });
 
     }
   }, [loggedUser]);
@@ -145,6 +158,10 @@ const App = () => {
               <Route
                 path={process.env.PUBLIC_URL + "/wishlist"}
                 element={<Wishlist />}
+              />
+              <Route
+                path={process.env.PUBLIC_URL + "/userOrders"}
+                element={<UserOrders />}
               />
               <Route
                 path={process.env.PUBLIC_URL + "/compare"}

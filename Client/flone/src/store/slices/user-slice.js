@@ -6,6 +6,7 @@ const userSlice = createSlice({
     users: [],
     loggedUser: {},
     isAdmin: false,
+    userOrders:[]
   },
   reducers: {
     setUsers(state, action) {
@@ -20,7 +21,10 @@ const userSlice = createSlice({
     setAdmin(state, action) {
       state.isAdmin = action.payload;
     },
+    setUserOrders(state, action) {
+      state.userOrders = action.payload;
+    },
   },
 });
-export const { setUsers, loginUser, logoutUser, setAdmin } = userSlice.actions;
+export const { setUsers, loginUser, logoutUser, setAdmin,setUserOrders } = userSlice.actions;
 export default userSlice.reducer;

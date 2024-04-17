@@ -18,7 +18,7 @@ const IconGroup = ({ iconWhiteClass }) => {
     offcanvasMobileMenu.classList.add("active");
   };
   const dispatch = useDispatch();
-  const { loggedUser, isAdmin } = useSelector((state) => state.user);
+  const { loggedUser, isAdmin, userOrders } = useSelector((state) => state.user);
   const { compareItems } = useSelector((state) => state.compare);
   const { wishlistItems } = useSelector((state) => state.wishlist);
   const { cartItems } = useSelector((state) => state.cart);
@@ -31,7 +31,7 @@ const IconGroup = ({ iconWhiteClass }) => {
           style={{ color: loggedUser.firstName ? "green" : "black" }}
           onClick={(e) => handleClick(e)}
         >
-          <i className="pe-7s-user-female" />
+          <i className="pe-7s-user" />
         </button>
         <div className="account-dropdown">
           <ul>
@@ -93,9 +93,17 @@ const IconGroup = ({ iconWhiteClass }) => {
           </span>
         </Link>
       </div>
+      <div className="same-style header-wishlist">
+        <Link to={process.env.PUBLIC_URL + "/userOrders"}>
+          <i className="pe-7s-ribbon" />
+          <span className="count-style">
+            {userOrders && userOrders.length ? userOrders.length : 0}
+          </span>
+        </Link>
+      </div>
       <div className="same-style cart-wrap d-none d-lg-block">
         <button className="icon-cart" onClick={(e) => handleClick(e)}>
-          <i className="pe-7s-shopbag" />
+          <i className="pe-7s-cart" />
           <span className="count-style">
             {cartItems && cartItems.length ? cartItems.length : 0}
           </span>
