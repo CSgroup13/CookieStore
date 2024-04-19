@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import SEO from "../../components/seo";
 import LayoutThree from "../../layouts/LayoutThree";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
+import api, { getData } from "../../utils/api";
+
 import {
   Dialog,
   DialogTitle,
@@ -23,18 +25,33 @@ import Iconify from 'src/components/iconify';
 const UserOrders = () => {
   const { pathname } = useLocation();
   const { userOrders } = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.order);
   const { products } = useSelector((state) => state.product);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [openItemsDialog, setOpenItemsDialog] = useState(false);
+  const [searchOrderId, setSearchOrderId] = useState("");
+  const [searchResult, setSearchResult] = useState(null); // State to store search result
 
   const statusMap = {
-    0: { label: 'Not Paid', color: 'rgba(255, 0, 0, 0.6)' }, 
-    1: { label: 'Pending', color: 'rgba(255, 165, 0, 0.6)' }, 
-    2: { label: 'Processing', color: 'rgba(0, 0, 255, 0.6)' }, 
-    3: { label: 'Shipped', color: 'rgba(0, 128, 0, 0.6)' }, 
+    0: { label: 'Not Paid', color: 'rgba(255, 0, 0, 0.6)' },
+    1: { label: 'Pending', color: 'rgba(255, 165, 0, 0.6)' },
+    2: { label: 'Processing', color: 'rgba(0, 0, 255, 0.6)' },
+    3: { label: 'Shipped', color: 'rgba(0, 128, 0, 0.6)' },
     4: { label: 'Delivered', color: 'rgba(128, 0, 128, 0.6)' }
   };
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchOrderId !== "") {
+      getData(`${api.orders}order/${searchOrderId}`)
+        .then((foundOrder) => {
+          setSearchResult(foundOrder);
+        })
+        .catch((error) => {
+          setSearchResult("cannot find this order.");
+        });
+    }
+  };
 
   const handleOrderClick = (order) => {
     setSelectedOrder(order);
@@ -114,21 +131,59 @@ const UserOrders = () => {
                   </div>
                 </Fragment>
               ) : (
-                <div className="row">
-                  <div className="col-lg-12">
-                    <div className="item-empty-area text-center">
-                      <div className="item-empty-area__icon mb-30">
-                        <i className="pe-7s-ribbon"></i>
-                      </div>
-                      <div className="item-empty-area__text">
-                        No orders found. <br />{" "}
-                        <Link to={process.env.PUBLIC_URL + "/shop-grid-standard"}>
-                          Start Shopping
-                        </Link>
-                      </div>
+                <>
+                  <div className="row">
+                    <div className="col-lg-12">
+                      {/* Render search form if user is not logged in */}
+                      <form onSubmit={handleSearchSubmit} style={{ marginBottom: '20px' }}>
+                        <div className="input-group">
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Enter Order ID"
+                            value={searchOrderId}
+                            onChange={(e) => setSearchOrderId(e.target.value)}
+                          />
+                          <button type="submit" className="btn btn-primary">Search</button>
+                        </div>
+                      </form>
                     </div>
                   </div>
-                </div>
+
+                  {searchResult && searchResult.id? (
+                    <div className="row">
+                      <div className="col-12">
+                        <Typography variant="h4">Search Result:</Typography>
+                        <div>
+                          <Typography variant="body1">Order ID: {searchResult.id}</Typography>
+                          <Typography variant="body1">Total Price: {searchResult.totalPrice.toFixed(2)}₪</Typography>
+                          <Typography variant="body1">Date: {new Date(searchResult.date).toLocaleString()}</Typography>
+                          <Typography variant="body1">Shipping Address: {searchResult.shippingAddress}</Typography>
+                          <Typography variant="body1">Status: {statusMap[searchResult.status].label}</Typography>
+                          <Typography variant="h6">Items:</Typography>
+                          {searchResult.orderItems.map((item) => {
+                            const product = products.find((product) => product.id === item.id);
+                            if(product){
+                              return (
+                                <div key={item.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                                  <img src={product.image} alt={product.name} style={{ width: '100px', marginRight: '20px' }} />
+                                  <div>
+                                    <Typography variant="body1">{product.name} - {item.quantity}</Typography>
+                                    <Typography variant="body2">{product.description}</Typography>
+                                  </div>
+                                </div>
+                              );
+                            }
+                            else{
+                              return null;
+                            }
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  ): <span>{searchResult}</span>}
+                </>
+
               )}
             </div>
           </div>
