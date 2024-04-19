@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
@@ -20,12 +20,15 @@ import { emptyRows, applyFilter, getComparator } from "../utils";
 import api, { deleteData } from "../../../utils/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsers } from "../../../store/slices/user-slice";
+import { listenToNotifications } from "src/sections/overview/view/app-view";
 
 // ----------------------------------------------------------------------
 
 export default function UserPage() {
   const dispatch = useDispatch();
-
+  useEffect(() => {
+    listenToNotifications(dispatch);
+  }, []);
   const { users } = useSelector((state) => state.user);
 
   const [page, setPage] = useState(0);

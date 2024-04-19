@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Container from '@mui/material/Container';
@@ -15,12 +15,15 @@ import { emptyRows, applyFilter, getComparator } from '../utils';
 import api, { deleteData } from "../../../utils/api"
 import { useDispatch, useSelector } from "react-redux";
 import { setOrders } from "../../../store/slices/order-slice";
+import { listenToNotifications } from 'src/sections/overview/view/app-view';
 
 // ----------------------------------------------------------------------
 
 export default function OrderPage() {
   const dispatch = useDispatch();
-
+  useEffect(() => {
+    listenToNotifications(dispatch);
+  }, []);
   const { orders } = useSelector((state) => state.order);
 
   const [page, setPage] = useState(0);
