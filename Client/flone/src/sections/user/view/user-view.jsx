@@ -17,18 +17,25 @@ import UserTableHead from "../user-table-head";
 import TableEmptyRows from "../table-empty-rows";
 import UserTableToolbar from "../user-table-toolbar";
 import { emptyRows, applyFilter, getComparator } from "../utils";
-import api, { deleteData } from "../../../utils/api";
+import api, { getData,deleteData } from "../../../utils/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsers } from "../../../store/slices/user-slice";
 import { listenToNotifications } from "src/sections/overview/view/app-view";
-
 // ----------------------------------------------------------------------
 
 export default function UserPage() {
   const dispatch = useDispatch();
   useEffect(() => {
     listenToNotifications(dispatch);
+    getData(api.users)
+      .then((users) => {
+        dispatch(setUsers(users))
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
+
   const { users } = useSelector((state) => state.user);
 
   const [page, setPage] = useState(0);
@@ -145,8 +152,6 @@ export default function UserPage() {
       <Card>
         <UserTableToolbar
           numSelected={selected.length}
-          filterName={filterName}
-          onFilterName={handleFilterByName}
           onDelete={deleteSelected}
         />
 
