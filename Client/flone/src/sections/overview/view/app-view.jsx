@@ -51,16 +51,17 @@ export default function AppView() {
         if (snapshot.exists()) {
           // Data exists at the specified database path
           const data = snapshot.val();
-          let notification = [];
+          let notifications = [];
+          console.log(data);
           for (const orderId in data) {
             if (Object.hasOwnProperty.call(data, orderId)) {
-              notification = [
-                ...notification,
-                { ...data[orderId], id: data[orderId].id.toString() },
-              ];
+              notifications.push({
+                ...data[orderId],
+                id: data[orderId].id.toString(),
+              });
             }
           }
-          dispatch(setNotifications(notification));
+          dispatch(setNotifications(notifications));
         } else {
           // Data does not exist at the specified database path
           console.log("No data available");

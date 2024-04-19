@@ -17,8 +17,8 @@ import {
   IconButton,
   TableRow,
   TableCell,
-} from '@mui/material';
-import Iconify from 'src/components/iconify';
+} from "@mui/material";
+import Iconify from "src/components/iconify";
 
 const UserOrders = () => {
   const { pathname } = useLocation();
@@ -28,13 +28,12 @@ const UserOrders = () => {
   const [openItemsDialog, setOpenItemsDialog] = useState(false);
 
   const statusMap = {
-    0: { label: 'Not Paid', color: 'rgba(255, 0, 0, 0.6)' }, 
-    1: { label: 'Pending', color: 'rgba(255, 165, 0, 0.6)' }, 
-    2: { label: 'Processing', color: 'rgba(0, 0, 255, 0.6)' }, 
-    3: { label: 'Shipped', color: 'rgba(0, 128, 0, 0.6)' }, 
-    4: { label: 'Delivered', color: 'rgba(128, 0, 128, 0.6)' }
+    0: { label: "Not Paid", color: "rgba(255, 0, 0, 0.6)" },
+    1: { label: "Pending", color: "rgba(255, 165, 0, 0.6)" },
+    2: { label: "Processing", color: "rgba(0, 0, 255, 0.6)" },
+    3: { label: "Shipped", color: "rgba(0, 128, 0, 0.6)" },
+    4: { label: "Delivered", color: "rgba(128, 0, 128, 0.6)" },
   };
-
 
   const handleOrderClick = (order) => {
     setSelectedOrder(order);
@@ -59,7 +58,10 @@ const UserOrders = () => {
             { label: "Your Orders", path: process.env.PUBLIC_URL + pathname },
           ]}
         />
-        <div className="container" style={{ display: 'flex', justifyContent: 'center' }}>
+        <div
+          className="container"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
           <div className="cart-main-area pt-20 pb-100">
             <div className="container">
               {userOrders && userOrders.length >= 1 ? (
@@ -80,17 +82,36 @@ const UserOrders = () => {
                           </thead>
                           <tbody>
                             {userOrders.map((order) => (
-                              <TableRow key={order.id} hover tabIndex={-1} role="checkbox" selected={selectedOrder}>
+                              <TableRow
+                                key={order.id}
+                                hover
+                                tabIndex={-1}
+                                role="checkbox"
+                                selected={selectedOrder}
+                              >
                                 <TableCell>{order.id}</TableCell>
-                                <TableCell>{order.totalPrice.toFixed(2)}₪</TableCell>
-                                <TableCell>{new Date(order.date).toLocaleString()}</TableCell>
+                                <TableCell>
+                                  {order.totalPrice.toFixed(2)}₪
+                                </TableCell>
+                                <TableCell>
+                                  {new Date(order.date).toLocaleString()}
+                                </TableCell>
                                 <TableCell>{order.shippingAddress}</TableCell>
                                 <TableCell>
-                                  <Button style={{ backgroundColor: statusMap[order.status].color, color: 'white' }}>
+                                  <Button
+                                    style={{
+                                      backgroundColor:
+                                        statusMap[order.status].color,
+                                      color: "white",
+                                    }}
+                                  >
                                     {statusMap[order.status].label}
                                   </Button>
-                                </TableCell>                                <TableCell>
-                                  <IconButton onClick={() => handleOrderClick(order)}>
+                                </TableCell>{" "}
+                                <TableCell>
+                                  <IconButton
+                                    onClick={() => handleOrderClick(order)}
+                                  >
                                     <Iconify icon="eva:eye-outline" />
                                   </IconButton>
                                 </TableCell>
@@ -105,7 +126,9 @@ const UserOrders = () => {
                     <div className="col-lg-12">
                       <div className="cart-shiping-update-wrapper">
                         <div className="cart-shiping-update">
-                          <Link to={process.env.PUBLIC_URL + "/shop-grid-standard"}>
+                          <Link
+                            to={process.env.PUBLIC_URL + "/shop-grid-standard"}
+                          >
                             Continue Shopping
                           </Link>
                         </div>
@@ -122,7 +145,9 @@ const UserOrders = () => {
                       </div>
                       <div className="item-empty-area__text">
                         No orders found. <br />{" "}
-                        <Link to={process.env.PUBLIC_URL + "/shop-grid-standard"}>
+                        <Link
+                          to={process.env.PUBLIC_URL + "/shop-grid-standard"}
+                        >
                           Start Shopping
                         </Link>
                       </div>
@@ -137,24 +162,32 @@ const UserOrders = () => {
       <Dialog open={openItemsDialog} onClose={handleCloseItemsDialog}>
         <DialogTitle>Order Items</DialogTitle>
         <DialogContent>
-          {selectedOrder && selectedOrder.orderItems.map((item, index) => {
-            const product = products.find(product => product.id === item.productId);
-            if (!product) return null;
-            return (
-              <Card key={index} style={{ marginBottom: '16px' }}>
-                <CardContent>
-                  <CardMedia
-                    component="img"
-                    src={product.image}
-                    style={{ width: '100px', height: '100px', marginRight: '16px', objectFit: 'cover' }}
-                  />
-                  <Typography variant="body1">
-                    {product.name}: {item.quantity}
-                  </Typography>
-                </CardContent>
-              </Card>
-            );
-          })}
+          {selectedOrder &&
+            selectedOrder.orderItems.map((item, index) => {
+              const product = products.find(
+                (product) => product.id === item.productId
+              );
+              if (!product) return null;
+              return (
+                <Card key={index} style={{ marginBottom: "16px" }}>
+                  <CardContent>
+                    <CardMedia
+                      component="img"
+                      src={product.image}
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        marginRight: "16px",
+                        objectFit: "cover",
+                      }}
+                    />
+                    <Typography variant="body1">
+                      {product.name}: {item.quantity}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              );
+            })}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseItemsDialog}>Close</Button>

@@ -13,7 +13,6 @@ import api, { postData } from "src/utils/api";
 import cogoToast from "cogo-toast";
 import emailjs from "emailjs-com";
 import { deleteAllFromCart } from "src/store/slices/cart-slice";
-import { sub } from "date-fns";
 import { getDatabase, push, ref } from "firebase/database";
 import { app } from "src/config";
 
@@ -194,6 +193,7 @@ const Checkout = () => {
         shippingMethod: Number(formData.shipping),
         paymentMethod: Number(formData.payment),
         notes: formData.notes,
+        status: 0,
         orderItems: orderItems,
       };
       postData(api.orders, orderDetails)
@@ -549,10 +549,12 @@ const Checkout = () => {
                       <div className="payment-method"></div>
                     </div>
                     <div className="place-order mt-25">
-                      <button className="btn-hover" onClick={placeOrder}>
-                        Place Order
-                      </button>
-                      {isPlaceOrderValid && (
+                      {formData.payment === "2" && (
+                        <button className="btn-hover" onClick={placeOrder}>
+                          Place Order
+                        </button>
+                      )}
+                      {isPlaceOrderValid && formData.payment === "1" && (
                         <PayPalScriptProvider options={initialOptions}>
                           <Paypal
                             formData={formData}

@@ -40,6 +40,7 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
     shippingMethod: Number(formData.shipping),
     paymentMethod: Number(formData.payment),
     notes: formData.notes,
+    status:1,
     orderItems: orderItems,
   };
   const onCreateOrder = (data, actions) => {
@@ -137,21 +138,6 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
                       isUnRead: true,
                     };
                     push((ref(db), newNotification));
-                    // database
-                    //   .ref("notifications")
-                    //   .push(newNotification)
-                    //   .then(() => {
-                    //     console.log(
-                    //       "Order successfully written to the database"
-                    //     );
-                    //   })
-                    //   .catch((error) => {
-                    //     console.error(
-                    //       "Error writing order to the database:",
-                    //       error
-                    //     );
-                    //   });
-                    // dispatch(addNotification(newNotification));
                     navigate("/"); // Only navigate after sending the email to the admin
                   })
                   .catch((error) => {

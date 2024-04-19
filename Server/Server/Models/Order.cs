@@ -13,6 +13,7 @@ namespace Server.Models
         public List<OrderItem> orderItems { get; set; }
         public enum Status
         {
+            NotPaid=0,
             Pending=1,
             Processing=2,
             Shipped=3,
