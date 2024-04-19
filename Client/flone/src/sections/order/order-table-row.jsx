@@ -1,25 +1,16 @@
-import { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import Popover from '@mui/material/Popover';
 import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
-import MenuItem from '@mui/material/MenuItem';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import Iconify from 'src/components/iconify';
-import api, { putData, deleteData } from "../../utils/api";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TextField,
-  Typography,
-  Card,
-  CardContent,
-  CardMedia,
-} from '@mui/material';
+import Popover from '@mui/material/Popover';
+import MenuItem from '@mui/material/MenuItem';
+import Button from '@mui/material/Button';
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Typography, Card, CardContent } from '@mui/material';
+import api, { deleteData, putData } from "../../utils/api";
+import Dropdown from 'react-bootstrap/Dropdown';
+import {Checkbox} from '@mui/material';
 import { useSelector } from 'react-redux';
 
 export default function OrderTableRow({
@@ -38,10 +29,8 @@ export default function OrderTableRow({
   deleteOrder,
   updateOrder
 }) {
-  const { products } = useSelector((state) => state.product);
-
-  const [open, setOpen] = useState(null);
-  const [editedOrder, setEditedOrder] = useState({
+  const [open, setOpen] = React.useState(null);
+  const [editedOrder, setEditedOrder] = React.useState({
     id,
     userId,
     totalPrice,
@@ -54,8 +43,17 @@ export default function OrderTableRow({
     paymentMethod
   });
 
-  const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [openItemsDialog, setOpenItemsDialog] = useState(false);
+  const { products } = useSelector((state) => state.product);
+  const [openEditDialog, setOpenEditDialog] = React.useState(false);
+  const [openItemsDialog, setOpenItemsDialog] = React.useState(false);
+
+  const statusMap = [
+    { label: 'Not Paid', color: 'rgba(255, 0, 0, 0.6)' },
+    { label: 'Pending', color: 'rgba(255, 165, 0, 0.6)' },
+    { label: 'Processing', color: 'rgba(0, 0, 255, 0.6)' },
+    { label: 'Shipped', color: 'rgba(0, 128, 0, 0.6)' },
+    { label: 'Delivered', color: 'rgba(128, 0, 128, 0.6)' }
+  ];
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -92,7 +90,7 @@ export default function OrderTableRow({
   const editOrder = () => {
     const updatedOrder = {
       ...editedOrder,
-      shippingMethod: Number(editedOrder.shippingMethod), 
+      shippingMethod: Number(editedOrder.shippingMethod),
       paymentMethod: Number(editedOrder.paymentMethod)
     };
     putData(api.orders + "updateOrder", updatedOrder)
@@ -103,8 +101,7 @@ export default function OrderTableRow({
       .catch((error) => {
         console.error(error);
       })
-
-    };
+  };
 
   const removeOrder = () => {
     deleteData(api.orders + "deleteOrder/" + id)
@@ -118,6 +115,17 @@ export default function OrderTableRow({
       });
   };
 
+  const handleStatusChange = (newStatus) => {
+    const newStatusOrder={...editedOrder,status:newStatus}
+    putData(api.orders + "updateOrder", newStatusOrder)
+      .then((order) => {
+        updateOrder(order);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+  };
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -126,13 +134,26 @@ export default function OrderTableRow({
         </TableCell>
         <TableCell>{id}</TableCell>
         <TableCell>{userId}</TableCell>
-        <TableCell>{totalPrice}</TableCell>
-        <TableCell>{date}</TableCell>
+        <TableCell>{totalPrice}₪</TableCell>
+        <TableCell>{date.split("T")[0]}</TableCell>
         <TableCell>{shippingAddress}</TableCell>
-        <TableCell>{notes}</TableCell>
-        <TableCell>{status}</TableCell>
-        <TableCell>{shippingMethod}</TableCell>
-        <TableCell>{paymentMethod}</TableCell>
+        <TableCell>{notes || "No notes"}</TableCell>
+        <TableCell>
+          <Dropdown>
+            <Dropdown.Toggle id="dropdown-basic" style={{backgroundColor:statusMap[status].color,borderColor:statusMap[status].color}}>
+              {statusMap[status].label}
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              {statusMap.map((statusItem, index) => (
+                <Dropdown.Item key={index} onClick={() => handleStatusChange(index)}>
+                  {statusItem.label}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+        </TableCell>
+        <TableCell>{shippingMethod === 1 ? "Shipping" : "PickUp"}</TableCell>
+        <TableCell>{paymentMethod === 1 ? "PayPal" : "Cash"}</TableCell>
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
             <Iconify icon="eva:more-vertical-fill" />
@@ -191,7 +212,7 @@ export default function OrderTableRow({
             fullWidth
             margin="normal"
           />
-          <TextField 
+          <TextField
             name="shippingMethod"
             label="Shipping Method"
             value={editedOrder.shippingMethod}
@@ -199,7 +220,7 @@ export default function OrderTableRow({
             fullWidth
             margin="normal"
           />
-          <TextField 
+          <TextField
             name="paymentMethod"
             label="Payment Method"
             value={editedOrder.paymentMethod}
@@ -241,11 +262,18 @@ export default function OrderTableRow({
 }
 
 OrderTableRow.propTypes = {
-  name: PropTypes.any,
-  email: PropTypes.any,
-  password: PropTypes.any,
-  phone: PropTypes.any,
-  role: PropTypes.any,
-  address: PropTypes.any,
-  regDate: PropTypes.string
+  id: PropTypes.number.isRequired,
+  userId: PropTypes.number.isRequired,
+  totalPrice: PropTypes.number.isRequired,
+  date: PropTypes.string.isRequired,
+  shippingAddress: PropTypes.string.isRequired,
+  notes: PropTypes.string,
+  status: PropTypes.number.isRequired,
+  shippingMethod: PropTypes.number.isRequired,
+  paymentMethod: PropTypes.number.isRequired,
+  orderItems: PropTypes.array.isRequired,
+  selected: PropTypes.bool.isRequired,
+  handleClick: PropTypes.func.isRequired,
+  deleteOrder: PropTypes.func.isRequired,
+  updateOrder: PropTypes.func.isRequired,
 };

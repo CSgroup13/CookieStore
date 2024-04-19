@@ -63,6 +63,8 @@ const UserOrders = () => {
     setOpenItemsDialog(false);
   };
 
+  const mainLabel= (userOrders && userOrders.length >= 1 ) ? "Your Orders" : "Search Orders";
+
   return (
     <Fragment>
       <SEO
@@ -73,7 +75,7 @@ const UserOrders = () => {
         <Breadcrumb
           pages={[
             { label: "Home", path: process.env.PUBLIC_URL + "/" },
-            { label: "Your Orders", path: process.env.PUBLIC_URL + pathname },
+            { label: mainLabel, path: process.env.PUBLIC_URL + pathname },
           ]}
         />
         <div className="container" style={{ display: 'flex', justifyContent: 'center' }}>
@@ -143,27 +145,27 @@ const UserOrders = () => {
                             placeholder="Enter Order ID"
                             value={searchOrderId}
                             onChange={(e) => setSearchOrderId(e.target.value)}
-                          />
-                          <button type="submit" className="btn btn-primary">Search</button>
+                            style={{ borderColor: '#BC7FCD', outlineColor: '#BC7FCD' }} />
+                          <button type="submit" className="btn" style={{ backgroundColor: '#BC7FCD', color: 'white' }}>Search</button>
                         </div>
                       </form>
                     </div>
                   </div>
 
-                  {searchResult && searchResult.id? (
+                  {searchResult && searchResult.id ? (
                     <div className="row">
                       <div className="col-12">
-                        <Typography variant="h4">Search Result:</Typography>
+                        <Typography variant="h4">Order {searchResult.id}</Typography>
                         <div>
-                          <Typography variant="body1">Order ID: {searchResult.id}</Typography>
                           <Typography variant="body1">Total Price: {searchResult.totalPrice.toFixed(2)}₪</Typography>
                           <Typography variant="body1">Date: {new Date(searchResult.date).toLocaleString()}</Typography>
                           <Typography variant="body1">Shipping Address: {searchResult.shippingAddress}</Typography>
-                          <Typography variant="body1">Status: {statusMap[searchResult.status].label}</Typography>
+                          <Typography variant="body1">Payment Method: {searchResult.paymentMethod === 1 ? "Paypal" : "Cash"}</Typography>
+                          <Typography variant="body1">Status: <span style={{ color: statusMap[searchResult.status].color }}>{statusMap[searchResult.status].label}</span></Typography>
                           <Typography variant="h6">Items:</Typography>
                           {searchResult.orderItems.map((item) => {
                             const product = products.find((product) => product.id === item.id);
-                            if(product){
+                            if (product) {
                               return (
                                 <div key={item.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
                                   <img src={product.image} alt={product.name} style={{ width: '100px', marginRight: '20px' }} />
@@ -174,14 +176,14 @@ const UserOrders = () => {
                                 </div>
                               );
                             }
-                            else{
+                            else {
                               return null;
                             }
                           })}
                         </div>
                       </div>
                     </div>
-                  ): <span>{searchResult}</span>}
+                  ) : <span>{searchResult}</span>}
                 </>
 
               )}
