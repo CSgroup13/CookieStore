@@ -12,9 +12,10 @@ import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import api, { postData } from "src/utils/api";
 import cogoToast from "cogo-toast";
 import emailjs from "emailjs-com";
-import { deleteAllFromCart } from "src/store/slices/cart-slice";
+import { deleteAllFromCart, setDiscount } from "src/store/slices/cart-slice";
 import { getDatabase, push, ref, set } from "firebase/database";
 import { app } from "src/config";
+import { addToUserOrders } from "src/store/slices/user-slice";
 
 const Checkout = () => {
   const { totalPrice } = useSelector((state) => state.cart);
@@ -265,7 +266,9 @@ const Checkout = () => {
                   };
                   const db = getDatabase(app);
                   set(ref(db, `notifications/${order.id}`), newNotification);
+                  dispatch(addToUserOrders(orderDetails));
                   dispatch(deleteAllFromCart());
+                  dispatch(setDiscount(0));
                   navigate("/"); // Only navigate after sending the email to the admin
                 })
                 .catch((error) => {

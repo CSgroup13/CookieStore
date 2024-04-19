@@ -94,7 +94,7 @@ const UserOrders = () => {
                       <div className="table-content table-responsive cart-table-content">
                         <table>
                           <thead>
-                            <tr>
+                            <tr key="head">
                               <th>Order ID</th>
                               <th>Total Price</th>
                               <th>Date</th>
@@ -130,7 +130,7 @@ const UserOrders = () => {
                                   >
                                     {statusMap[order.status].label}
                                   </Button>
-                                </TableCell>{" "}
+                                </TableCell>
                                 <TableCell>
                                   <IconButton
                                     onClick={() => handleOrderClick(order)}
@@ -284,7 +284,6 @@ const UserOrders = () => {
               const product = products.find(
                 (product) => product.id === item.productId
               );
-              let rate = product.rate;
               if (!product) return null;
               return (
                 <Card key={index} style={{ marginBottom: "16px" }}>
@@ -328,7 +327,7 @@ const UserOrders = () => {
                             );
                           });
                       }}
-                      value={rate}
+                      value={product.rate}
                     />
                   </CardContent>
                 </Card>

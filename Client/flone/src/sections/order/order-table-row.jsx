@@ -1,18 +1,28 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import IconButton from '@mui/material/IconButton';
-import Iconify from 'src/components/iconify';
-import Popover from '@mui/material/Popover';
-import MenuItem from '@mui/material/MenuItem';
-import Button from '@mui/material/Button';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Typography, Card, CardContent } from '@mui/material';
+import React from "react";
+import PropTypes from "prop-types";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import IconButton from "@mui/material/IconButton";
+import Iconify from "src/components/iconify";
+import Popover from "@mui/material/Popover";
+import MenuItem from "@mui/material/MenuItem";
+import Button from "@mui/material/Button";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Typography,
+  Card,
+  CardContent,
+} from "@mui/material";
 import api, { deleteData, putData } from "../../utils/api";
-import Dropdown from 'react-bootstrap/Dropdown';
-import { Checkbox } from '@mui/material';
-import { useSelector } from 'react-redux';
-import Select from '@mui/material/Select';
+import Dropdown from "react-bootstrap/Dropdown";
+import { Checkbox } from "@mui/material";
+import { useSelector } from "react-redux";
+import Select from "@mui/material/Select";
+import zIndex from "@mui/material/styles/zIndex";
 
 export default function OrderTableRow({
   id,
@@ -28,7 +38,7 @@ export default function OrderTableRow({
   selected,
   handleClick,
   deleteOrder,
-  updateOrder
+  updateOrder,
 }) {
   const [open, setOpen] = React.useState(null);
   const [editedOrder, setEditedOrder] = React.useState({
@@ -41,7 +51,7 @@ export default function OrderTableRow({
     orderItems,
     status,
     shippingMethod,
-    paymentMethod
+    paymentMethod,
   });
 
   const { products } = useSelector((state) => state.product);
@@ -49,11 +59,11 @@ export default function OrderTableRow({
   const [openItemsDialog, setOpenItemsDialog] = React.useState(false);
 
   const statusMap = [
-    { label: 'Not Paid', color: 'rgba(255, 0, 0, 0.6)' },
-    { label: 'Pending', color: 'rgba(255, 165, 0, 0.6)' },
-    { label: 'Processing', color: 'rgba(0, 0, 255, 0.6)' },
-    { label: 'Shipped', color: 'rgba(0, 128, 0, 0.6)' },
-    { label: 'Delivered', color: 'rgba(128, 0, 128, 0.6)' }
+    { label: "Not Paid", color: "rgba(255, 0, 0, 0.6)" },
+    { label: "Pending", color: "rgba(255, 165, 0, 0.6)" },
+    { label: "Processing", color: "rgba(0, 0, 255, 0.6)" },
+    { label: "Shipped", color: "rgba(0, 128, 0, 0.6)" },
+    { label: "Delivered", color: "rgba(128, 0, 128, 0.6)" },
   ];
 
   const handleOpenMenu = (event) => {
@@ -84,15 +94,16 @@ export default function OrderTableRow({
     const { name, value } = e.target;
     setEditedOrder((prevOrder) => ({
       ...prevOrder,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const editOrder = () => {
+    console.log(editedOrder);
     const updatedOrder = {
       ...editedOrder,
       shippingMethod: Number(editedOrder.shippingMethod),
-      paymentMethod: Number(editedOrder.paymentMethod)
+      paymentMethod: Number(editedOrder.paymentMethod),
     };
     putData(api.orders + "updateOrder", updatedOrder)
       .then((order) => {
@@ -101,7 +112,8 @@ export default function OrderTableRow({
       })
       .catch((error) => {
         console.error(error);
-      })
+      });
+    handleEditDialogClose();
   };
 
   const removeOrder = () => {
@@ -117,14 +129,15 @@ export default function OrderTableRow({
   };
 
   const handleStatusChange = (newStatus) => {
-    const newStatusOrder = { ...editedOrder, status: newStatus }
+    const newStatusOrder = { ...editedOrder, status: newStatus };
+    setEditedOrder(newStatusOrder);
     putData(api.orders + "updateOrder", newStatusOrder)
       .then((order) => {
         updateOrder(order);
       })
       .catch((error) => {
         console.error(error);
-      })
+      });
   };
 
   return (
@@ -141,12 +154,21 @@ export default function OrderTableRow({
         <TableCell>{notes || "No notes"}</TableCell>
         <TableCell>
           <Dropdown>
-            <Dropdown.Toggle id="dropdown-basic" style={{ backgroundColor: statusMap[status].color, borderColor: statusMap[status].color }}>
+            <Dropdown.Toggle
+              id="dropdown-basic"
+              style={{
+                backgroundColor: statusMap[status].color,
+                borderColor: statusMap[status].color,
+              }}
+            >
               {statusMap[status].label}
             </Dropdown.Toggle>
             <Dropdown.Menu>
               {statusMap.map((statusItem, index) => (
-                <Dropdown.Item key={index} onClick={() => handleStatusChange(index)}>
+                <Dropdown.Item
+                  key={index}
+                  onClick={() => handleStatusChange(index)}
+                >
                   {statusItem.label}
                 </Dropdown.Item>
               ))}
@@ -162,26 +184,29 @@ export default function OrderTableRow({
         </TableCell>
       </TableRow>
 
-
       <Popover
         open={!!open}
         anchorEl={open}
         onClose={handleCloseMenu}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
         PaperProps={{
           sx: { width: 140 },
         }}
       >
         <MenuItem onClick={handleItemsDialogOpen} style={{ color: "#ce0fdb" }}>
-          <Iconify icon="mdi:invoice-line-items" style={{ color: "#ce0fdb" }} sx={{ mr: 2 }} />
+          <Iconify
+            icon="mdi:invoice-line-items"
+            style={{ color: "#ce0fdb" }}
+            sx={{ mr: 2 }}
+          />
           Items
         </MenuItem>
         <MenuItem onClick={handleEditDialogOpen}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
           Edit
         </MenuItem>
-        <MenuItem onClick={removeOrder} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={removeOrder} sx={{ color: "error.main" }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Delete
         </MenuItem>
@@ -247,13 +272,24 @@ export default function OrderTableRow({
         <DialogTitle>Order Items</DialogTitle>
         <DialogContent>
           {orderItems.map((item, index) => {
-            const product = products.find(product => product.id === item.productId);
+            const product = products.find(
+              (product) => product.id === item.productId
+            );
             if (!product) return null;
 
             return (
-              <Card key={index} style={{ marginBottom: '16px' }}>
+              <Card key={index} style={{ marginBottom: "16px" }}>
                 <CardContent>
-                  <img src={product.image} style={{ width: '100px', height: '100px', marginRight: '16px', objectFit: 'cover' }} />
+                  <img
+                    alt={product.name}
+                    src={product.image}
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      marginRight: "16px",
+                      objectFit: "cover",
+                    }}
+                  />
                   <Typography variant="body1">
                     {product.name}: {item.quantity}
                   </Typography>

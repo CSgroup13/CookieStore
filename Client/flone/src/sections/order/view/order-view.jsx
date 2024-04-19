@@ -1,21 +1,21 @@
-import { useEffect, useState } from 'react';
-import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
-import Container from '@mui/material/Container';
-import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
-import TablePagination from '@mui/material/TablePagination';
-import Scrollbar from 'src/components/scrollbar';
-import TableNoData from '../table-no-data';
-import OrderTableRow from '../order-table-row';
-import OrderTableHead from '../order-table-head';
-import TableEmptyRows from '../table-empty-rows';
-import OrderTableToolbar from '../order-table-toolbar';
-import { emptyRows, applyFilter, getComparator } from '../utils';
-import api, { getData,deleteData } from "../../../utils/api";
+import { useEffect, useState } from "react";
+import Card from "@mui/material/Card";
+import Table from "@mui/material/Table";
+import Container from "@mui/material/Container";
+import TableBody from "@mui/material/TableBody";
+import TableContainer from "@mui/material/TableContainer";
+import TablePagination from "@mui/material/TablePagination";
+import Scrollbar from "src/components/scrollbar";
+import TableNoData from "../table-no-data";
+import OrderTableRow from "../order-table-row";
+import OrderTableHead from "../order-table-head";
+import TableEmptyRows from "../table-empty-rows";
+import OrderTableToolbar from "../order-table-toolbar";
+import { emptyRows, applyFilter, getComparator } from "../utils";
+import api, { getData, deleteData } from "../../../utils/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setOrders } from "../../../store/slices/order-slice";
-import { listenToNotifications } from 'src/sections/overview/view/app-view';
+import { listenToNotifications } from "src/sections/overview/view/app-view";
 
 // ----------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ export default function OrderPage() {
     listenToNotifications(dispatch);
     getData(api.orders)
       .then((orders) => {
-        dispatch(setOrders(orders))
+        dispatch(setOrders(orders));
       })
       .catch((error) => {
         console.error(error);
@@ -37,20 +37,19 @@ export default function OrderPage() {
 
   const [page, setPage] = useState(0);
 
-  const [order, setOrder] = useState('asc');
+  const [order, setOrder] = useState("asc");
 
   const [selected, setSelected] = useState([]);
 
-  const [orderBy, setOrderBy] = useState('name');
+  const [orderBy, setOrderBy] = useState("name");
 
-  const [filterName, setFilterName] = useState('');
+  const [filterName, setFilterName] = useState("");
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
   const handleSort = (event, id) => {
-    const isAsc = orderBy === id && order === 'asc';
-    if (id !== '') {
-      setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === id && order === "asc";
+    if (id !== "") {
+      setOrder(isAsc ? "desc" : "asc");
       setOrderBy(id);
     }
   };
@@ -66,33 +65,38 @@ export default function OrderPage() {
 
   const deleteOrder = (orderId) => {
     dispatch(setOrders(orders.filter((order) => order.id !== orderId)));
-  }
-
-  const updateOrder = (updatedOrder) => {
-    dispatch(setOrders(orders.map((order) => {
-      if (order.id === updatedOrder.id) {
-        return updatedOrder;
-      } else {
-        return order;
-      }
-    })));
   };
 
+  const updateOrder = (updatedOrder) => {
+    dispatch(
+      setOrders(
+        orders.map((order) => {
+          if (order.id === updatedOrder.id) {
+            return updatedOrder;
+          } else {
+            return order;
+          }
+        })
+      )
+    );
+  };
 
   const deleteSelected = () => {
     // Iterate over the selected array and delete each selected order
+    let remainedArr = [...orders];
     selected.forEach((orderId) => {
       // Call your delete API here to delete the order by ID
       deleteData(api.orders + "deleteOrder/" + orderId)
-        .then((deleted) => {
-          if (deleted) {
-            dispatch(setOrders(orders.filter((order) => order.id !== orderId)));
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      .then((deleted) => {
+        if (deleted) {
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+      remainedArr = remainedArr.filter((order) => order.id !== orderId);
     });
+    dispatch(setOrders(remainedArr));
     // Clear the selected array after deletion
     setSelected([]);
   };
@@ -116,7 +120,6 @@ export default function OrderPage() {
     setSelected(newSelected);
   };
 
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -139,7 +142,6 @@ export default function OrderPage() {
 
   const notFound = !dataFiltered.length && !!filterName;
 
-
   return (
     <Container>
       <Card>
@@ -149,7 +151,7 @@ export default function OrderPage() {
         />
 
         <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
+          <TableContainer sx={{ overflow: "unset" }}>
             <Table sx={{ minWidth: 800 }}>
               <OrderTableHead
                 order={order}
@@ -159,16 +161,16 @@ export default function OrderPage() {
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'id', label: 'Order ID' },
-                  { id: 'userId', label: 'User ID' },
-                  { id: 'totalPrice', label: 'Total Price' },
-                  { id: 'date', label: 'Order Date' },
-                  { id: 'shippingAddress', label: 'Shipping Address' },
-                  { id: 'notes', label: 'Special Notes' },
-                  { id: 'status', label: 'Status' },
-                  { id: 'shippingMethod', label: 'Shipping Method' },
-                  { id: 'paymentMethod', label: 'Payment Method' },
-                  { id: '' },
+                  { id: "id", label: "Order ID" },
+                  { id: "userId", label: "User ID" },
+                  { id: "totalPrice", label: "Total Price" },
+                  { id: "date", label: "Order Date" },
+                  { id: "shippingAddress", label: "Shipping Address" },
+                  { id: "notes", label: "Special Notes" },
+                  { id: "status", label: "Status" },
+                  { id: "shippingMethod", label: "Shipping Method" },
+                  { id: "paymentMethod", label: "Payment Method" },
+                  { id: "" },
                 ]}
               />
               <TableBody>
@@ -193,7 +195,7 @@ export default function OrderPage() {
                         deleteOrder={deleteOrder}
                         updateOrder={updateOrder}
                       />
-                    )
+                    );
                   })}
 
                 <TableEmptyRows
