@@ -1293,6 +1293,59 @@ public class DBservices
 
     }
 
+
+    //--------------------------------------------------------------------------------------------------
+    // This method rates a product
+    //--------------------------------------------------------------------------------------------------
+    public int rateProduct(int productId, int userId, int rate)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        Dictionary<string, object> paramDic = new Dictionary<string, object>();
+
+        paramDic.Add("@productId", productId);
+        paramDic.Add("@userId", userId);
+        paramDic.Add("@rate", rate);
+        cmd = CreateCommandWithStoredProcedure("SP_rateProduct", con, paramDic);// create the command
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            if (dataReader.Read())
+            {
+
+                int newRate = Convert.ToInt32(dataReader["rate"]);
+                return newRate;
+
+            }
+            return rate;
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+
+    }
+
     //*****************************************************Category Methods*********************************************************************************
     //--------------------------------------------------------------------------------------------------
     // This method add new category to db

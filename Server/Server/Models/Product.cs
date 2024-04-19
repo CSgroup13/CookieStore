@@ -63,5 +63,11 @@
             return dbs.deleteProduct(id);
         }
 
+        public static int rateProduct(int productId, int userId, int rate)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.rateProduct(productId, userId, rate);
+        }
+
     }
 }

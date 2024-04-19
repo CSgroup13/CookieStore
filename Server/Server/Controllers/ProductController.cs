@@ -35,6 +35,18 @@ namespace Server.Controllers
             catch (Exception ex) { return BadRequest(ex.Message); }
         }
 
+        [HttpPost("rateProduct/{productId}/{userId}/{rate}")]
+        public IActionResult rateProduct(int productId, int userId, int rate)
+        {
+            try
+            {
+                return Ok(Product.rateProduct(productId, userId, rate));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         //get 8 best sellers products
         // GET: api/<ProductController>
         [HttpGet("bestSellers")]
