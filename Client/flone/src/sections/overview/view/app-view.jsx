@@ -11,6 +11,27 @@ import { getDatabase, onValue, ref } from "firebase/database";
 import { app } from "src/config";
 import { setNotifications } from "src/store/slices/notifications-slice";
 
+export function listenToNotifications(dispatch) {
+  const db = getDatabase(app);
+  onValue(
+    ref(db, `notifications/`),
+    (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        let notifications = [];
+        for (const orderId in data) {
+          notifications.unshift(data[orderId]);
+        }
+        dispatch(setNotifications(notifications));
+      } else {
+        console.log("No data available");
+      }
+    },
+    (error) => {
+      console.error("Error listening for data changes:", error);
+    }
+  );
+}
 // ----------------------------------------------------------------------
 export default function AppView() {
   const { orders } = useSelector((state) => state.order);
@@ -44,33 +65,7 @@ export default function AppView() {
   }
 
   useEffect(() => {
-    const db = getDatabase(app);
-    onValue(
-      ref(db),
-      (snapshot) => {
-        if (snapshot.exists()) {
-          // Data exists at the specified database path
-          const data = snapshot.val();
-          let notifications = [];
-          console.log(data);
-          for (const orderId in data) {
-            if (Object.hasOwnProperty.call(data, orderId)) {
-              notifications.push({
-                ...data[orderId],
-                id: data[orderId].id.toString(),
-              });
-            }
-          }
-          dispatch(setNotifications(notifications));
-        } else {
-          // Data does not exist at the specified database path
-          console.log("No data available");
-        }
-      },
-      (error) => {
-        console.error("Error listening for data changes:", error);
-      }
-    );
+    listenToNotifications(dispatch);
     const today = new Date();
     const lastWeekStart = new Date(
       today.getFullYear(),
@@ -191,7 +186,7 @@ export default function AppView() {
         <Grid xs={12} sm={6} md={4}>
           <AppWidgetSummary
             title="New Users"
-            total={dashboardData.totalUsers}
+            total={dashboardData.totalUsers ? dashboardData.totalUsers : 0}
             color="info"
             icon={
               <img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />

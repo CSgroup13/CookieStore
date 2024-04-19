@@ -13,7 +13,7 @@ import api, { postData } from "src/utils/api";
 import cogoToast from "cogo-toast";
 import emailjs from "emailjs-com";
 import { deleteAllFromCart } from "src/store/slices/cart-slice";
-import { getDatabase, push, ref } from "firebase/database";
+import { getDatabase, push, ref, set } from "firebase/database";
 import { app } from "src/config";
 
 const Checkout = () => {
@@ -264,7 +264,7 @@ const Checkout = () => {
                     isUnRead: true,
                   };
                   const db = getDatabase(app);
-                  push(ref(db), newNotification);
+                  set(ref(db, `notifications/${order.id}`), newNotification);
                   dispatch(deleteAllFromCart());
                   navigate("/"); // Only navigate after sending the email to the admin
                 })
