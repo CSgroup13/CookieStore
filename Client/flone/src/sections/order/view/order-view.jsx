@@ -173,7 +173,7 @@ export default function OrderPage() {
                         key={row.id}
                         id={row.id}
                         userId={row.userId}
-                        totalPrice={row.totalPrice.toFixed(2)}
+                        totalPrice={Number(row.totalPrice.toFixed(2))}
                         date={row.date}
                         shippingAddress={row.shippingAddress}
                         notes={row.notes}
