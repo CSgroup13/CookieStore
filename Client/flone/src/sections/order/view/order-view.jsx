@@ -12,7 +12,7 @@ import OrderTableHead from '../order-table-head';
 import TableEmptyRows from '../table-empty-rows';
 import OrderTableToolbar from '../order-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-import api, { deleteData } from "../../../utils/api"
+import api, { getData,deleteData } from "../../../utils/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setOrders } from "../../../store/slices/order-slice";
 import { listenToNotifications } from 'src/sections/overview/view/app-view';
@@ -21,9 +21,18 @@ import { listenToNotifications } from 'src/sections/overview/view/app-view';
 
 export default function OrderPage() {
   const dispatch = useDispatch();
+
   useEffect(() => {
     listenToNotifications(dispatch);
+    getData(api.orders)
+      .then((orders) => {
+        dispatch(setOrders(orders))
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
+
   const { orders } = useSelector((state) => state.order);
 
   const [page, setPage] = useState(0);
@@ -77,7 +86,7 @@ export default function OrderPage() {
       deleteData(api.orders + "deleteOrder/" + orderId)
         .then((deleted) => {
           if (deleted) {
-            deleteOrder(orderId)
+            dispatch(setOrders(orders.filter((order) => order.id !== orderId)));
           }
         })
         .catch((error) => {
@@ -136,8 +145,6 @@ export default function OrderPage() {
       <Card>
         <OrderTableToolbar
           numSelected={selected.length}
-          filterName={filterName}
-          onFilterName={handleFilterByName}
           onDelete={deleteSelected}
         />
 

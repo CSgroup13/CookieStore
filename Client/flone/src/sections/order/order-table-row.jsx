@@ -10,8 +10,9 @@ import Button from '@mui/material/Button';
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Typography, Card, CardContent } from '@mui/material';
 import api, { deleteData, putData } from "../../utils/api";
 import Dropdown from 'react-bootstrap/Dropdown';
-import {Checkbox} from '@mui/material';
+import { Checkbox } from '@mui/material';
 import { useSelector } from 'react-redux';
+import Select from '@mui/material/Select';
 
 export default function OrderTableRow({
   id,
@@ -116,7 +117,7 @@ export default function OrderTableRow({
   };
 
   const handleStatusChange = (newStatus) => {
-    const newStatusOrder={...editedOrder,status:newStatus}
+    const newStatusOrder = { ...editedOrder, status: newStatus }
     putData(api.orders + "updateOrder", newStatusOrder)
       .then((order) => {
         updateOrder(order);
@@ -140,7 +141,7 @@ export default function OrderTableRow({
         <TableCell>{notes || "No notes"}</TableCell>
         <TableCell>
           <Dropdown>
-            <Dropdown.Toggle id="dropdown-basic" style={{backgroundColor:statusMap[status].color,borderColor:statusMap[status].color}}>
+            <Dropdown.Toggle id="dropdown-basic" style={{ backgroundColor: statusMap[status].color, borderColor: statusMap[status].color }}>
               {statusMap[status].label}
             </Dropdown.Toggle>
             <Dropdown.Menu>
@@ -212,22 +213,30 @@ export default function OrderTableRow({
             fullWidth
             margin="normal"
           />
-          <TextField
+          <Select
             name="shippingMethod"
             label="Shipping Method"
             value={editedOrder.shippingMethod}
             onChange={handleInputChange}
             fullWidth
             margin="normal"
-          />
-          <TextField
+          >
+            {/* Define your select options here */}
+            <MenuItem value={1}>Shipping</MenuItem>
+            <MenuItem value={2}>PickUp</MenuItem>
+          </Select>
+          <Select
             name="paymentMethod"
             label="Payment Method"
             value={editedOrder.paymentMethod}
             onChange={handleInputChange}
             fullWidth
             margin="normal"
-          />
+          >
+            {/* Define your select options here */}
+            <MenuItem value={1}>PayPal</MenuItem>
+            <MenuItem value={2}>Cash</MenuItem>
+          </Select>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleEditDialogClose}>Cancel</Button>
