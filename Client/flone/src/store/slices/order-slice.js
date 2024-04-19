@@ -1,4 +1,4 @@
-import api, { deleteData, postData } from "../../utils/api";
+import api, { deleteData } from "../../utils/api";
 import cogoToast from "cogo-toast";
 
 const { createSlice } = require("@reduxjs/toolkit");

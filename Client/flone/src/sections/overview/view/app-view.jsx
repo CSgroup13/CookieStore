@@ -23,8 +23,6 @@ export function listenToNotifications(dispatch) {
           notifications.unshift(data[orderId]);
         }
         dispatch(setNotifications(notifications));
-      } else {
-        console.log("No data available");
       }
     },
     (error) => {
