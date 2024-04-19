@@ -32,27 +32,11 @@ export default function Nav({ openNav, onCloseNav }) {
   }, [pathname]);
 
   const renderMenu = (
-    <>
-      <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
-        {navConfig.map((item) => (
-          <NavItem key={item.title} item={item} />
-        ))}
-      </Stack>
-      {/* <Button
-        variant="contained"
-        color="primary"
-        sx={{
-          backgroundColor: "black",
-          color: "white",
-          "&:hover": {
-            backgroundColor: "#333", // Darken the background color on hover
-          },
-        }}
-        onClick={() => navigate("/shop-grid-standard")}
-      >
-        Return To Shop
-      </Button> */}
-    </>
+    <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
+      {navConfig.map((item) => (
+        <NavItem key={item.title} item={item} />
+      ))}
+    </Stack>
   );
 
   const renderContent = (
