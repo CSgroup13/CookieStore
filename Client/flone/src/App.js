@@ -42,6 +42,7 @@ const NotFound = lazy(() => import("./pages/other/NotFound"));
 
 const App = () => {
   const { loggedUser, isAdmin } = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.order);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -59,15 +60,6 @@ const App = () => {
       getData(`${api.users}${loggedUser.id}/products`)
         .then((products) => {
           store.dispatch(setWishlist(products));
-          // store.dispatch
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-
-      getData(`${api.users}${loggedUser.id}/orders`)
-        .then((userOrders) => {
-          store.dispatch(setUserOrders(userOrders));
         })
         .catch((error) => {
           console.error(error);
@@ -75,9 +67,7 @@ const App = () => {
     }
     else {
       store.dispatch(setWishlist([]));
-      store.dispatch(setUserOrders([]));
     }
-    
     if (isAdmin) {
       getData(api.users)
         .then((users) => {
@@ -97,6 +87,22 @@ const App = () => {
 
     }
   }, [loggedUser]);
+
+  useEffect(() => {
+    if (loggedUser?.firstName) {
+      getData(`${api.users}${loggedUser.id}/orders`)
+        .then((userOrders) => {
+          store.dispatch(setUserOrders(userOrders));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+    else {
+      store.dispatch(setUserOrders([]));
+    }
+
+  }, [loggedUser,orders]);
 
   return (
     <ThemeProvider>

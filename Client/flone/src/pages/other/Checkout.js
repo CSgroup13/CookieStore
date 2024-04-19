@@ -13,6 +13,7 @@ import api, { postData } from "src/utils/api";
 import cogoToast from "cogo-toast";
 import emailjs from "emailjs-com";
 import { deleteAllFromCart } from "src/store/slices/cart-slice";
+import { addToOrders } from "src/store/slices/order-slice";
 import { getDatabase, push, ref } from "firebase/database";
 import { app } from "src/config";
 
@@ -265,6 +266,7 @@ const Checkout = () => {
                   };
                   const db = getDatabase(app);
                   push(ref(db), newNotification);
+                  dispatch(addToOrders(orderDetails));
                   dispatch(deleteAllFromCart());
                   navigate("/"); // Only navigate after sending the email to the admin
                 })
