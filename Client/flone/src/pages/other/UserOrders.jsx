@@ -81,198 +81,193 @@ const UserOrders = () => {
             { label: mainLabel, path: process.env.PUBLIC_URL + pathname },
           ]}
         />
-        <div
-          className="container"
-          style={{ display: "flex", justifyContent: "center" }}
-        >
-          <div className="cart-main-area pt-20 pb-100">
-            <div className="container">
-              {userOrders && userOrders.length >= 1 ? (
-                <Fragment>
-                  <div className="row">
-                    <div className="col-12">
-                      <div className="table-content table-responsive cart-table-content">
-                        <table>
-                          <thead>
-                            <tr key="head">
-                              <th>Order ID</th>
-                              <th>Total Price</th>
-                              <th>Date</th>
-                              <th>Shipping Address</th>
-                              <th>Status</th>
-                              <th>Items</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {userOrders.map((order) => (
-                              <TableRow
-                                key={order.id}
-                                hover
-                                tabIndex={-1}
-                                role="checkbox"
-                                selected={selectedOrder}
-                              >
-                                <TableCell>{order.id}</TableCell>
-                                <TableCell>
-                                  {order.totalPrice.toFixed(2)}₪
-                                </TableCell>
-                                <TableCell>
-                                  {new Date(order.date).toLocaleString()}
-                                </TableCell>
-                                <TableCell>{order.shippingAddress}</TableCell>
-                                <TableCell>
-                                  <Button
-                                    style={{
-                                      backgroundColor:
-                                        statusMap[order.status].color,
-                                      color: "white",
-                                    }}
-                                  >
-                                    {statusMap[order.status].label}
-                                  </Button>
-                                </TableCell>
-                                <TableCell>
-                                  <IconButton
-                                    onClick={() => handleOrderClick(order)}
-                                  >
-                                    <Iconify icon="eva:eye-outline" />
-                                  </IconButton>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-lg-12">
-                      <div className="cart-shiping-update-wrapper">
-                        <div className="cart-shiping-update">
-                          <Link
-                            to={process.env.PUBLIC_URL + "/shop-grid-standard"}
-                          >
-                            Continue Shopping
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Fragment>
-              ) : (
-                <>
-                  <div className="row">
-                    <div className="col-lg-12">
-                      {/* Render search form if user is not logged in */}
-                      <form
-                        onSubmit={handleSearchSubmit}
-                        style={{ marginBottom: "20px" }}
-                      >
-                        <div className="input-group">
-                          <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Enter Order ID"
-                            value={searchOrderId}
-                            onChange={(e) => setSearchOrderId(e.target.value)}
-                            style={{
-                              borderColor: "#BC7FCD",
-                              outlineColor: "#BC7FCD",
-                            }}
-                          />
-                          <button
-                            type="submit"
-                            className="btn"
-                            style={{
-                              backgroundColor: "#BC7FCD",
-                              color: "white",
-                            }}
-                          >
-                            Search
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-
-                  {searchResult && searchResult.id ? (
-                    <div className="row">
-                      <div className="col-12">
-                        <Typography variant="h4">
-                          Order {searchResult.id}
-                        </Typography>
-                        <div>
-                          <Typography variant="body1">
-                            Total Price: {searchResult.totalPrice.toFixed(2)}₪
-                          </Typography>
-                          <Typography variant="body1">
-                            Date: {new Date(searchResult.date).toLocaleString()}
-                          </Typography>
-                          <Typography variant="body1">
-                            Shipping Address: {searchResult.shippingAddress}
-                          </Typography>
-                          <Typography variant="body1">
-                            Payment Method:{" "}
-                            {searchResult.paymentMethod === 1
-                              ? "Paypal"
-                              : "Cash"}
-                          </Typography>
-                          <Typography variant="body1">
-                            Status:{" "}
-                            <span
-                              style={{
-                                color: statusMap[searchResult.status].color,
-                              }}
+        <div className="cart-main-area pt-90 pb-100">
+          <div className="container">
+            {userOrders && userOrders.length >= 1 ? (
+              <Fragment>
+                <div className="row">
+                  <div className="col-12">
+                    <div className="table-content table-responsive cart-table-content">
+                      <table>
+                        <thead>
+                          <tr key="head">
+                            <th>Order ID</th>
+                            <th>Total Price</th>
+                            <th>Date</th>
+                            <th>Shipping Address</th>
+                            <th>Status</th>
+                            <th>Items</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {userOrders.map((order) => (
+                            <TableRow
+                              key={order.id}
+                              hover
+                              tabIndex={-1}
+                              role="checkbox"
+                              selected={selectedOrder}
                             >
-                              {statusMap[searchResult.status].label}
-                            </span>
-                          </Typography>
-                          <Typography variant="h6">Items:</Typography>
-                          {searchResult.orderItems.map((item) => {
-                            const product = products.find(
-                              (product) => product.id === item.id
-                            );
-                            if (product) {
-                              return (
-                                <div
-                                  key={item.id}
+                              <TableCell>{order.id}</TableCell>
+                              <TableCell>
+                                {order.totalPrice.toFixed(2)}₪
+                              </TableCell>
+                              <TableCell>
+                                {new Date(order.date).toLocaleString()}
+                              </TableCell>
+                              <TableCell>{order.shippingAddress}</TableCell>
+                              <TableCell>
+                                <Button
                                   style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    marginBottom: "20px",
+                                    backgroundColor:
+                                      statusMap[order.status].color,
+                                    color: "white",
                                   }}
                                 >
-                                  <img
-                                    src={product.image}
-                                    alt={product.name}
-                                    style={{
-                                      width: "100px",
-                                      marginRight: "20px",
-                                    }}
-                                  />
-                                  <div>
-                                    <Typography variant="body1">
-                                      {product.name} - {item.quantity}
-                                    </Typography>
-                                    <Typography variant="body2">
-                                      {product.description}
-                                    </Typography>
-                                  </div>
-                                </div>
-                              );
-                            } else {
-                              return null;
-                            }
-                          })}
-                        </div>
+                                  {statusMap[order.status].label}
+                                </Button>
+                              </TableCell>
+                              <TableCell>
+                                <IconButton
+                                  onClick={() => handleOrderClick(order)}
+                                >
+                                  <Iconify icon="eva:eye-outline" />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-lg-12">
+                    <div className="cart-shiping-update-wrapper">
+                      <div className="cart-shiping-update">
+                        <Link
+                          to={process.env.PUBLIC_URL + "/shop-grid-standard"}
+                        >
+                          Continue Shopping
+                        </Link>
                       </div>
                     </div>
-                  ) : (
-                    <span>{searchResult}</span>
-                  )}
-                </>
-              )}
-            </div>
+                  </div>
+                </div>
+              </Fragment>
+            ) : (
+              <>
+                <div className="row">
+                  <div className="col-lg-12">
+                    {/* Render search form if user is not logged in */}
+                    <form
+                      onSubmit={handleSearchSubmit}
+                      style={{ marginBottom: "20px" }}
+                    >
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Enter Order ID"
+                          value={searchOrderId}
+                          onChange={(e) => setSearchOrderId(e.target.value)}
+                          style={{
+                            borderColor: "#BC7FCD",
+                            outlineColor: "#BC7FCD",
+                          }}
+                        />
+                        <button
+                          type="submit"
+                          className="btn"
+                          style={{
+                            backgroundColor: "#BC7FCD",
+                            color: "white",
+                          }}
+                        >
+                          Search
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+                {searchResult && searchResult.id ? (
+                  <div className="row">
+                    <div className="col-12">
+                      <Typography variant="h4">
+                        Order {searchResult.id}
+                      </Typography>
+                      <div>
+                        <Typography variant="body1">
+                          Total Price: {searchResult.totalPrice.toFixed(2)}₪
+                        </Typography>
+                        <Typography variant="body1">
+                          Date: {new Date(searchResult.date).toLocaleString()}
+                        </Typography>
+                        <Typography variant="body1">
+                          Shipping Address: {searchResult.shippingAddress}
+                        </Typography>
+                        <Typography variant="body1">
+                          Payment Method:{" "}
+                          {searchResult.paymentMethod === 1
+                            ? "Paypal"
+                            : "Cash"}
+                        </Typography>
+                        <Typography variant="body1">
+                          Status:{" "}
+                          <span
+                            style={{
+                              color: statusMap[searchResult.status].color,
+                            }}
+                          >
+                            {statusMap[searchResult.status].label}
+                          </span>
+                        </Typography>
+                        <Typography variant="h6">Items:</Typography>
+                        {searchResult.orderItems.map((item) => {
+                          const product = products.find(
+                            (product) => product.id === item.productId
+                          );
+                          if (product) {
+                            return (
+                              <div
+                                key={item.id}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  marginBottom: "20px",
+                                }}
+                              >
+                                <img
+                                  src={product.image}
+                                  alt={product.name}
+                                  style={{
+                                    width: "100px",
+                                    marginRight: "20px",
+                                  }}
+                                />
+                                <div>
+                                  <Typography variant="body1">
+                                    {product.name} - {item.quantity}
+                                  </Typography>
+                                  <Typography variant="body2">
+                                    {product.description}
+                                  </Typography>
+                                </div>
+                              </div>
+                            );
+                          } else {
+                            return null;
+                          }
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <span>{searchResult}</span>
+                )}
+              </>
+            )}
           </div>
         </div>
       </LayoutThree>

@@ -160,7 +160,7 @@ const Contact = () => {
                           defaultValue={""}
                           onChange={handleChange}
                         />
-                        <button className="submit" type="submit">
+                        <button className="submit" type="submit" disabled={formData.name=="" || formData.email=="" || formData.subject=="" || formData.message==""}>
                           SEND
                         </button>
                       </div>
