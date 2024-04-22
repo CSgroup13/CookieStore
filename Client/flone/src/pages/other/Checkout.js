@@ -189,7 +189,7 @@ const Checkout = () => {
       const orderDetails = {
         userId: loggedUser?.id || -1,
         totalPrice,
-        date: new Date(Date.now()),
+        date: new Date(Date.now()).toISOString(),
         shippingAddress: `${formData.address}, ${formData.apartment}, ${formData.city}, Israel, ${formData.postalCode}`,
         shippingMethod: Number(formData.shipping),
         paymentMethod: Number(formData.payment),

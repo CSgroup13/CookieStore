@@ -7,7 +7,7 @@ export default function OrdersPage() {
   return (
     <>
       <Helmet>
-        <title> Order | Minimal UI </title>
+        <title> Admin | Orders </title>
       </Helmet>
 
       <OrderView />
