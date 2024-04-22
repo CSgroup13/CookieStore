@@ -209,9 +209,7 @@ const UserOrders = () => {
                         </Typography>
                         <Typography variant="body1">
                           Payment Method:{" "}
-                          {searchResult.paymentMethod === 1
-                            ? "Paypal"
-                            : "Cash"}
+                          {searchResult.paymentMethod === 1 ? "Paypal" : "Cash"}
                         </Typography>
                         <Typography variant="body1">
                           Status:{" "}
@@ -298,6 +296,7 @@ const UserOrders = () => {
                     </Typography>
                     <Rating
                       onChange={(event, newValue) => {
+                        newValue = newValue === null ? product.rate : newValue;
                         postData(
                           `${api.products}rateProduct/${product.id}/${loggedUser.id}/${newValue}`
                         )
