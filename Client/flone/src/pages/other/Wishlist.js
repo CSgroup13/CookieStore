@@ -56,14 +56,7 @@ const Wishlist = () => {
                             return (
                               <tr key={key}>
                                 <td className="product-thumbnail">
-                                  <Link
-                                    to={
-                                      process.env.PUBLIC_URL +
-                                      "/product/" +
-                                      wishlistItem.id
-                                    }
-                                  >
-                                    <img
+                                <img
                                       className="img-fluid"
                                       src={
                                         process.env.PUBLIC_URL +
@@ -71,9 +64,7 @@ const Wishlist = () => {
                                       }
                                       alt=""
                                     />
-                                  </Link>
                                 </td>
-
                                 <td className="product-name text-center">
                                   <Link
                                     to={
