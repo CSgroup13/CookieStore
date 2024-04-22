@@ -15,6 +15,13 @@ const Contact = () => {
     message: "",
   });
 
+  const openWhatsAppChat = () => {
+    const phoneNumber = "+972505240094"; // Your WhatsApp number
+    const message = "היי, יש לי שאלה בקשר להזמנת עוגיות באתר"; // Default message
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -104,6 +111,11 @@ const Contact = () => {
                       <li>
                         <a href="https://www.instagram.com/cookiesaddicttion/" target="_blank">
                           <i className="fa fa-instagram" style={{ fontSize: "26px" }} />
+                        </a>
+                      </li>
+                      <li>
+                        <a onClick={openWhatsAppChat}>
+                          <i className="fa fa-whatsapp" style={{ fontSize: "26px" }} />
                         </a>
                       </li>
                     </ul>

@@ -10,11 +10,11 @@ import { deleteFromWishlist, deleteAllFromWishlist } from "../../store/slices/wi
 const Wishlist = () => {
   const dispatch = useDispatch();
   let { pathname } = useLocation();
-  
-  const {loggedUser} = useSelector((state) => state.user);
+
+  const { loggedUser } = useSelector((state) => state.user);
   const { wishlistItems } = useSelector((state) => state.wishlist);
   const { cartItems } = useSelector((state) => state.cart);
-  
+
 
   return (
     <Fragment>
@@ -24,11 +24,11 @@ const Wishlist = () => {
       />
       <LayoutThree headerTop="visible">
         {/* breadcrumb */}
-        <Breadcrumb 
+        <Breadcrumb
           pages={[
-            {label: "Home", path: process.env.PUBLIC_URL + "/" },
-            {label: "Wishlist", path: process.env.PUBLIC_URL + pathname }
-          ]} 
+            { label: "Home", path: process.env.PUBLIC_URL + "/" },
+            { label: "Wishlist", path: process.env.PUBLIC_URL + pathname }
+          ]}
         />
         <div className="cart-main-area pt-90 pb-100">
           <div className="container">
@@ -56,65 +56,56 @@ const Wishlist = () => {
                             return (
                               <tr key={key}>
                                 <td className="product-thumbnail">
-                                <img
-                                      className="img-fluid"
-                                      src={
-                                        process.env.PUBLIC_URL +
-                                        wishlistItem.image
-                                      }
-                                      alt=""
-                                    />
+                                  <img
+                                    className="img-fluid"
+                                    src={
+                                      process.env.PUBLIC_URL +
+                                      wishlistItem.image
+                                    }
+                                    alt=""
+                                  />
                                 </td>
                                 <td className="product-name text-center">
-                                  <Link
-                                    to={
-                                      process.env.PUBLIC_URL +
-                                      "/product/" +
-                                      wishlistItem.id
-                                    }
-                                  >
-                                    {wishlistItem.name}
-                                  </Link>
+                                  {wishlistItem.name}
                                 </td>
-
                                 <td className="product-price-cart">
-                                    <span dir="rtl" className="amount">
+                                  <span dir="rtl" className="amount">
                                     ₪{wishlistItem.price}
-                                    </span>
+                                  </span>
                                 </td>
 
                                 <td className="product-wishlist-cart">
-                                    <button
-                                      onClick={() =>
-                                        dispatch(addToCart(wishlistItem))
-                                      }
-                                      className={
-                                        cartItem !== undefined &&
+                                  <button
+                                    onClick={() =>
+                                      dispatch(addToCart(wishlistItem))
+                                    }
+                                    className={
+                                      cartItem !== undefined &&
                                         cartItem.quantity > 0
-                                          ? "active"
-                                          : ""
-                                      }
-                                      disabled={
-                                        cartItem !== undefined &&
-                                        cartItem.quantity > 0
-                                      }
-                                      title={
-                                        wishlistItem !== undefined
-                                          ? "Added to cart"
-                                          : "Add to cart"
-                                      }
-                                    >
-                                      {cartItem !== undefined &&
+                                        ? "active"
+                                        : ""
+                                    }
+                                    disabled={
+                                      cartItem !== undefined &&
                                       cartItem.quantity > 0
-                                        ? "Added"
-                                        : "Add to cart"}
-                                    </button>
+                                    }
+                                    title={
+                                      wishlistItem !== undefined
+                                        ? "Added to cart"
+                                        : "Add to cart"
+                                    }
+                                  >
+                                    {cartItem !== undefined &&
+                                      cartItem.quantity > 0
+                                      ? "Added"
+                                      : "Add to cart"}
+                                  </button>
                                 </td>
 
                                 <td className="product-remove">
                                   <button
                                     onClick={() =>
-                                      dispatch(deleteFromWishlist({id:wishlistItem.id,userId:loggedUser.id}))
+                                      dispatch(deleteFromWishlist({ id: wishlistItem.id, userId: loggedUser.id }))
                                     }
                                   >
                                     <i className="fa fa-times"></i>
