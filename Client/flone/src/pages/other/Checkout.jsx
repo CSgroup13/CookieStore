@@ -13,7 +13,7 @@ import api, { postData } from "src/utils/api";
 import cogoToast from "cogo-toast";
 import emailjs from "emailjs-com";
 import { deleteAllFromCart, setDiscount } from "src/store/slices/cart-slice";
-import { getDatabase, push, ref, set } from "firebase/database";
+import { getDatabase, ref, set } from "firebase/database";
 import { app } from "src/firbaseConfig";
 import { addToUserOrders } from "src/store/slices/user-slice";
 
@@ -211,7 +211,8 @@ const Checkout = () => {
             Postal Code: ${formData.postalCode}
             Phone: ${formData.phone}
             Email: ${formData.email}
-            Shipping Method: ${formData.shipping === "1" ? "Shipping" : "Pickup"
+            Shipping Method: ${
+              formData.shipping === "1" ? "Shipping" : "Pickup"
             }
             Payment Method: ${formData.payment === "1" ? "Paypal" : "Cash"}
             Notes: ${formData.notes}
@@ -255,8 +256,9 @@ const Checkout = () => {
                   const newNotification = {
                     id: order.id,
                     title: "You have new order",
-                    description: `from ${formData.firstName + " " + formData.lastName
-                      }`,
+                    description: `from ${
+                      formData.firstName + " " + formData.lastName
+                    }`,
                     avatar: null,
                     type: "order_placed",
                     createdAt: new Date().toISOString(),

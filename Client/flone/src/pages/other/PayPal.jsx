@@ -10,13 +10,11 @@ import { sub } from "date-fns";
 import { useSelector } from "react-redux";
 import { setDiscount } from "../../store/slices/cart-slice";
 import { FUNDING } from "@paypal/react-paypal-js";
-// import database from "src/config";
 import { getDatabase, push, ref } from "firebase/database";
 import { app } from "src/firbaseConfig";
 import { addToOrders } from "src/store/slices/order-slice";
 
 const Paypal = ({ formData, cartItems, loggedUser }) => {
-  const orders = useSelector((state) => state.orders);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [{ isPending }] = usePayPalScriptReducer();
