@@ -3,9 +3,9 @@ import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import DashboardLayout from 'src/layouts/dashboard';
 
-export const IndexPage = lazy(() => import('src/pages/app'));
-export const UserPage = lazy(() => import('src/pages/user'));
-export const ProductsPage = lazy(() => import('src/pages/products'));
+export const IndexPage = lazy(() => import('src/pages/manage/dashboard'));
+export const UserPage = lazy(() => import('src/pages/manage/user'));
+export const ProductsPage = lazy(() => import('src/pages/manage/products'));
 
 // ----------------------------------------------------------------------
 

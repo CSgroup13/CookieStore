@@ -11,13 +11,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { setUserOrders, setUsers } from "./store/slices/user-slice";
 import { setOrders } from "./store/slices/order-slice";
 
-export const IndexPage = lazy(() => import("./pages/app"));
-export const UserPage = lazy(() => import("./pages/user"));
-export const ProductsPage = lazy(() => import("./pages/products"));
-export const OrdersPage = lazy(() => import("./pages/orders"));
+export const IndexPage = lazy(() => import("./pages/manage/dashboard"));
+export const UserPage = lazy(() => import("./pages/manage/user"));
+export const ProductsPage = lazy(() => import("./pages/manage/products"));
+export const OrdersPage = lazy(() => import("./pages/manage/orders"));
 
 // home page
-const HomeOrganicFood = lazy(() => import("./pages/home/HomeOrganicFood"));
+const HomeOrganicFood = lazy(() => import("./pages/home/HomeCookiesAddiction"));
 // shop pages
 const ShopGridStandard = lazy(() => import("./pages/shop/ShopGridStandard"));
 
@@ -101,7 +101,7 @@ const App = () => {
       store.dispatch(setUserOrders([]));
     }
 
-  }, [loggedUser,orders]);
+  }, [loggedUser, orders]);
 
   return (
     <ThemeProvider>
