@@ -18,7 +18,9 @@ const Contact = () => {
   const openWhatsAppChat = () => {
     const phoneNumber = "+972505240094"; // Your WhatsApp number
     const message = "היי, יש לי שאלה בקשר להזמנת עוגיות באתר"; // Default message
-    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+      message
+    )}`;
     window.open(url, "_blank");
   };
 
@@ -54,7 +56,7 @@ const Contact = () => {
           email: "",
           subject: "",
           message: "",
-        })
+        });
       });
   };
   return (
@@ -109,13 +111,23 @@ const Contact = () => {
                     <h3>Follow Us</h3>
                     <ul>
                       <li>
-                        <a href="https://www.instagram.com/cookiesaddicttion/" target="_blank">
-                          <i className="fa fa-instagram" style={{ fontSize: "26px" }} />
+                        <a
+                          href="https://www.instagram.com/cookiesaddicttion/"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <i
+                            className="fa fa-instagram"
+                            style={{ fontSize: "26px" }}
+                          />
                         </a>
                       </li>
                       <li>
-                        <a onClick={openWhatsAppChat}>
-                          <i className="fa fa-whatsapp" style={{ fontSize: "26px" }} />
+                        <a href onClick={openWhatsAppChat}>
+                          <i
+                            className="fa fa-whatsapp"
+                            style={{ fontSize: "26px" }}
+                          />
                         </a>
                       </li>
                     </ul>
@@ -160,7 +172,16 @@ const Contact = () => {
                           defaultValue={""}
                           onChange={handleChange}
                         />
-                        <button className="submit" type="submit" disabled={formData.name=="" || formData.email=="" || formData.subject=="" || formData.message==""}>
+                        <button
+                          className="submit"
+                          type="submit"
+                          disabled={
+                            formData.name === "" ||
+                            formData.email === "" ||
+                            formData.subject === "" ||
+                            formData.message === ""
+                          }
+                        >
                           SEND
                         </button>
                       </div>
