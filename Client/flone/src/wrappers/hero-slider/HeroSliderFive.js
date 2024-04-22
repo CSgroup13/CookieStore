@@ -13,7 +13,7 @@ const params = {
   modules: [EffectFade],
   loop: true,
   speed: 1000,
-  navigation: true,
+  navigation: false,
   autoHeight: false
 };
 
@@ -25,7 +25,7 @@ const HeroSliderFive = ({ spaceLeftClass, spaceRightClass }) => {
           <Swiper options={params}>
             {sliderData.map((single, key) => (
               <SwiperSlide key={key}>
-                <HeroSliderFiveSingle
+                <HeroSliderFiveSingle key={key}
                   data={single}
                 />
               </SwiperSlide>
