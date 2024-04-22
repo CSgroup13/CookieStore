@@ -5,7 +5,7 @@ const HeroSliderFiveSingle = ({ data }) => {
   return (
     <div
       className="single-slider-2 slider-height-1 slider-height-res15 d-flex align-items-center slider-height-res bg-img"
-      style={{ backgroundImage: `linear-gradient(rgba(255, 255, 255, 0), rgba(220, 180, 200, 255)), url(/assets/img/cookies_images/main_image.jpg)`, }}
+      style={{ backgroundImage: `linear-gradient(rgba(255, 255, 255, 0), rgba(220, 180, 200, 255)), url(/assets/img/cookies_images/crumbl.jpg)`, }}
     >
       <div className="container">
         <div className="row">
