@@ -21,7 +21,7 @@ import Scrollbar from "../../../components/scrollbar";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotifications } from "../../../store/slices/notifications-slice";
 import { getDatabase, ref, remove } from "firebase/database";
-import { app } from "src/config";
+import { app } from "src/firbaseConfig";
 // ----------------------------------------------------------------------
 
 const removeNotification = (objectId) => {

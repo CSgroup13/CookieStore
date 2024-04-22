@@ -12,11 +12,11 @@ import { setDiscount } from "../../store/slices/cart-slice";
 import { FUNDING } from "@paypal/react-paypal-js";
 // import database from "src/config";
 import { getDatabase, push, ref } from "firebase/database";
-import { app } from "src/config";
+import { app } from "src/firbaseConfig";
 import { addToOrders } from "src/store/slices/order-slice";
 
 const Paypal = ({ formData, cartItems, loggedUser }) => {
-  const orders=useSelector((state) => state.orders);
+  const orders = useSelector((state) => state.orders);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [{ isPending }] = usePayPalScriptReducer();
@@ -42,7 +42,7 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
     shippingMethod: Number(formData.shipping),
     paymentMethod: Number(formData.payment),
     notes: formData.notes,
-    status:1,
+    status: 1,
     orderItems: orderItems,
   };
   const onCreateOrder = (data, actions) => {
@@ -76,14 +76,13 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
             Postal Code: ${formData.postalCode}
             Phone: ${formData.phone}
             Email: ${formData.email}
-            Shipping Method: ${
-              formData.shipping === "1" ? "Shipping" : "Pickup"
-            }
+            Shipping Method: ${formData.shipping === "1" ? "Shipping" : "Pickup"
+              }
             Payment Method: "Paypal"
             Notes: ${formData.notes}
             Order Items: ${cartItems
-              .map((item) => `${item.name}: ${item.quantity}`)
-              .join(", ")}
+                .map((item) => `${item.name}: ${item.quantity}`)
+                .join(", ")}
             `;
             // Sending confirmation email to the user
             emailjs
@@ -128,9 +127,8 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
                     const newNotification = {
                       id: order.id,
                       title: "You have new order",
-                      description: `from ${
-                        formData.firstName + " " + formData.lastName
-                      }`,
+                      description: `from ${formData.firstName + " " + formData.lastName
+                        }`,
                       avatar: null,
                       type: "order_placed",
                       createdAt: sub(new Date(), {

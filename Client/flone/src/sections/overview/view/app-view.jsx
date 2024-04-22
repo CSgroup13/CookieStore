@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import api, { getData } from "src/utils/api";
 import { getDatabase, onValue, ref } from "firebase/database";
-import { app } from "src/config";
+import { app } from "src/firbaseConfig";
 import { setNotifications } from "src/store/slices/notifications-slice";
 import { setOrders } from "src/store/slices/order-slice";
 
@@ -25,12 +25,12 @@ export function listenToNotifications(dispatch) {
         }
         dispatch(setNotifications(notifications));
         getData(api.orders)
-      .then((orders) => {
-        dispatch(setOrders(orders));
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+          .then((orders) => {
+            dispatch(setOrders(orders));
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       } else {
         dispatch(setNotifications([]));
       }
