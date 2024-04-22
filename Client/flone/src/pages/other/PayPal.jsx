@@ -16,7 +16,6 @@ import { app } from "src/firbaseConfig";
 import { addToOrders } from "src/store/slices/order-slice";
 
 const Paypal = ({ formData, cartItems, loggedUser }) => {
-  const orders = useSelector((state) => state.orders);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [{ isPending }] = usePayPalScriptReducer();
