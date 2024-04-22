@@ -229,8 +229,8 @@ const Checkout = () => {
                 to_name: formData.firstName + " " + formData.lastName,
                 to_email: formData.email,
                 from_name: "Cookies Addiction",
-                message: `Your delicious cookies order (Order Number ${order.id}) has been successfully placed!🍪🎉 
-        Thank you for choosing us!`,
+                from_email: "cookiesaddiction1@gmail.com",
+                message: `${orderDetailsMessage}\nThank you for choosing us! 🍪🎉`,
               },
               "Ov1O19nU4lvvYar64"
             )

@@ -10,6 +10,7 @@ import api, { getData } from "src/utils/api";
 import { getDatabase, onValue, ref } from "firebase/database";
 import { app } from "src/config";
 import { setNotifications } from "src/store/slices/notifications-slice";
+import { setOrders } from "src/store/slices/order-slice";
 
 export function listenToNotifications(dispatch) {
   const db = getDatabase(app);
@@ -23,6 +24,13 @@ export function listenToNotifications(dispatch) {
           notifications.unshift(data[orderId]);
         }
         dispatch(setNotifications(notifications));
+        getData(api.orders)
+      .then((orders) => {
+        dispatch(setOrders(orders));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
       } else {
         dispatch(setNotifications([]));
       }
