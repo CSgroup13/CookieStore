@@ -22,7 +22,7 @@ import { fToNow } from "../../../utils/format-time";
 
 import Iconify from "../../../components/iconify";
 import Scrollbar from "../../../components/scrollbar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setNotifications } from "../../../store/slices/notifications-slice";
 import { getDatabase, ref, remove } from "firebase/database";
 import { app } from "src/config";
@@ -90,6 +90,7 @@ const removeNotification = (objectId) => {
 };
 
 export default function NotificationsPopover() {
+  const dispatch = useDispatch();
   const { notifications } = useSelector((state) => state.notifications);
   const totalUnRead = notifications.filter(
     (item) => item.isUnRead === true
@@ -105,12 +106,16 @@ export default function NotificationsPopover() {
   };
 
   const handleMarkAllAsRead = () => {
-    setNotifications(
-      notifications.map((notification) => ({
-        ...notification,
-        isUnRead: false,
-      }))
-    );
+    const db = getDatabase(app);
+    // Remove all data in the 'notifications' node
+    remove(ref(db, "notifications"))
+      .then(() => {
+        console.log("All data in notifications node deleted successfully");
+      })
+      .catch((error) => {
+        console.error("Error deleting data:", error);
+      });
+    dispatch(setNotifications([]));
   };
 
   return (
@@ -174,12 +179,6 @@ export default function NotificationsPopover() {
             ))}
           </List>
         </Scrollbar>
-
-        <Box sx={{ p: 1 }}>
-          <Button fullWidth disableRipple>
-            View All
-          </Button>
-        </Box>
       </Popover>
     </>
   );
@@ -203,7 +202,8 @@ function NotificationItem({ notification }) {
   const { avatar, title } = renderContent(notification);
 
   return (
-    <ListItemButton onClick={() => removeNotification(notification.id)}
+    <ListItemButton
+      onClick={() => removeNotification(notification.id)}
       sx={{
         py: 1.5,
         px: 2.5,
