@@ -6,7 +6,7 @@ const HeroSliderFiveSingle = ({ data }) => {
     <div
       className="single-slider-2 slider-height-1 slider-height-res15 d-flex align-items-center slider-height-res bg-img"
       style={{
-        backgroundImage: `url(/assets/img/cookies_images/crumbl.jpg)`,
+        backgroundImage: `url(./assets/img/cookies_images/crumbl.jpg)`,
       }}
     >
       <div className="container">

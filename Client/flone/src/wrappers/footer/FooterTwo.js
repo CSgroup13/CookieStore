@@ -25,8 +25,8 @@ const FooterTwo = ({
       className={clsx("footer-area", backgroundColorClass, spaceLeftClass, spaceRightClass, backgroundImage && "bg-img")}
       style={{
         backgroundImage: ` ${backgroundImage
-            ? `url(${process.env.PUBLIC_URL + backgroundImage})`
-            : `url()`
+          ? `url(${process.env.PUBLIC_URL + backgroundImage})`
+          : `url()`
           }`
       }}
     >
@@ -40,21 +40,21 @@ const FooterTwo = ({
                 alt=""
                 src={
                   process.env.PUBLIC_URL +
-                  `${footerLogo ? footerLogo : "/assets/img/logo/logo.png"}`
+                  `${footerLogo ? footerLogo : "./assets/img/logo/logo.png"}`
                 }
               />
             </Link>
           </div>
-          <div className="footer-social" style={{marginTop:"20px"}}>
+          <div className="footer-social" style={{ marginTop: "20px" }}>
             <ul>
               <li>
                 <a href="https://www.instagram.com/cookiesaddicttion/" target="_blank">
-                  <i className="fa fa-instagram" style={{ fontSize: "26px" }}/>
+                  <i className="fa fa-instagram" style={{ fontSize: "26px" }} />
                 </a>
               </li>
               <li>
                 <a onClick={openWhatsAppChat}>
-                  <i className="fa fa-whatsapp" style={{ fontSize: "26px" }}/>
+                  <i className="fa fa-whatsapp" style={{ fontSize: "26px" }} />
                 </a>
               </li>
             </ul>

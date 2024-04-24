@@ -26,7 +26,7 @@ const About = () => {
         <SectionTitleWithText spaceTopClass="pt-100" spaceBottomClass="pb-95" />
         <div style={{ display: "flex", justifyContent: "center" }}>
           <img
-            src="/assets/img/cookies_images/aboutImg.jpg"
+            src="./assets/img/cookies_images/aboutImg.jpg"
             style={{
               width: "40%",
               height: "auto",

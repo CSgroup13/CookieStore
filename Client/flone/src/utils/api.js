@@ -1,7 +1,7 @@
-const localApi = "https://localhost:44365/api/";
-// const ruppinApi = "";
+// const localApi = "https://localhost:44365/api/";
+const ruppinApi = "https://proj.ruppin.ac.il/cgroup13/test2/tar1/api/";
 
-const currentApi = localApi;
+const currentApi = ruppinApi;
 
 const api = {
   products: currentApi + "Product/",

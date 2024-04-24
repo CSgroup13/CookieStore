@@ -45,31 +45,31 @@ const TabProductEleven = ({
             </div>
             <Tab.Content>
               <Tab.Pane eventKey="newArrival">
-                  <ProductGridTwelve
-                    category={category}
-                    type="new"
-                    limit={8}
-                    spaceBottomClass="mb-25"
-                    colorClass={colorClass}
-                  />
+                <ProductGridTwelve
+                  category={category}
+                  type="new"
+                  limit={8}
+                  spaceBottomClass="mb-25"
+                  colorClass={colorClass}
+                />
               </Tab.Pane>
               <Tab.Pane eventKey="bestSeller">
-                  <ProductGridTwelve
-                    category={category}
-                    type="bestSeller"
-                    limit={8}
-                    spaceBottomClass="mb-25"
-                    colorClass={colorClass}
-                  />
+                <ProductGridTwelve
+                  category={category}
+                  type="bestSeller"
+                  limit={8}
+                  spaceBottomClass="mb-25"
+                  colorClass={colorClass}
+                />
               </Tab.Pane>
               <Tab.Pane eventKey="saleItems">
-                  <ProductGridTwelve
-                    category={category}
-                    type="saleItems"
-                    limit={8}
-                    spaceBottomClass="mb-25"
-                    colorClass={colorClass}
-                  />
+                <ProductGridTwelve
+                  category={category}
+                  type="saleItems"
+                  limit={8}
+                  spaceBottomClass="mb-25"
+                  colorClass={colorClass}
+                />
               </Tab.Pane>
             </Tab.Content>
           </Tab.Container>
@@ -78,7 +78,7 @@ const TabProductEleven = ({
       {bgShape ? (
         <div className="bg-png-1">
           <img
-            src={process.env.PUBLIC_URL + "/assets/img/bg/shape-2.png"}
+            src={process.env.PUBLIC_URL + "./assets/img/bg/shape-2.png"}
             alt=""
           />
         </div>

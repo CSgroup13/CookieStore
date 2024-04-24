@@ -1,23 +1,23 @@
 [
   {
     "id": 1,
-    "titleImage": "/assets/img/icon-img/support-13.png",
+    "titleImage": "./assets/img/icon-img/support-13.png",
     "title": "Free shipping on all order",
-    "iconImage": "/assets/img/icon-img/support-5.png",
+    "iconImage": "./assets/img/icon-img/support-5.png",
     "backgroundColor": "#BC7FCD"
   },
   {
     "id": 2,
-    "titleImage": "/assets/img/icon-img/support-14.png",
+    "titleImage": "./assets/img/icon-img/support-14.png",
     "title": "Back guarantee under 5 days",
-    "iconImage": "/assets/img/icon-img/support-6.png",
+    "iconImage": "./assets/img/icon-img/support-6.png",
     "backgroundColor": "#FB9AD1"
   },
   {
     "id": 3,
-    "titleImage": "/assets/img/icon-img/support-15.png",
+    "titleImage": "./assets/img/icon-img/support-15.png",
     "title": "10% On every order over 100₪",
-    "iconImage": "/assets/img/icon-img/support-7.png",
+    "iconImage": "./assets/img/icon-img/support-7.png",
     "backgroundColor": "#86469C"
   }
 ]

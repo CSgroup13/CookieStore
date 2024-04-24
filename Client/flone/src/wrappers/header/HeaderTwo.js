@@ -38,7 +38,7 @@ const HeaderTwo = () => {
             <div className="col-lg-2 d-none d-lg-block text-center">
               {/* header logo */}
               <Logo
-                imageUrl="/assets/img/logo/logo.png"
+                imageUrl="./assets/img/logo/logo.png"
                 logoClass="logo-hm-9"
               />
             </div>
@@ -50,15 +50,14 @@ const HeaderTwo = () => {
         </div>
       </div>
       <div
-        className={`header-bottom sticky-bar header-res-padding header-padding-2 ${
-          scroll > headerTop ? "stick" : ""
-        }`}
+        className={`header-bottom sticky-bar header-res-padding header-padding-2 ${scroll > headerTop ? "stick" : ""
+          }`}
       >
         <div className="container">
           <div className="row">
             <div className="col-6 d-block d-lg-none">
               {/* header logo */}
-              <Logo imageUrl="/assets/img/logo/logo.png" />
+              <Logo imageUrl="./assets/img/logo/logo.png" />
             </div>
             <div className="col-6 d-block d-lg-none">
               {/* Icon group */}

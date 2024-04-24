@@ -21,21 +21,19 @@ const FooterFour = ({
       <div className={`${containerClass ? containerClass : "container"}`}>
         <div className="row">
           <div
-            className={`${
-              sideMenu ? "col-xl-2 col-sm-4" : "col-lg-2 col-sm-4"
-            }`}
+            className={`${sideMenu ? "col-xl-2 col-sm-4" : "col-lg-2 col-sm-4"
+              }`}
           >
             {/* footer copyright */}
             <FooterCopyright
-              footerLogo="/assets/img/logo/logo-2.png"
+              footerLogo="./assets/img/logo/logo-2.png"
               spaceBottomClass="mb-30"
               colorClass="copyright-white"
             />
           </div>
           <div
-            className={`${
-              sideMenu ? "col-xl-2 col-sm-4" : "col-lg-2 col-sm-4"
-            }`}
+            className={`${sideMenu ? "col-xl-2 col-sm-4" : "col-lg-2 col-sm-4"
+              }`}
           >
             <div className="footer-widget footer-widget-white mb-30 ml-30">
               <div className="footer-title">
@@ -66,16 +64,14 @@ const FooterFour = ({
             </div>
           </div>
           <div
-            className={`${
-              sideMenu ? "col-xl-2 col-sm-4" : "col-lg-2 col-sm-4"
-            }`}
+            className={`${sideMenu ? "col-xl-2 col-sm-4" : "col-lg-2 col-sm-4"
+              }`}
           >
             <div
-              className={`${
-                sideMenu
+              className={`${sideMenu
                   ? "footer-widget footer-widget-white mb-30 ml-95"
                   : "footer-widget footer-widget-white mb-30 ml-50"
-              }`}
+                }`}
             >
               <div className="footer-title">
                 <h3>USEFUL LINKS</h3>
@@ -101,16 +97,14 @@ const FooterFour = ({
             </div>
           </div>
           <div
-            className={`${
-              sideMenu ? "col-xl-3 col-sm-4" : "col-lg-2 col-sm-6"
-            }`}
+            className={`${sideMenu ? "col-xl-3 col-sm-4" : "col-lg-2 col-sm-6"
+              }`}
           >
             <div
-              className={`${
-                sideMenu
+              className={`${sideMenu
                   ? "footer-widget footer-widget-white mb-30 ml-145"
                   : "footer-widget footer-widget-white mb-30 ml-75"
-              }`}
+                }`}
             >
               <div className="footer-title">
                 <h3>FOLLOW US</h3>
@@ -158,9 +152,8 @@ const FooterFour = ({
             </div>
           </div>
           <div
-            className={`${
-              sideMenu ? "col-xl-3 col-sm-8" : "col-lg-4 col-sm-6"
-            }`}
+            className={`${sideMenu ? "col-xl-3 col-sm-8" : "col-lg-4 col-sm-6"
+              }`}
           >
             {/* footer newsletter */}
             <FooterNewsletter

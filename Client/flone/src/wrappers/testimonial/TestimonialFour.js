@@ -12,19 +12,18 @@ const settings = {
 };
 
 const TestimonialFour = ({
-spaceTopClass,
-spaceBottomClass,
-testimonialClass
+  spaceTopClass,
+  spaceBottomClass,
+  testimonialClass
 }) => {
-return (
-  <div className="testimonial-area">
-    <div className="container">
-      <div
-        className={clsx("bg-img", spaceTopClass, spaceBottomClass)}
-        style={{
-            backgroundImage: `url(${
-              process.env.PUBLIC_URL + "/assets/img/bg/testimonial-bg-3.jpg"
-            })`
+  return (
+    <div className="testimonial-area">
+      <div className="container">
+        <div
+          className={clsx("bg-img", spaceTopClass, spaceBottomClass)}
+          style={{
+            backgroundImage: `url(${process.env.PUBLIC_URL + "./assets/img/bg/testimonial-bg-3.jpg"
+              })`
           }}
         >
           <div className="row">

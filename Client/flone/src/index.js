@@ -18,9 +18,9 @@ root.render(
   <Provider store={store}>
     <PersistProvider>
       <HelmetProvider>
-          <Suspense>
-            <App />
-          </Suspense>
+        <Suspense>
+          <App />
+        </Suspense>
       </HelmetProvider>
     </PersistProvider>
   </Provider>

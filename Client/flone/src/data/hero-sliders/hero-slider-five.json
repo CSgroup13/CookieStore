@@ -3,7 +3,7 @@
     "id": 1,
     "title": "I could give up on cookies...",
     "subtitle": "BUT IM NOT A QUITTER!",
-    "image": "/assets/img/slider/slider-8.jpg",
+    "image": "./assets/img/slider/slider-8.jpg",
     "url": "/shop-grid-standard"
   }
 ]

@@ -58,6 +58,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "homepage": "https://proj.ruppin.ac.il/cgroup13/test2/tar6/build",
   "eslintConfig": {
     "extends": "react-app"
   },
