@@ -210,7 +210,7 @@ function renderContent(notification) {
       avatar: (
         <img
           alt={notification.title}
-          src="./assets/icons/ic_notification_package.svg"
+          src={process.env.PUBLIC_URL + "/assets/icons/ic_notification_package.svg"}
         />
       ),
       title,
@@ -221,7 +221,7 @@ function renderContent(notification) {
       avatar: (
         <img
           alt={notification.title}
-          src="./assets/icons/ic_notification_shipping.svg"
+          src={process.env.PUBLIC_URL + "/assets/icons/ic_notification_shipping.svg"}
         />
       ),
       title,
@@ -232,7 +232,7 @@ function renderContent(notification) {
       avatar: (
         <img
           alt={notification.title}
-          src="./assets/icons/ic_notification_mail.svg"
+          src={process.env.PUBLIC_URL + "/assets/icons/ic_notification_mail.svg"}
         />
       ),
       title,
@@ -243,7 +243,7 @@ function renderContent(notification) {
       avatar: (
         <img
           alt={notification.title}
-          src="./assets/icons/ic_notification_chat.svg"
+          src={process.env.PUBLIC_URL + "/assets/icons/ic_notification_chat.svg"}
         />
       ),
       title,

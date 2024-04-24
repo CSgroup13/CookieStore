@@ -282,7 +282,7 @@ export default function OrderTableRow({
                 <CardContent>
                   <img
                     alt={product.name}
-                    src={product.image}
+                    src={process.env.PUBLIC_URL+product.image}
                     style={{
                       width: "100px",
                       height: "100px",

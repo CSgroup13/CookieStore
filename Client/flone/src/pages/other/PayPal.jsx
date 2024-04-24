@@ -137,16 +137,16 @@ const Paypal = ({ formData, cartItems, loggedUser }) => {
                       isUnRead: true,
                     };
                     push((ref(db), newNotification));
-                    navigate("/"); // Only navigate after sending the email to the admin
+                    navigate(process.env.PUBLIC_URL+"/"); // Only navigate after sending the email to the admin
                   })
                   .catch((error) => {
                     console.error("Error sending email to admin:", error);
-                    navigate("/"); // Handle error and navigate
+                    navigate(process.env.PUBLIC_URL+"/"); // Handle error and navigate
                   });
               })
               .catch((error) => {
                 console.error("Error sending email to user:", error);
-                navigate("/"); // Handle error and navigate
+                navigate(process.env.PUBLIC_URL+"/"); // Handle error and navigate
               });
           })
           .catch((error) => {

@@ -3,33 +3,33 @@ import SvgColor from '../../components/svg-color';
 // ----------------------------------------------------------------------
 
 const icon = (name) => (
-  <SvgColor src={`./assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
+  <SvgColor src={process.env.PUBLIC_URL + `/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
 );
 
 const navConfig = [
   {
     title: 'dashboard',
-    path: '/adminDashboard',
+    path: process.env.PUBLIC_URL+'/adminDashboard',
     icon: icon('ic_analytics'),
   },
   {
     title: 'users',
-    path: '/adminUsers',
+    path: process.env.PUBLIC_URL+'/adminUsers',
     icon: icon('ic_user'),
   },
   {
     title: 'products',
-    path: '/adminProducts',
+    path: process.env.PUBLIC_URL+'/adminProducts',
     icon: icon('ic_cart'),
   },
   {
     title: 'orders',
-    path: '/adminOrders',
+    path: process.env.PUBLIC_URL+'/adminOrders',
     icon: icon('ic_analytics'),
   },
   {
     title: 'Back to store',
-    path: '/',
+    path: process.env.PUBLIC_URL+'/',
     icon: icon('ic_go_back'),
   },
 ];

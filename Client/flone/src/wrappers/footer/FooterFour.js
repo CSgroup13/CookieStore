@@ -26,7 +26,7 @@ const FooterFour = ({
           >
             {/* footer copyright */}
             <FooterCopyright
-              footerLogo="./assets/img/logo/logo-2.png"
+              footerLogo={process.env.PUBLIC_URL + "/assets/img/logo/logo-2.png"}
               spaceBottomClass="mb-30"
               colorClass="copyright-white"
             />

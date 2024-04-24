@@ -92,7 +92,7 @@ const Cart = () => {
                                 <Link onClick={() => setModalShow(true)}>
                                   <img
                                     className="img-fluid"
-                                    src={cartItem.image}
+                                    src={process.env.PUBLIC_URL+cartItem.image}
                                     alt=""
                                   />
                                 </Link>

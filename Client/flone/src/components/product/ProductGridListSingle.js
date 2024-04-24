@@ -26,7 +26,7 @@ const ProductGridListSingle = ({
       <div className={clsx("product-wrap", spaceBottomClass)}>
         <div className="product-img">
           <Link onClick={() => setModalShow(true)}>
-            <img className="default-img" src={product.image} alt="" />
+            <img className="default-img" src={process.env.PUBLIC_URL+product.image} alt="" />
           </Link>
           {product.new ? (
             <div className="product-img-badges">
@@ -107,7 +107,7 @@ const ProductGridListSingle = ({
                 <Link onClick={() => setModalShow(true)}>
                   <img
                     className="default-img img-fluid"
-                    src={product.image}
+                    src={process.env.PUBLIC_URL+product.image}
                     alt=""
                   />
                 </Link>

@@ -78,7 +78,7 @@ const TabProductEleven = ({
       {bgShape ? (
         <div className="bg-png-1">
           <img
-            src={process.env.PUBLIC_URL + "./assets/img/bg/shape-2.png"}
+            src={process.env.PUBLIC_URL + "/assets/img/bg/shape-2.png"}
             alt=""
           />
         </div>

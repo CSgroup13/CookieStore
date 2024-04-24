@@ -15,7 +15,7 @@ const TestimonialThree = () => {
     <div
       className="testimonial-area bg-img mt-195"
       style={{
-        backgroundImage: `url(${process.env.PUBLIC_URL + "./assets/img/bg/testimonial-bg-2.jpg"
+        backgroundImage: `url(${process.env.PUBLIC_URL + "/assets/img/bg/testimonial-bg-2.jpg"
           })`
       }}
     >
@@ -41,7 +41,7 @@ const TestimonialThree = () => {
               <img
                 className="wow fadeInUp"
                 src={
-                  process.env.PUBLIC_URL + "./assets/img/testimonial/testi-2.png"
+                  process.env.PUBLIC_URL + "/assets/img/testimonial/testi-2.png"
                 }
                 alt=""
               />

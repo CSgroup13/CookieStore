@@ -161,7 +161,7 @@ const LoginRegister = () => {
             position: "top-center",
           });
           dispatch(loginUser(user));
-          navigate("/");
+          navigate(process.env.PUBLIC_URL+"/");
         })
         .catch((error) => {
           cogoToast.error(error.message, { position: "bottom-left" });
@@ -193,7 +193,7 @@ const LoginRegister = () => {
           dispatch(loginUser(user));
           if (user.email === "cookiesaddiction1@gmail.com")
             dispatch(setAdmin(true));
-          navigate("/");
+          navigate(process.env.PUBLIC_URL+"/");
         })
         .catch((error) => {
           cogoToast.error(error.message, { position: "bottom-left" });

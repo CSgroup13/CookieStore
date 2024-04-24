@@ -269,16 +269,16 @@ const Checkout = () => {
                   dispatch(addToUserOrders(orderDetails));
                   dispatch(deleteAllFromCart());
                   dispatch(setDiscount(0));
-                  navigate("/"); // Only navigate after sending the email to the admin
+                  navigate(process.env.PUBLIC_URL+"/"); // Only navigate after sending the email to the admin
                 })
                 .catch((error) => {
                   console.error("Error sending email to admin:", error);
-                  navigate("/"); // Handle error and navigate
+                  navigate(process.env.PUBLIC_URL+"/"); // Handle error and navigate
                 });
             })
             .catch((error) => {
               console.error("Error sending email to user:", error);
-              navigate("/"); // Handle error and navigate
+              navigate(process.env.PUBLIC_URL+"/"); // Handle error and navigate
             });
         })
         .catch((error) => {

@@ -237,7 +237,7 @@ const UserOrders = () => {
                                 }}
                               >
                                 <img
-                                  src={product.image}
+                                  src={process.env.PUBLIC_URL+product.image}
                                   alt={product.name}
                                   style={{
                                     width: "100px",
@@ -283,7 +283,7 @@ const UserOrders = () => {
                   <CardContent>
                     <CardMedia
                       component="img"
-                      src={product.image}
+                      src={process.env.PUBLIC_URL+product.image}
                       style={{
                         width: "100px",
                         height: "100px",

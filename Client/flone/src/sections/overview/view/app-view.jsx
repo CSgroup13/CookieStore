@@ -187,7 +187,7 @@ export default function AppView() {
             title="Weekly Income"
             total={dashboardData.totalIncome}
             color="success"
-            icon={<img alt="icon" src="./assets/icons/glass/ic_glass_bag.png" />}
+            icon={<img alt="icon" src={process.env.PUBLIC_URL + "/assets/icons/glass/ic_glass_bag.png"} />}
           />
         </Grid>
 
@@ -197,7 +197,7 @@ export default function AppView() {
             total={dashboardData.totalUsers ? dashboardData.totalUsers : 0}
             color="info"
             icon={
-              <img alt="icon" src="./assets/icons/glass/ic_glass_users.png" />
+              <img alt="icon" src={process.env.PUBLIC_URL + "/assets/icons/glass/ic_glass_users.png"} />
             }
           />
         </Grid>
@@ -207,7 +207,7 @@ export default function AppView() {
             title="Orders"
             total={dashboardData.totalOrders}
             color="warning"
-            icon={<img alt="icon" src="./assets/icons/glass/ic_glass_buy.png" />}
+            icon={<img alt="icon" src={process.env.PUBLIC_URL + "/assets/icons/glass/ic_glass_buy.png" }/>}
           />
         </Grid>
         <Grid xs={12} md={6} lg={8}>

@@ -27,7 +27,7 @@ const ProductGridSingleTwo = ({
       <div className={clsx("product-wrap-2", spaceBottomClass, colorClass)}>
         <div className="product-img">
           <Link onClick={() => setModalShow(true)}>
-            <img className="default-img" src={product.image} alt="" />
+            <img className="default-img" src={process.env.PUBLIC_URL+product.image} alt="" />
           </Link>
           <div className="product-action-2">
             <button

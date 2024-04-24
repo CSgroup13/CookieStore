@@ -22,7 +22,7 @@ const TestimonialFour = ({
         <div
           className={clsx("bg-img", spaceTopClass, spaceBottomClass)}
           style={{
-            backgroundImage: `url(${process.env.PUBLIC_URL + "./assets/img/bg/testimonial-bg-3.jpg"
+            backgroundImage: `url(${process.env.PUBLIC_URL + "/assets/img/bg/testimonial-bg-3.jpg"
               })`
           }}
         >

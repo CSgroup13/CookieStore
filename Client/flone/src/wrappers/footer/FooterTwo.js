@@ -40,7 +40,7 @@ const FooterTwo = ({
                 alt=""
                 src={
                   process.env.PUBLIC_URL +
-                  `${footerLogo ? footerLogo : "./assets/img/logo/logo.png"}`
+                  `${footerLogo ? footerLogo : "/assets/img/logo/logo.png"}`
                 }
               />
             </Link>
