@@ -6,7 +6,6 @@ import checker from 'vite-plugin-checker';
 // ----------------------------------------------------------------------
 
 export default defineConfig({
-  base: "/CookieStore/",
   plugins: [
     react(),
     checker({
