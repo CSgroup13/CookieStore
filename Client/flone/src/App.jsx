@@ -1,6 +1,6 @@
 import { Suspense, lazy, useEffect } from "react";
 import ScrollToTop from "./helpers/scroll-top";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import api, { getData } from "./utils/api";
 import { store } from "./store/store";
 import { setProducts } from "./store/slices/product-slice";
