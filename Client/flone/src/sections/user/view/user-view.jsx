@@ -153,6 +153,7 @@ export default function UserPage() {
         <UserTableToolbar
           numSelected={selected.length}
           onDelete={deleteSelected}
+          onFilterName={handleFilterByName}
         />
 
         <Scrollbar>
